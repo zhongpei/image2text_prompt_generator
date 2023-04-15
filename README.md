@@ -14,7 +14,10 @@ CLIP 模型是一种强大的自然语言处理和计算机视觉模型，它能
 
 # 一键包
 
-[baidu](https://pan.baidu.com/s/1pKtpPmiuliX7rf0z-5HY_w?pwd=79sk) 提取码: 79sk
+[baidu云盘](https://pan.baidu.com/s/1pKtpPmiuliX7rf0z-5HY_w?pwd=79sk) 提取码: 79sk
+
+解压缩后，点击webui.bat
+第一次运行会自动下载模型
 
 # 安装工具的说明如下：
 
