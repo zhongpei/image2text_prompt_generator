@@ -12,13 +12,18 @@
 
 CLIP 模型是一种强大的自然语言处理和计算机视觉模型，它能够将文本描述和图像特征联系起来，从而更准确地理解用户的需求并生成所需的图像。BLIP 模型则是一个跨模态的预训练模型，它结合了语言和图像信息，可以用于生成图像、图像搜索和视觉问答等任务。WD14 模型则是一种深度神经网络模型，用于处理结构化和非结构化数据的大规模机器学习任务。
 
-$ 安装工具的说明如下：
+# 一键包
+
+[baidu](https://pan.baidu.com/s/1pKtpPmiuliX7rf0z-5HY_w?pwd=79sk) 提取码: 79sk
+
+# 安装工具的说明如下：
 
 首先，确保您的计算机已经安装了 Python 3。如果您尚未安装 Python，请前往官方网站（https://www.python.org/downloads/）下载并安装最新版本的 Python 3。
 接着，下载并解压缩我们的工具安装包。
 打开命令行窗口（Windows 用户可以按下 Win + R 键，在运行框中输入 “cmd” 并按下回车键打开命令行窗口），并进入到工具安装包所在的目录。
 在命令行窗口中输入以下命令安装所需的依赖项：
-Copy code
+
+
 ```bash
 git clone https://huggingface.co/spaces/hahahafofo/image2text_prompt_generator
 cd image2text_prompt_generator
