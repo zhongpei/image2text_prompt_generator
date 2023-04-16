@@ -1,7 +1,7 @@
 import gradio as gr
 import torch
 
-from utils.chatglm import models as chatglm_models
+from utils.chatglm import chat2text
 from utils.exif import get_image_info
 from utils.generator import generate_prompt
 from utils.image2text import git_image2text, w14_image2text, clip_image2text
@@ -175,7 +175,7 @@ def ui(enable_chat: bool = False, enable_queue: bool = False):
             outputs=[output_img_prompter, output_img_prompter_zh]
         )
         chatglm_btn.click(
-            fn=chatglm_models.chatglm.generator_image_text,
+            fn=chat2text,
             inputs=input_text,
             outputs=chatglm_output,
         )
@@ -236,8 +236,8 @@ def ui(enable_chat: bool = False, enable_queue: bool = False):
 
 
 @click.command()
-@click.option('--chat', is_flag=True, help='Disable chat.', default=False)
-@click.option('--queue', is_flag=True, help='Disable queue.', default=False)
+@click.option('--chat', is_flag=True, help='Enable chat.', default=False)
+@click.option('--queue', is_flag=True, help='Enable queue.', default=False)
 def main(chat, queue):
     ui(enable_chat=chat, enable_queue=queue)
 
