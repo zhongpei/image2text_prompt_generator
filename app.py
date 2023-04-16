@@ -66,6 +66,8 @@ def empty_cache():
             from numba import cuda
             current_cuda = cuda.get_current_device()
             current_cuda.reset()
+        except:
+            pass
 
 
 with gr.Blocks(title="Prompt生成器") as block:
