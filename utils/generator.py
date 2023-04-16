@@ -24,11 +24,16 @@ class Models(object):
         if item in ('gpt2_650k_pipe',):
             self.gpt2_650k_pipe = self.load_gpt2_650k_pipe()
 
+        if item in ('gpt_neo_125m',):
+            self.gpt2_650k_pipe = self.load_gpt_neo_125m()
         return getattr(self, item)
 
     @classmethod
-    def load_gpt2_650k_pipe(cls):
+    def load_gpt_neo_125m(cls):
+        return pipeline('text-generation', model='DrishtiSharma/StableDiffusion-Prompt-Generator-GPT-Neo-125M')
 
+    @classmethod
+    def load_gpt2_650k_pipe(cls):
         return pipeline('text-generation', model='Ar4ikov/gpt2-650k-stable-diffusion-prompt-generator')
 
     @classmethod
@@ -62,7 +67,16 @@ def generate_prompt(
         model_name='microsoft',
 ):
     if model_name == 'gpt2_650k':
-        return generate_prompt_gpt2_650k(
+        return generate_prompt_pipe(
+            models.gpt2_650k_pipe,
+            prompt=plain_text,
+            min_length=min_length,
+            max_length=max_length,
+            num_return_sequences=num_return_sequences,
+        )
+    elif model_name == 'gpt_neo_125m':
+        return generate_prompt_pipe(
+            models.gpt_neo_125m,
             prompt=plain_text,
             min_length=min_length,
             max_length=max_length,
@@ -114,7 +128,7 @@ def generate_prompt_microsoft(
     return "\n".join(result)
 
 
-def generate_prompt_gpt2_650k(prompt: str, min_length=60, max_length: int = 255, num_return_sequences: int = 8) -> str:
+def generate_prompt_pipe(pipe, prompt: str, min_length=60, max_length: int = 255, num_return_sequences: int = 8) -> str:
     def get_valid_prompt(text: str) -> str:
         dot_split = text.split('.')[0]
         n_split = text.split('\n')[0]
@@ -130,7 +144,7 @@ def generate_prompt_gpt2_650k(prompt: str, min_length=60, max_length: int = 255,
 
         output += [
             get_valid_prompt(result['generated_text']) for result in
-            models.gpt2_650k_pipe(
+            pipe(
                 prompt,
                 max_new_tokens=rand_length(min_length, max_length),
                 num_return_sequences=num_return_sequences
