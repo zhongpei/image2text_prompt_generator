@@ -5,6 +5,7 @@
 * 在线演示 [demo](https://huggingface.co/spaces/hahahafofo/image2text_prompt_generator)
 * 图片功能请本地部署，使用本地GPU
 * 部分模型使用CPU，防止GPU显存溢出
+* 支持stable diffusion和midjourney两种prompt生成方式
 
 支持多种深度学习模型，包括 CLIP（Contrastive Language-Image Pre-Training）、BLIP（Bridging Language and Image Pre-Training）和 WD14（Wide and Deep 14-layer）等。
 
@@ -14,7 +15,7 @@
 # 文生文
 ![img.png](./img/text2text.png)
 
-# 文生图
+# 图生文
 ![img.png](./img/image2text.png)
 
 # 一键包
