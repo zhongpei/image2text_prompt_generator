@@ -62,6 +62,10 @@ def translate_input(text: str, chatglm_text: str) -> str:
 def empty_cache():
     if device == "cuda":
         torch.cuda.empty_cache()
+        try:
+            from numba import cuda
+            current_cuda = cuda.get_current_device()
+            current_cuda.reset()
 
 
 with gr.Blocks(title="Prompt生成器") as block:

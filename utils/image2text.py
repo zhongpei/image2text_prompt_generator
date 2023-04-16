@@ -120,6 +120,8 @@ def clip_image2text(image, mode_type='best', model_name='vit_h_14'):
         prompt = model.interrogate_negative(image)
     else:
         prompt = model.interrogate(image)  # default to best
+    if device == 'cuda':
+        torch.cuda.empty_cache()
     return prompt
 
 
