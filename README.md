@@ -6,19 +6,23 @@
 * 图片功能请本地部署，使用本地GPU
 * 部分模型使用CPU，防止GPU显存溢出
 * 支持stable diffusion和midjourney两种prompt生成方式
+* 支持chatglm描述画面生成
 
 支持多种深度学习模型，包括 CLIP（Contrastive Language-Image Pre-Training）、BLIP（Bridging Language and Image Pre-Training）和 WD14（Wide and Deep 14-layer）等。
 
 多种模型支持
 ![img.png](./img/param.png)
 
-# 文生文
+## 文生文
 ![img.png](./img/text2text.png)
 
-# 图生文
+## 图生文
 ![img.png](./img/image2text.png)
 
-# 一键包
+## chatglm 生成
+![img.png](./img/chatglm.png)
+
+## 一键包
 
 [baidu云盘](https://pan.baidu.com/s/1pKtpPmiuliX7rf0z-5HY_w?pwd=79sk) 提取码: 79sk
 
