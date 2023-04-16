@@ -108,6 +108,7 @@ class Models(object):
 models = Models.instance()
 
 
+@torch.no_grad()
 def clip_image2text(image, mode_type='best', model_name='vit_h_14'):
     image = image.convert('RGB')
     model = getattr(models, f'clip_{model_name}_model')
@@ -122,6 +123,7 @@ def clip_image2text(image, mode_type='best', model_name='vit_h_14'):
     return prompt
 
 
+@torch.no_grad()
 def git_image2text(input_image, max_length=50):
     image = input_image.convert('RGB')
     pixel_values = models.git_processor(images=image, return_tensors="pt").to(device).pixel_values
@@ -131,6 +133,7 @@ def git_image2text(input_image, max_length=50):
     return generated_caption
 
 
+@torch.no_grad()
 def w14_image2text(
         image: PIL.Image.Image,
         model_name: str,
