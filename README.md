@@ -6,17 +6,31 @@
 * 图片功能请本地部署，使用本地GPU
 * 部分模型使用CPU，防止GPU显存溢出
 * 支持stable diffusion和midjourney两种prompt生成方式
-* 支持chatglm描述画面生成
+* 支持chatglm 描述画面生成
 
 支持多种深度学习模型，包括 CLIP（Contrastive Language-Image Pre-Training）、BLIP（Bridging Language and Image Pre-Training）和 WD14（Wide and Deep 14-layer）等。
 
 多种模型支持
+* prompt优化模型
+  * mircosoft 生成简单描述 (stable diffusion)
+  * mj 生成随机描述 (midjourney)
+  * gpt2 650k 和 gpt_neo_125M 生成随机描述(stable diffusion)
+
 ![img.png](./img/param.png)
 
 ## 文生文
+* 中文翻译到英文
+* 中文通过chatglm生成复杂描述
+* 通过prompt优化模型生成
+
 ![img.png](./img/text2text.png)
 
 ## 图生文
+* clip 用于 多人，场景复杂,占用显出比较高
+* blip 用于 人物和场景简单
+* wd14 用于 人物
+* prompt 生成会自动合并 blip或clip + wd14
+
 ![img.png](./img/image2text.png)
 
 ## chatglm 生成
@@ -24,10 +38,10 @@
 
 ## 一键包
 
-[baidu云盘](https://pan.baidu.com/s/1pKtpPmiuliX7rf0z-5HY_w?pwd=79sk) 提取码: 79sk
-
-解压缩后，点击webui.bat
-第一次运行会自动下载模型
+* v1.0 [baidu云盘](https://pan.baidu.com/s/1pKtpPmiuliX7rf0z-5HY_w?pwd=79sk) 提取码: 79sk
+* v1.5 [baidu云盘](https://pan.baidu.com/s/1vMzDGbtTO0-CD7wk-4GrcQ?pwd=eb33) 提取码: eb33
+* 解压缩后，运行webui.bat
+* 第一次运行会自动下载模型
 
 # 安装工具的说明如下：
 
