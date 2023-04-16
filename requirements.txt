@@ -13,3 +13,5 @@ clip-interrogator==0.6.0
 cpm_kernels==1.0.11
 mdtex2html==1.2.0
 httpx[socks]
+numba==0.56.4
+click==8.1.3

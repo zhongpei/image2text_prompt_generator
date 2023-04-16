@@ -72,17 +72,26 @@ def wenyanwen2modern(text: str) -> str:
             ), skip_special_tokens=True)[0].replace(" ", "")
 
 
+def fix_text(text: str) -> str:
+    text = text.strip()
+    text_lines = [t.strip() for t in text.split("\n") if len(t.strip()) > 0]
+
+    return "".join(text_lines)
+
+
 def zh2en(text: str) -> str:
+    text = fix_text(text)
     with torch.no_grad():
         encoded = models.zh2en_tokenizer([text], return_tensors="pt")
-        sequences = models.zh2en_model.generate(**encoded)
+        sequences = models.zh2en_model.generate(**encoded, max_new_tokens=512)
         return models.zh2en_tokenizer.batch_decode(sequences, skip_special_tokens=True)[0]
 
 
 def en2zh(text: str) -> str:
+    text = fix_text(text)
     with torch.no_grad():
         encoded = models.en2zh_tokenizer([text], return_tensors="pt")
-        sequences = models.en2zh_model.generate(**encoded)
+        sequences = models.en2zh_model.generate(**encoded, max_new_tokens=512)
         return models.en2zh_tokenizer.batch_decode(sequences, skip_special_tokens=True)[0]
 
 

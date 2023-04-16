@@ -6,6 +6,7 @@ import re
 from .singleton import Singleton
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
+device_pipe = 0 if torch.cuda.is_available() else -1
 
 
 @Singleton
@@ -30,15 +31,27 @@ class Models(object):
 
     @classmethod
     def load_gpt_neo_125m(cls):
-        return pipeline('text-generation', model='DrishtiSharma/StableDiffusion-Prompt-Generator-GPT-Neo-125M')
+        return pipeline(
+            'text-generation',
+            model='DrishtiSharma/StableDiffusion-Prompt-Generator-GPT-Neo-125M',
+            device=device_pipe
+        )
 
     @classmethod
     def load_gpt2_650k_pipe(cls):
-        return pipeline('text-generation', model='Ar4ikov/gpt2-650k-stable-diffusion-prompt-generator')
+        return pipeline(
+            'text-generation',
+            model='Ar4ikov/gpt2-650k-stable-diffusion-prompt-generator',
+            device=device_pipe
+        )
 
     @classmethod
     def load_mj_pipe(cls):
-        return pipeline('text-generation', model='succinctly/text2image-prompt-generator')
+        return pipeline(
+            'text-generation',
+            model='succinctly/text2image-prompt-generator',
+            device=device_pipe
+        )
 
     @classmethod
     def load_microsoft_model(cls):
@@ -99,6 +112,7 @@ def generate_prompt(
         )
 
 
+@torch.no_grad()
 def generate_prompt_microsoft(
         plain_text,
         min_length=60,
@@ -128,6 +142,7 @@ def generate_prompt_microsoft(
     return "\n".join(result)
 
 
+@torch.no_grad()
 def generate_prompt_pipe(pipe, prompt: str, min_length=60, max_length: int = 255, num_return_sequences: int = 8) -> str:
     def get_valid_prompt(text: str) -> str:
         dot_split = text.split('.')[0]
@@ -158,6 +173,7 @@ def generate_prompt_pipe(pipe, prompt: str, min_length=60, max_length: int = 255
     return "\n".join([o.strip() for o in output])
 
 
+@torch.no_grad()
 def generate_prompt_mj(text_in_english: str, num_return_sequences: int = 8, min_length=60, max_length=90) -> str:
     seed = random.randint(100, 1000000)
     set_seed(seed)
