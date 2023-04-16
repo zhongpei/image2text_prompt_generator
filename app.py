@@ -8,6 +8,7 @@ from utils.image2text import git_image2text, w14_image2text, clip_image2text
 from utils.translate import en2zh as translate_en2zh
 from utils.translate import zh2en as translate_zh2en
 from ui.chat import chatglm_ui
+
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
@@ -58,8 +59,14 @@ def translate_input(text: str, chatglm_text: str) -> str:
     return translate_zh2en(text)
 
 
+def empty_cache():
+    if device == "cuda":
+        torch.cuda.empty_cache()
+
+
 with gr.Blocks(title="Prompt生成器") as block:
     with gr.Column():
+        empty_cache_btn = gr.Button('清显存')
 
         with gr.Tab('文本生成'):
             with gr.Row():
@@ -145,7 +152,7 @@ with gr.Blocks(title="Prompt生成器") as block:
                 )
 
         chatglm_ui()
-
+    empty_cache_btn.click(fn=empty_cache)
     img_prompter_btn.click(
         fn=image_generate_prompter,
         inputs=[
