@@ -75,14 +75,14 @@ def wenyanwen2modern(text: str) -> str:
 def zh2en(text: str) -> str:
     with torch.no_grad():
         encoded = models.zh2en_tokenizer([text], return_tensors="pt")
-        sequences = models.zh2en_model.generate(**encoded)
+        sequences = models.zh2en_model.generate(**encoded, max_new_tokens=512)
         return models.zh2en_tokenizer.batch_decode(sequences, skip_special_tokens=True)[0]
 
 
 def en2zh(text: str) -> str:
     with torch.no_grad():
         encoded = models.en2zh_tokenizer([text], return_tensors="pt")
-        sequences = models.en2zh_model.generate(**encoded)
+        sequences = models.en2zh_model.generate(**encoded, max_new_tokens=512)
         return models.en2zh_tokenizer.batch_decode(sequences, skip_special_tokens=True)[0]
 
 
