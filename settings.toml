@@ -25,8 +25,12 @@ mj_model = "succinctly/text2image-prompt-generator"
 enable = true # 是否启用翻译功能
 device = "cuda" # cpu mps cuda
 local_files_only = false # 是否只使用本地模型
+
 zh2en_model = "Helsinki-NLP/opus-mt-zh-en"
 en2zh_model = "Helsinki-NLP/opus-mt-en-zh"
+
+# zh2en_model = "./models/opus-mt-zh-en"
+# en2zh_model = "./models/opus-mt-en-zh"
 
 [chatglm]
 model = "THUDM/chatglm-6b-int4" # THUDM/chatglm-6b-int4 THUDM/chatglm-6b-int8 THUDM/chatglm-6b

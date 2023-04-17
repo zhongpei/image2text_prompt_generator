@@ -18,20 +18,17 @@ class Models(object):
             return getattr(self, item)
 
         if item in ('zh2en_model', 'zh2en_tokenizer',):
-            self.zh2en_model, self.zh2en_tokenizer = self.load_zh2en_model()
+            self.zh2en_model, self.zh2en_tokenizer = self.load_model(settings.translate.zh2en_model)
 
         if item in ('en2zh_model', 'en2zh_tokenizer',):
-            self.en2zh_model, self.en2zh_tokenizer = self.load_en2zh_model()
-
-        if item in ('wenyanwen2modern_tokenizer', 'wenyanwen2modern_model',):
-            self.wenyanwen2modern_tokenizer, self.wenyanwen2modern_model = self.load_wenyanwen2modern_model()
+            self.en2zh_model, self.en2zh_tokenizer = self.load_model(settings.translate.en2zh_model)
 
         return getattr(self, item)
 
     @classmethod
-    def load_en2zh_model(cls):
+    def load_model(cls, model_name):
         model = AutoModelForSeq2SeqLM.from_pretrained(
-            settings.translate.en2zh_model,
+            model_name,
             trust_remote_code=True,
             resume_download=True,
             local_files_only=settings.translate.local_files_only,
@@ -40,21 +37,9 @@ class Models(object):
             settings.translate.en2zh_model,
             trust_remote_code=True,
             resume_download=True,
-            local_files_only=settings.translate.local_files_only,
+            local_files_only=model_name,
         )
         return model, tokenizer
-
-    @classmethod
-    def load_zh2en_model(cls):
-        zh2en_model = AutoModelForSeq2SeqLM.from_pretrained(
-            settings.translate.zh2en_model,
-            trust_remote_code=True,
-            resume_download=True,
-            local_files_only=settings.translate.local_files_only,
-        ).to(device).eval()
-        zh2en_tokenizer = AutoTokenizer.from_pretrained(settings.translate.zh2en_model)
-
-        return zh2en_model, zh2en_tokenizer,
 
 
 models = Models.instance()
