@@ -51,14 +51,12 @@ class Models(object):
     def load_model(cls, model_name, tokenizer_class, model_class):
         tokenizer = tokenizer_class.from_pretrained(
             model_name,
-            device=device_id,
             trust_remote_code=True,
             resume_download=True,
             local_files_only=settings.generator.local_files_only,
         )
         model = model_class.from_pretrained(
             model_name,
-            device=device_id,
             trust_remote_code=True,
             resume_download=True,
             local_files_only=settings.generator.local_files_only,
