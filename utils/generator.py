@@ -7,7 +7,7 @@ from .singleton import Singleton
 from config import settings
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-device_pipe = 0 if torch.cuda.is_available() else -1
+
 if settings.generator.device == "cpu":
     device = "cpu"
 
@@ -37,6 +37,7 @@ class Models(object):
         return pipeline(
             'text-generation',
             model='DrishtiSharma/StableDiffusion-Prompt-Generator-GPT-Neo-125M',
+            device=device
 
         )
 
@@ -45,6 +46,7 @@ class Models(object):
         return pipeline(
             'text-generation',
             model='Ar4ikov/gpt2-650k-stable-diffusion-prompt-generator',
+            device=device
 
         )
 
@@ -53,6 +55,7 @@ class Models(object):
         return pipeline(
             'text-generation',
             model='succinctly/text2image-prompt-generator',
+            device=device
 
         )
 
@@ -170,7 +173,6 @@ def generate_prompt_pipe(pipe, prompt: str, min_length=60, max_length: int = 255
                 prompt,
                 max_new_tokens=rand_length(min_length, max_length),
                 num_return_sequences=num_return_sequences,
-                device=device_pipe,
 
             )
         ]
