@@ -29,7 +29,7 @@ class Models(object):
         if item in ('gpt2_650k_pipe',):
             self.gpt2_650k_pipe = self.load_gpt2_650k_pipe()
 
-        if item in ('gpt_neo_125m',):
+        if item in ('gpt_neo_125m_pipe',):
             self.gpt_neo_125m_pipe = self.load_gpt_neo_125m()
         return getattr(self, item)
 
@@ -76,6 +76,8 @@ models = Models.instance()
 
 
 def rand_length(min_length: int = 60, max_length: int = 90) -> int:
+    seed = random.randint(100, 1000000)
+    set_seed(seed)
     if min_length > max_length:
         return max_length
 
