@@ -3,6 +3,7 @@ from .remove_backgroud import remove_background
 import gradio as gr
 import os
 from .mesh_face import mesh_face, mesh_hand
+from config import settings
 
 
 def bz_autocrop(input_dir, output_dir, reject_dir, height=512, width=512, facePercent=50):
@@ -46,12 +47,24 @@ def bz_mesh(input_dir, output_dir, max_faces=1, thickness=10, circle_radius=10, 
     return result
 
 
+def remove_background_func(input_dir, output_dir, background_type):
+    if os.path.exists(settings.image_tools.transparent_background_path):
+        bin = settings.image_tools.transparent_background_path
+    elif os.path.exists(os.path.join("venv", "Scripts", "transparent-background.exe")):
+        bin = os.path.join("venv", "Scripts", "transparent-background.exe")
+    elif os.path.exists(os.path.join("venv", "bin", "transparent-background")):
+        bin = os.path.join("venv", "bin", "transparent-background")
+    else:
+        bin = "transparent-background"
+    remove_background(input_dir, output_dir, bin, background_type, bin=bin)
+
+
 def image_tools_ui():
     with gr.Tab("image tools"):
         with gr.Tab("remove background(扣背)"):
             remove_input_dir = gr.Textbox(label='input_dir')
             remove_output_dir = gr.Textbox(label='output_dir')
-            background_type = gr.Radio(choices=["white", "green"], label="background_type",value="white")
+            background_type = gr.Radio(choices=["white", "green"], label="background_type", value="white")
             remove_background_button = gr.Button("remove")
 
         with gr.Tab("mesh face(糊脸)"):
@@ -60,7 +73,7 @@ def image_tools_ui():
             max_faces = gr.Slider(0, 20, value=1, label='max_faces', step=1)
             thickness = gr.Slider(0, 20, value=20, label='thickness', step=1)
             circle_radius = gr.Slider(0, 100, value=20, label='circle_radius', step=1)
-            mesh_type = gr.Radio(choices=["face", ], label="mesh_type",value="face")
+            mesh_type = gr.Radio(choices=["face", ], label="mesh_type", value="face")
 
             mesh_face_button = gr.Button("mesh")
 
@@ -80,7 +93,7 @@ def image_tools_ui():
         )
 
         remove_background_button.click(
-            remove_background,
+            remove_background_func,
             inputs=[remove_input_dir, remove_output_dir, background_type],
             outputs=text_output
 

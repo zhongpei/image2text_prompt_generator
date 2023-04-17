@@ -29,23 +29,15 @@ def remove_cmd(image_path, output_path, background_type, fast, jit):
         remove_background(image_path, output_path, background_type, fast, jit)
 
 
-from config import settings
 
 
-def remove_background(image_path, output_path, background_type, fast=False, jit=False):
+
+def remove_background(image_path, output_path, background_type, fast=False, jit=False,bin="transparent-background"):
     # Remove the background of the images
     # video_path: path to the source
     # output_path: path to the output
     if not os.path.exists(output_path):
         os.makedirs(output_path, exist_ok=True)
-    if os.path.exists(settings.image_tools.transparent_background_path):
-        bin = settings.image_tools.transparent_background_path
-    elif os.path.exists(os.path.join("venv", "Scripts", "transparent-background.exe")):
-        bin = os.path.join("venv", "Scripts", "transparent-background.exe")
-    elif os.path.exists(os.path.join("venv", "bin", "transparent-background")):
-        bin = os.path.join("venv", "bin", "transparent-background")
-    else:
-        bin = "transparent-background"
 
     cmd = "{bin} --source {image_path} --dest {output_path}  --type {background_type}".format(
         bin=bin,
