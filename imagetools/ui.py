@@ -56,7 +56,7 @@ def remove_background_func(input_dir, output_dir, background_type):
         bin_path = os.path.join("venv", "bin", "transparent-background")
     else:
         bin_path = "transparent-background"
-    remove_background(input_dir, output_dir, bin, background_type, bin_path=bin_path)
+    remove_background(input_dir, output_dir, background_type, bin_path=bin_path)
 
 
 def image_tools_ui():
