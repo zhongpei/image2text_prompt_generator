@@ -7,9 +7,10 @@ from .singleton import Singleton
 from config import settings
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-
+device_id = 0 if torch.cuda.is_available() else -1
 if settings.generator.device == "cpu":
     device = "cpu"
+    device_id = -1
 
 
 @Singleton
@@ -37,7 +38,7 @@ class Models(object):
         return pipeline(
             'text-generation',
             model='DrishtiSharma/StableDiffusion-Prompt-Generator-GPT-Neo-125M',
-            device=device
+            device=device_id
 
         )
 
@@ -46,7 +47,7 @@ class Models(object):
         return pipeline(
             'text-generation',
             model='Ar4ikov/gpt2-650k-stable-diffusion-prompt-generator',
-            device=device
+            device=device_id
 
         )
 
@@ -55,13 +56,13 @@ class Models(object):
         return pipeline(
             'text-generation',
             model='succinctly/text2image-prompt-generator',
-            device=device
+            device=device_id
 
         )
 
     @classmethod
     def load_microsoft_model(cls):
-        prompter_model = AutoModelForCausalLM.from_pretrained("microsoft/Promptist").to(device).eval()
+        prompter_model = AutoModelForCausalLM.from_pretrained("microsoft/Promptist").eval()
         tokenizer = AutoTokenizer.from_pretrained("gpt2")
         tokenizer.pad_token = tokenizer.eos_token
         tokenizer.padding_side = "left"
@@ -131,7 +132,7 @@ def generate_prompt_microsoft(
     input_ids = models.microsoft_tokenizer(
         plain_text.strip() + " Rephrase:",
         return_tensors="pt",
-        device=models.microsoft_model.device
+
     ).input_ids
 
     eos_id = models.microsoft_tokenizer.eos_token_id
@@ -149,7 +150,7 @@ def generate_prompt_microsoft(
     output_texts = models.microsoft_tokenizer.batch_decode(
         outputs,
         skip_special_tokens=True,
-        device=models.microsoft_model.device
+
     )
     result = []
     for output_text in output_texts:
