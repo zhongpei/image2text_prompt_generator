@@ -40,8 +40,7 @@ class Models(object):
             model='DrishtiSharma/StableDiffusion-Prompt-Generator-GPT-Neo-125M',
             device=device_id,
             trust_remote_code=True,
-            resume_download=True,
-            local_files_only=settings.generator.local_files_only,
+
         )
 
     @classmethod
@@ -51,8 +50,7 @@ class Models(object):
             model='Ar4ikov/gpt2-650k-stable-diffusion-prompt-generator',
             device=device_id,
             trust_remote_code=True,
-            resume_download=True,
-            local_files_only=settings.generator.local_files_only,
+
         )
 
     @classmethod
@@ -62,8 +60,7 @@ class Models(object):
             model='succinctly/text2image-prompt-generator',
             device=device_id,
             trust_remote_code=True,
-            resume_download=True,
-            local_files_only=settings.generator.local_files_only,
+
         )
 
     @classmethod
