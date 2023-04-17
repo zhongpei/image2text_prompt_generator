@@ -38,7 +38,7 @@ def remove_background(image_path, output_path, background_type, fast=False, jit=
     # output_path: path to the output
     if not os.path.exists(output_path):
         os.makedirs(output_path, exist_ok=True)
-    if os.path.exists(settings.imagetools.transparent_background_path):
+    if os.path.exists(settings.image_tools.transparent_background_path):
         bin = settings.imagetools.transparent_background_path
     elif os.path.exists(os.path.join("venv", "Scripts", "transparent-background.exe")):
         bin = os.path.join("venv", "Scripts", "transparent-background.exe")
