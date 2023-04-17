@@ -106,7 +106,7 @@ def generate_prompt(
             prompt=plain_text,
             min_length=min_length,
             max_length=max_length,
-            num_return_sequences=num_return_sequences,
+            num_return_sequences=1,
         )
     elif model_name == 'mj':
         return generate_prompt_mj(
