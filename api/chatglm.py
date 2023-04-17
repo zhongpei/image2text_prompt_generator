@@ -1,6 +1,6 @@
 import json
 from typing import List
-
+import re
 import uvicorn
 from fastapi import FastAPI, Request, status, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -99,17 +99,23 @@ AI: 好的, 如果有什么需要, 随时告诉我"""
             yield json.dumps({"response": response[0]})
         torch_gc()
 
-    async def eval_prompt(model_name):
+    async def eval_prompt():
+        def is_ascii(s):
+            return all(ord(c) < 128 for c in s)
 
         def get_question():
             q = question
-            if model_name.find('chatglm') != -1:
+            prompt = re.search(r"^prompt.*:", question).group(0)
+            if prompt.find('chatglm') != -1:
                 q = chat2text(question)
 
-            return zh2en(q)
+            if is_ascii(q):
+                return prompt, q
 
-        q = get_question()
-        if model_name.find('gpt2') != -1:
+            return prompt, zh2en(q)
+
+        prompt, q = get_question()
+        if prompt.find('gpt2') != -1:
             yield json.dumps(
                 {"response": generate_prompt(
                     plain_text=q,
@@ -119,7 +125,7 @@ AI: 好的, 如果有什么需要, 随时告诉我"""
                 )
                 }
             )
-        elif model_name.find('mj') != -1:
+        elif prompt.find('mj') != -1:
             yield json.dumps(
                 {"response": generate_prompt(
                     plain_text=q,
@@ -128,14 +134,14 @@ AI: 好的, 如果有什么需要, 随时告诉我"""
                     num_return_sequences=1
                 )}
             )
-        else:
-            yield json.dumps(
-                {"response": generate_prompt(plain_text=q, max_length=body.max_tokens, model_name='microsoft')}
-            )
+
+        yield json.dumps(
+            {"response": generate_prompt(plain_text=q, max_length=body.max_tokens, model_name='microsoft')}
+        )
         torch_gc()
 
     if body.model.startswith('prompt'):
-        return EventSourceResponse(eval_prompt(body.model))
+        return EventSourceResponse(eval_prompt())
 
     return EventSourceResponse(eval_chatglm())
 
