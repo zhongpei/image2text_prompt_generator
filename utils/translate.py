@@ -31,13 +31,13 @@ class Models(object):
     @classmethod
     def load_en2zh_model(cls):
         model = AutoModelForSeq2SeqLM.from_pretrained(
-            "Helsinki-NLP/opus-mt-en-zh",
+            settings.translate.en2zh_model,
             trust_remote_code=True,
             resume_download=True,
             local_files_only=settings.translate.local_files_only,
         ).to(device).eval()
         tokenizer = AutoTokenizer.from_pretrained(
-            "Helsinki-NLP/opus-mt-en-zh",
+            settings.translate.en2zh_model,
             trust_remote_code=True,
             resume_download=True,
             local_files_only=settings.translate.local_files_only,
@@ -47,12 +47,12 @@ class Models(object):
     @classmethod
     def load_zh2en_model(cls):
         zh2en_model = AutoModelForSeq2SeqLM.from_pretrained(
-            'Helsinki-NLP/opus-mt-zh-en',
+            settings.translate.zh2en_model,
             trust_remote_code=True,
             resume_download=True,
             local_files_only=settings.translate.local_files_only,
         ).to(device).eval()
-        zh2en_tokenizer = AutoTokenizer.from_pretrained('Helsinki-NLP/opus-mt-zh-en')
+        zh2en_tokenizer = AutoTokenizer.from_pretrained(settings.translate.zh2en_model)
 
         return zh2en_model, zh2en_tokenizer,
 

@@ -37,7 +37,8 @@ class Models(object):
     def load_gpt_neo_125m(cls):
         return pipeline(
             'text-generation',
-            model='DrishtiSharma/StableDiffusion-Prompt-Generator-GPT-Neo-125M',
+            model=settings.generator.gpt_neo_125m_model,
+            tokenizer=settings.generator.gpt_neo_125m_model,
             device=device_id,
             trust_remote_code=True,
 
