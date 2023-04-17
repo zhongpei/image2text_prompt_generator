@@ -47,6 +47,18 @@ class Body(BaseModel):
     max_tokens: int
 
 
+chatglm_6b_int4 = {
+    "enable": True,
+    "model_name": 'chatglm-6b-int4',
+    "type": 'chatglm',
+    "tokenizer": chatglm_model.chatglm.tokenizer,
+    "model": chatglm_model.chatglm.model,
+
+}
+
+models = [chatglm_6b_int4]
+
+
 @app.post("/chat/completions")
 async def completions(body: Body, request: Request):
     global models
