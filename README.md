@@ -42,6 +42,7 @@ Prompt 生成器
 
 * [v1.0](https://pan.baidu.com/s/1pKtpPmiuliX7rf0z-5HY_w?pwd=79sk) 提取码: 79sk
 * [v1.5](https://pan.baidu.com/s/1vMzDGbtTO0-CD7wk-4GrcQ?pwd=eb33) 提取码: eb33
+* [开发版](https://pan.baidu.com/s/1w1D3PdJjn3iOQFap4a-hWg?pwd=x964) 提取码: x964
 * [ChatGLM模型](https://pan.baidu.com/s/1_Hs-MRjSxg0gaIRDaUTD8Q?pwd=6ti4) 提取码: 6ti4
 * 运行webui.bat
 * 运行webui_chat.bat,提供chatGLM聊天界面
@@ -159,3 +160,22 @@ python app.py
 
 * v1.5  增加chatGLM模型
 * v1.0  增加webui
+
+## 计划
+
+* [X] webui
+* [X] 配置文件
+* [X] image2text
+  * [X] clip
+  * [X] blip
+  * [X] wd14
+* [X] text2text
+  * [X] ChatGLM
+  * [X] gpt2 650k
+  * [X] gpt_neo_125M
+  * [X] mj
+* [X] 抠图工具
+  * [X] 抠背景
+  * [X] 抠人物大头
+  * [X] 遮挡人物脸部
+* [ ] clip + w14 混合批量图片标签

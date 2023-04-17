@@ -9,6 +9,7 @@ from utils.translate import en2zh as translate_en2zh
 from utils.translate import zh2en as translate_zh2en
 from ui.chat import chatglm_ui
 import click
+from imagetools.ui import image_tools_ui
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -77,11 +78,14 @@ def empty_cache(force_clear_cache: bool = False):
 def ui(enable_chat: bool = False):
     with gr.Blocks(title="Prompt生成器") as block:
         with gr.Column():
-            force_clear_cache = gr.Checkbox(False, label='强制清显存')
-            empty_cache_btn = gr.Button('清显存')
+            with gr.Row():
+                force_clear_cache = gr.Checkbox(False, label='强制清显存', width=60)
+                empty_cache_btn = gr.Button('清显存')
 
             if enable_chat:
                 chatglm_ui()
+            if settings.image_tools.enable:
+                image_tools_ui()
 
             with gr.Tab('文本生成'):
                 with gr.Row():
