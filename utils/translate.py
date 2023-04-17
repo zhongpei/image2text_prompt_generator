@@ -1,4 +1,4 @@
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 from .singleton import Singleton
 
@@ -27,7 +27,7 @@ class Models(object):
 
     @classmethod
     def load_en2zh_model(cls):
-        model = AutoModel.from_pretrained(
+        model = AutoModelForSeq2SeqLM.from_pretrained(
             "Helsinki-NLP/opus-mt-en-zh",
             trust_remote_code=True,
             resume_download=True,
@@ -43,7 +43,7 @@ class Models(object):
 
     @classmethod
     def load_zh2en_model(cls):
-        zh2en_model = AutoModel.from_pretrained(
+        zh2en_model = AutoModelForSeq2SeqLM.from_pretrained(
             'Helsinki-NLP/opus-mt-zh-en',
             trust_remote_code=True,
             resume_download=True,
