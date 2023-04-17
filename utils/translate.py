@@ -67,6 +67,7 @@ def fix_text(text: str) -> str:
     return "".join(text_lines)
 
 
+@torch.no_grad()
 def zh2en(text: str, max_new_tokens: int = 512) -> str:
     text = fix_text(text)
     with torch.no_grad():
@@ -75,6 +76,7 @@ def zh2en(text: str, max_new_tokens: int = 512) -> str:
         return models.zh2en_tokenizer.batch_decode(sequences, skip_special_tokens=True)[0]
 
 
+@torch.no_grad()
 def en2zh(text: str, max_new_tokens: int = 512) -> str:
     text = fix_text(text)
     with torch.no_grad():

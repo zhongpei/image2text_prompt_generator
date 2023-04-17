@@ -78,6 +78,7 @@ def rand_length(min_length: int = 60, max_length: int = 90) -> int:
     return random.randint(min_length, max_length)
 
 
+@torch.no_grad()
 def generate_prompt(
         plain_text,
         min_length=60,
@@ -132,7 +133,7 @@ def generate_prompt_microsoft(
         return_tensors="pt",
         device=models.microsoft_model.device
     ).input_ids
-    
+
     eos_id = models.microsoft_tokenizer.eos_token_id
 
     outputs = models.microsoft_model.generate(
