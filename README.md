@@ -42,6 +42,7 @@ Prompt 生成器
 
 * [v1.0](https://pan.baidu.com/s/1pKtpPmiuliX7rf0z-5HY_w?pwd=79sk) 提取码: 79sk
 * [v1.5](https://pan.baidu.com/s/1vMzDGbtTO0-CD7wk-4GrcQ?pwd=eb33) 提取码: eb33
+* [开发版](https://pan.baidu.com/s/1w1D3PdJjn3iOQFap4a-hWg?pwd=x964) 提取码: x964)
 * [ChatGLM模型](https://pan.baidu.com/s/1_Hs-MRjSxg0gaIRDaUTD8Q?pwd=6ti4) 提取码: 6ti4
 * 运行webui.bat
 * 运行webui_chat.bat,提供chatGLM聊天界面
