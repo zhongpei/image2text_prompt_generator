@@ -71,8 +71,8 @@ def image_tools_ui():
             mash_input_dir = gr.Textbox(label='input_dir')
             mash_output_dir = gr.Textbox(label='output_dir')
             max_faces = gr.Slider(0, 20, value=1, label='max_faces', step=1)
-            thickness = gr.Slider(0, 20, value=20, label='thickness', step=1)
-            circle_radius = gr.Slider(0, 100, value=20, label='circle_radius', step=1)
+            thickness = gr.Slider(0, 20, value=10, label='thickness', step=1)
+            circle_radius = gr.Slider(0, 100, value=15, label='circle_radius', step=1)
             mesh_type = gr.Radio(choices=["face", ], label="mesh_type", value="face")
 
             mesh_face_button = gr.Button("mesh")
