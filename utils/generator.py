@@ -30,7 +30,7 @@ class Models(object):
             self.gpt2_650k_pipe = self.load_gpt2_650k_pipe()
 
         if item in ('gpt_neo_125m',):
-            self.gpt2_650k_pipe = self.load_gpt_neo_125m()
+            self.gpt_neo_125m_pipe = self.load_gpt_neo_125m()
         return getattr(self, item)
 
     @classmethod
@@ -38,8 +38,10 @@ class Models(object):
         return pipeline(
             'text-generation',
             model='DrishtiSharma/StableDiffusion-Prompt-Generator-GPT-Neo-125M',
-            device=device_id
-
+            device=device_id,
+            trust_remote_code=True,
+            resume_download=True,
+            local_files_only=settings.generator.local_files_only,
         )
 
     @classmethod
@@ -47,8 +49,10 @@ class Models(object):
         return pipeline(
             'text-generation',
             model='Ar4ikov/gpt2-650k-stable-diffusion-prompt-generator',
-            device=device_id
-
+            device=device_id,
+            trust_remote_code=True,
+            resume_download=True,
+            local_files_only=settings.generator.local_files_only,
         )
 
     @classmethod
@@ -56,8 +60,10 @@ class Models(object):
         return pipeline(
             'text-generation',
             model='succinctly/text2image-prompt-generator',
-            device=device_id
-
+            device=device_id,
+            trust_remote_code=True,
+            resume_download=True,
+            local_files_only=settings.generator.local_files_only,
         )
 
     @classmethod
@@ -97,7 +103,7 @@ def generate_prompt(
         )
     elif model_name == 'gpt_neo_125m':
         return generate_prompt_pipe(
-            models.gpt_neo_125m,
+            models.gpt_neo_125m_pipe,
             prompt=plain_text,
             min_length=min_length,
             max_length=max_length,

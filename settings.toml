@@ -15,6 +15,12 @@ enable = true # 是否启用generator功能
 device = "cuda" # cpu mps cuda
 local_files_only = false # 是否只使用本地模型
 
+# models
+microsoft_model = "microsoft/Promptist"
+gpt2_650k_model = "Ar4ikov/gpt2-650k-stable-diffusion-prompt-generator"
+gpt_neo_125m_model = "DrishtiSharma/StableDiffusion-Prompt-Generator-GPT-Neo-125M"
+mj_model = "succinctly/text2image-prompt-generator"
+
 
 [translate]
 enable = true # 是否启用翻译功能

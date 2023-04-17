@@ -28,6 +28,7 @@ def text_generate_prompter(
         max_length=prompt_max_length,
         num_return_sequences=prompt_num_return_sequences
     )
+    empty_cache()
     return result, "\n".join(translate_en2zh(line) for line in result.split("\n") if len(line) > 0)
 
 
@@ -52,6 +53,7 @@ def image_generate_prompter(
         "{},{}".format(translate_en2zh(line.strip()), translate_en2zh(w14_text.strip())) for line in
         result.split("\n") if len(line) > 0
     ]
+    empty_cache()
     return "\n".join(prompter_list), "\n".join(prompter_zh_list)
 
 
