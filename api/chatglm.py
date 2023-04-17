@@ -49,7 +49,7 @@ class Body(BaseModel):
 
 chatglm_6b_int4 = {
     "enable": True,
-    "model_name": 'chatglm-6b-int4',
+    "model_name": 'chatglm',
     "type": 'chatglm',
     "tokenizer": chatglm_model.chatglm.tokenizer,
     "model": chatglm_model.chatglm.model,
