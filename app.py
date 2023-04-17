@@ -1,6 +1,6 @@
 import gradio as gr
 import torch
-
+from config import settings
 from utils.chatglm import chat2text
 from utils.exif import get_image_info
 from utils.generator import generate_prompt
@@ -60,21 +60,28 @@ def translate_input(text: str, chatglm_text: str) -> str:
     return translate_zh2en(text)
 
 
-def empty_cache():
-    if device == "cuda":
-        torch.cuda.empty_cache()
-        try:
-            from numba import cuda
-            current_cuda = cuda.get_current_device()
-            current_cuda.reset()
-        except:
-            pass
+def empty_cache(force_clear_cache: bool = False):
+    if torch.cuda.is_available():
+        with torch.cuda.device(0):
+            torch.cuda.empty_cache()
+            torch.cuda.ipc_collect()
+        if force_clear_cache:
+            try:
+                from numba import cuda
+                current_cuda = cuda.get_current_device()
+                current_cuda.reset()
+            except:
+                pass
 
 
-def ui(enable_chat: bool = False, enable_queue: bool = False):
+def ui(enable_chat: bool = False):
     with gr.Blocks(title="Prompt生成器") as block:
         with gr.Column():
+            force_clear_cache = gr.Checkbox(False, label='强制清显存')
             empty_cache_btn = gr.Button('清显存')
+
+            if enable_chat:
+                chatglm_ui()
 
             with gr.Tab('文本生成'):
                 with gr.Row():
@@ -158,9 +165,8 @@ def ui(enable_chat: bool = False, enable_queue: bool = False):
                         value=0.85,
                         label="Character Tags Threshold",
                     )
-            if enable_chat:
-                chatglm_ui()
-        empty_cache_btn.click(fn=empty_cache)
+
+        empty_cache_btn.click(fn=empty_cache, inputs=force_clear_cache)
         img_prompter_btn.click(
             fn=image_generate_prompter,
             inputs=[
@@ -225,21 +231,22 @@ def ui(enable_chat: bool = False, enable_queue: bool = False):
             inputs=input_image,
             outputs=exif_info
         )
-
-    block.queue(max_size=64).launch(
-        show_api=False,
-        enable_queue=enable_queue,
-        debug=True,
-        share=False,
-        server_name='127.0.0.1'
-    )
+    return block
 
 
 @click.command()
 @click.option('--chat', is_flag=True, help='Enable chat.', default=False)
 @click.option('--queue', is_flag=True, help='Enable queue.', default=False)
 def main(chat, queue):
-    ui(enable_chat=chat, enable_queue=queue)
+    block = ui(enable_chat=chat or settings.chatglm.enable_chat)
+    block.queue(max_size=settings.server.queue_size).launch(
+        show_api=settings.server.show_api,
+        enable_queue=queue or settings.server.enable_queue,
+        debug=settings.server.debug,
+        share=False,
+        server_name=settings.server.host,
+        server_port=settings.server.port,
+    )
 
 
 if __name__ == '__main__':

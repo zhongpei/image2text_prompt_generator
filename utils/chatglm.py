@@ -1,12 +1,16 @@
 import time
 from abc import ABC, abstractmethod
 from typing import List, Tuple
-
+from config import settings
 import torch
 from transformers import AutoModel, AutoTokenizer
 from transformers import LogitsProcessor, LogitsProcessorList
 
 from .singleton import Singleton
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+if settings.chatglm.device == "cpu":
+    device = "cpu"
 
 
 def parse_codeblock(text):
@@ -70,24 +74,27 @@ class InvalidScoreLogitsProcessor(LogitsProcessor):
 
 class ChatGLM(BasePredictor):
 
-    def __init__(self, model_name="THUDM/chatglm-6b-int4"):
+    def __init__(self, model_name):
 
-        print(f'Loading model {model_name}')
+        print(f'Loading model {model_name} on {device}')
         start = time.perf_counter()
-        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name,
             trust_remote_code=True,
-            resume_download=True
+            resume_download=True,
+            local_files_only=settings.chatglm.local_files_only,
         )
-
         model = AutoModel.from_pretrained(
             model_name,
             trust_remote_code=True,
-            resume_download=True
-        ).half().to(self.device)
-
+            resume_download=True,
+            local_files_only=settings.chatglm.local_files_only,
+        )
+        if device == 'cuda' or "mps":
+            model = model.half().to(device)
+        else:
+            model = model.float().to(device)
         model = model.eval()
         self.model = model
         self.model_name = model_name
@@ -150,11 +157,14 @@ class ChatGLM(BasePredictor):
 
         input_length = len(batch_input['input_ids'][0])
         final_input_ids = torch.cat(
-            [batch_input['input_ids'], batch_answer['input_ids'][:, :-2]],
-            dim=-1).cuda()
+            [batch_input['input_ids'],
+             batch_answer['input_ids'][:, :-2]],
+            dim=-1
+        ).to(model.device)
 
         attention_mask = model.get_masks(
-            final_input_ids, device=final_input_ids.device)
+            final_input_ids, device=final_input_ids.device
+        )
 
         batch_input['input_ids'] = final_input_ids
         batch_input['attention_mask'] = attention_mask
@@ -164,7 +174,8 @@ class ChatGLM(BasePredictor):
         mask_token = MASK if MASK in input_ids else gMASK
         mask_positions = [seq.tolist().index(mask_token) for seq in input_ids]
         batch_input['position_ids'] = self.model.get_position_ids(
-            input_ids, mask_positions, device=input_ids.device)
+            input_ids, mask_positions, device=input_ids.device
+        )
 
         for outputs in model.stream_generate(**batch_input, **gen_kwargs):
             outputs = outputs.tolist()[0][input_length:]
@@ -181,7 +192,7 @@ class Models(object):
             return getattr(self, item)
 
         if item == 'chatglm':
-            self.chatglm = ChatGLM("THUDM/chatglm-6b-int4")
+            self.chatglm = ChatGLM(settings.chatglm.model)
 
         return getattr(self, item)
 
