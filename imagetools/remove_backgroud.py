@@ -29,10 +29,7 @@ def remove_cmd(image_path, output_path, background_type, fast, jit):
         remove_background(image_path, output_path, background_type, fast, jit)
 
 
-
-
-
-def remove_background(image_path, output_path, background_type, fast=False, jit=False,bin="transparent-background"):
+def remove_background(image_path, output_path, background_type, fast=False, jit=False, bin_path="transparent-background"):
     # Remove the background of the images
     # video_path: path to the source
     # output_path: path to the output
@@ -40,7 +37,7 @@ def remove_background(image_path, output_path, background_type, fast=False, jit=
         os.makedirs(output_path, exist_ok=True)
 
     cmd = "{bin} --source {image_path} --dest {output_path}  --type {background_type}".format(
-        bin=bin,
+        bin=bin_path,
         image_path=image_path,
         output_path=output_path,
         background_type=background_type,

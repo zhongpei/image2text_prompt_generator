@@ -49,14 +49,14 @@ def bz_mesh(input_dir, output_dir, max_faces=1, thickness=10, circle_radius=10, 
 
 def remove_background_func(input_dir, output_dir, background_type):
     if os.path.exists(settings.image_tools.transparent_background_path):
-        bin = settings.image_tools.transparent_background_path
+        bin_path = settings.image_tools.transparent_background_path
     elif os.path.exists(os.path.join("venv", "Scripts", "transparent-background.exe")):
-        bin = os.path.join("venv", "Scripts", "transparent-background.exe")
+        bin_path = os.path.join("venv", "Scripts", "transparent-background.exe")
     elif os.path.exists(os.path.join("venv", "bin", "transparent-background")):
-        bin = os.path.join("venv", "bin", "transparent-background")
+        bin_path = os.path.join("venv", "bin", "transparent-background")
     else:
-        bin = "transparent-background"
-    remove_background(input_dir, output_dir, bin, background_type, bin=bin)
+        bin_path = "transparent-background"
+    remove_background(input_dir, output_dir, bin, background_type, bin_path=bin_path)
 
 
 def image_tools_ui():
