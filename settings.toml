@@ -1,10 +1,13 @@
 [server]
-port = 7869 # 端口
+port = 7868 # 端口
 host = '127.0.0.1' # 局域网访问需要改成 "0.0.0.0"
 enable_queue = true # chat功能需要开启，如错误，需要关闭代理
 queue_size = 10
 show_api = false
 debug = true
+
+[image_tools]
+enable = true # 是否启用图片处理功能
 
 [chatglm]
 model = "THUDM/chatglm-6b-int4" # THUDM/chatglm-6b-int4 THUDM/chatglm-6b-int8 THUDM/chatglm-6b
