@@ -27,21 +27,21 @@ class Models(object):
 
         if item in ('mj_model', 'mj_tokenizer'):
             self.mj_model, mj_tokenizer = self.load_model(
-                model_name=settings.generator.mj_model_name,
+                model_name=settings.generator.mj_model,
                 tokenizer_class=GPT2Tokenizer,
                 model_class=GPT2LMHeadModel,
             )
 
         if item in ('gpt2_650k_model', 'gpt2_650k_tokenizer'):
             self.gpt2_650k_model, self.gpt2_650k_tokenizer = self.load_model(
-                model_name=settings.generator.gpt2_650k_model_name,
+                model_name=settings.generator.gpt2_650k_model,
                 tokenizer_class=GPT2Tokenizer,
                 model_class=GPT2LMHeadModel,
             )
 
         if item in ('gpt_neo_125m_model', 'gpt_neo_125m_tokenizer'):
             self.gpt_neo_125m_model, self.gpt_neo_125m_tokenizer = self.load_model(
-                model_name=settings.generator.gpt2_650k_model_name,
+                model_name=settings.generator.gpt2_650k_model,
                 tokenizer_class=GPT2Tokenizer,
                 model_class=GPTNeoForCausalLM,
             )
