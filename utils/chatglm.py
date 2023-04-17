@@ -1,12 +1,16 @@
 import time
 from abc import ABC, abstractmethod
 from typing import List, Tuple
-
+from config import settings
 import torch
 from transformers import AutoModel, AutoTokenizer
 from transformers import LogitsProcessor, LogitsProcessorList
 
 from .singleton import Singleton
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+if settings.chatglm.device == "cpu":
+    device = "cpu"
 
 
 def parse_codeblock(text):
@@ -70,24 +74,31 @@ class InvalidScoreLogitsProcessor(LogitsProcessor):
 
 class ChatGLM(BasePredictor):
 
-    def __init__(self, model_name="THUDM/chatglm-6b-int4"):
+    def __init__(self, model_name):
 
-        print(f'Loading model {model_name}')
+        print(f'Loading model {model_name} on {device}')
         start = time.perf_counter()
-        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name,
             trust_remote_code=True,
-            resume_download=True
+            resume_download=True,
+            local_files_only=settings.chatglm.local_files_only,
         )
-
-        model = AutoModel.from_pretrained(
-            model_name,
-            trust_remote_code=True,
-            resume_download=True
-        ).half().to(self.device)
-
+        if device == 'cuda' or "mps":
+            model = AutoModel.from_pretrained(
+                model_name,
+                trust_remote_code=True,
+                resume_download=True,
+                local_files_only=settings.chatglm.local_files_only,
+            ).half().to(device)
+        else:
+            model = AutoModel.from_pretrained(
+                model_name,
+                trust_remote_code=True,
+                resume_download=True,
+                local_files_only=settings.chatglm.local_files_only,
+            ).float().to(device)
         model = model.eval()
         self.model = model
         self.model_name = model_name
@@ -181,7 +192,7 @@ class Models(object):
             return getattr(self, item)
 
         if item == 'chatglm':
-            self.chatglm = ChatGLM("THUDM/chatglm-6b-int4")
+            self.chatglm = ChatGLM(settings.chatglm.model)
 
         return getattr(self, item)
 

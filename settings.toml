@@ -1,0 +1,14 @@
+[server]
+port = 7869
+host = '127.0.0.1'
+enable_queue = true
+queue_size = 10
+show_api = false
+debug = true
+
+[chatglm]
+#model = "THUDM/chatglm-6b-int4" # THUDM/chatglm-6b-int4 THUDM/chatglm-6b-int8 THUDM/chatglm-6b
+model = "./models/chatglm-6b-int4" # THUDM/chatglm-6b-int4 THUDM/chatglm-6b-int8 THUDM/chatglm-6b
+device = "mps" # cpu mps cuda
+enable_chat = true
+local_files_only = true
