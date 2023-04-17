@@ -159,3 +159,22 @@ python app.py
 
 * v1.5  增加chatGLM模型
 * v1.0  增加webui
+
+## 计划
+
+* [X] webui
+* [X] 配置文件
+* [X] image2text
+  * [X] clip
+  * [X] blip
+  * [X] wd14
+* [X] text2text
+  * [X] ChatGLM
+  * [X] gpt2 650k
+  * [X] gpt_neo_125M
+  * [X] mj
+* [X] 抠图工具
+  * [X] 抠背景
+  * [X] 抠人物大头
+  * [X] 遮挡人物脸部
+* [ ] clip + w14 混合批量图片标签
