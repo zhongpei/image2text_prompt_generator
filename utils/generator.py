@@ -66,8 +66,15 @@ class Models(object):
 
     @classmethod
     def load_microsoft_model(cls):
-        prompter_model = AutoModelForCausalLM.from_pretrained("microsoft/Promptist").eval()
-        tokenizer = AutoTokenizer.from_pretrained("gpt2")
+        prompter_model = AutoModelForCausalLM.from_pretrained(
+            "microsoft/Promptist",
+            trust_remote_code=True,
+            resume_download=True,
+            local_files_only=settings.translate.local_files_only,
+        ).eval()
+        tokenizer = AutoTokenizer.from_pretrained(
+            "gpt2",
+        )
         tokenizer.pad_token = tokenizer.eos_token
         tokenizer.padding_side = "left"
         return prompter_model, tokenizer
