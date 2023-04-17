@@ -41,7 +41,7 @@ class Models(object):
 
         if item in ('gpt_neo_125m_model', 'gpt_neo_125m_tokenizer'):
             self.gpt_neo_125m_model, self.gpt_neo_125m_tokenizer = self.load_model(
-                model_name=settings.generator.gpt2_650k_model,
+                model_name=settings.generator.gpt_neo_125m_model,
                 tokenizer_class=GPT2Tokenizer,
                 model_class=GPTNeoForCausalLM,
             )
@@ -51,13 +51,11 @@ class Models(object):
     def load_model(cls, model_name, tokenizer_class, model_class):
         tokenizer = tokenizer_class.from_pretrained(
             model_name,
-            trust_remote_code=True,
             resume_download=True,
             local_files_only=settings.generator.local_files_only,
         )
         model = model_class.from_pretrained(
             model_name,
-            trust_remote_code=True,
             resume_download=True,
             local_files_only=settings.generator.local_files_only,
             pad_token_id=tokenizer.eos_token_id
