@@ -111,13 +111,26 @@ AI: 好的, 如果有什么需要, 随时告诉我"""
         q = get_question()
         if model_name.find('gpt2') != -1:
             yield json.dumps(
-                {"response": generate_prompt(plain_text=q, max_length=body.max_tokens, model_name="gpt2_650k")}
+                {"response": generate_prompt(
+                    plain_text=q,
+                    max_length=body.max_tokens,
+                    model_name="gpt2_650k",
+                    num_return_sequences=1
+                )
+                }
             )
         elif model_name.find('mj') != -1:
-            yield json.dumps({"response": generate_prompt(plain_text=q, max_length=body.max_tokens, model_name="mj")})
+            yield json.dumps(
+                {"response": generate_prompt(
+                    plain_text=q,
+                    max_length=body.max_tokens,
+                    model_name="mj",
+                    num_return_sequences=1
+                )}
+            )
         else:
             yield json.dumps(
-                {"response": generate_prompt(plain_text=q, max_length=body.max_tokens)}
+                {"response": generate_prompt(plain_text=q, max_length=body.max_tokens, model_name='microsoft')}
             )
         torch_gc()
 

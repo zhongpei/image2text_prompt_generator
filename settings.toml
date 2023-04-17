@@ -10,6 +10,10 @@ debug = true
 enable = true # 是否启用图片处理功能
 transparent_background_path = ".\\system\\python\\Scripts\\transparent-background.exe" # transparent-background.exe路径
 
+[translate]
+enable = true # 是否启用翻译功能
+local_files_only = false # 是否只使用本地模型
+
 [chatglm]
 model = "THUDM/chatglm-6b-int4" # THUDM/chatglm-6b-int4 THUDM/chatglm-6b-int8 THUDM/chatglm-6b
 
