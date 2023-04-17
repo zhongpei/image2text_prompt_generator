@@ -45,24 +45,6 @@ class Body(BaseModel):
     max_tokens: int
 
 
-chatglm_6b_int4 = {
-    "enable": True,
-    "model_name": 'chatglm',
-    "type": 'chatglm',
-    "tokenizer": chatglm_model.chatglm.tokenizer,
-    "model": chatglm_model.chatglm.model,
-
-}
-
-prompt = {
-    "enable": True,
-    "model_name": 'prompt',
-    "type": 'prompt',
-}
-
-models = [chatglm_6b_int4, prompt]
-
-
 @app.post("/chat/completions")
 async def completions(body: Body, request: Request):
     question = body.messages[-1]
