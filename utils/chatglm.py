@@ -85,20 +85,16 @@ class ChatGLM(BasePredictor):
             resume_download=True,
             local_files_only=settings.chatglm.local_files_only,
         )
+        model = AutoModel.from_pretrained(
+            model_name,
+            trust_remote_code=True,
+            resume_download=True,
+            local_files_only=settings.chatglm.local_files_only,
+        )
         if device == 'cuda' or "mps":
-            model = AutoModel.from_pretrained(
-                model_name,
-                trust_remote_code=True,
-                resume_download=True,
-                local_files_only=settings.chatglm.local_files_only,
-            ).half().to(device)
+            model = model.half().to(device)
         else:
-            model = AutoModel.from_pretrained(
-                model_name,
-                trust_remote_code=True,
-                resume_download=True,
-                local_files_only=settings.chatglm.local_files_only,
-            ).float().to(device)
+            model = model.float().to(device)
         model = model.eval()
         self.model = model
         self.model_name = model_name
@@ -161,8 +157,10 @@ class ChatGLM(BasePredictor):
 
         input_length = len(batch_input['input_ids'][0])
         final_input_ids = torch.cat(
-            [batch_input['input_ids'], batch_answer['input_ids'][:, :-2]],
-            dim=-1).cuda()
+            [batch_input['input_ids'],
+             batch_answer['input_ids'][:, :-2]],
+            dim=-1
+        ).to(model.device)
 
         attention_mask = model.get_masks(
             final_input_ids, device=final_input_ids.device)
