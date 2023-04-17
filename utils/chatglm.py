@@ -174,7 +174,8 @@ class ChatGLM(BasePredictor):
         mask_token = MASK if MASK in input_ids else gMASK
         mask_positions = [seq.tolist().index(mask_token) for seq in input_ids]
         batch_input['position_ids'] = self.model.get_position_ids(
-            input_ids, mask_positions, device=input_ids.device)
+            input_ids, mask_positions, device=input_ids.device
+        )
 
         for outputs in model.stream_generate(**batch_input, **gen_kwargs):
             outputs = outputs.tolist()[0][input_length:]
