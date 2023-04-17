@@ -127,7 +127,12 @@ def generate_prompt_microsoft(
         num_return_sequences=8,
         length_penalty=-1.0
 ) -> str:
-    input_ids = models.microsoft_tokenizer(plain_text.strip() + " Rephrase:", return_tensors="pt").input_ids
+    input_ids = models.microsoft_tokenizer(
+        plain_text.strip() + " Rephrase:",
+        return_tensors="pt",
+        device=models.microsoft_model.device
+    ).input_ids
+    
     eos_id = models.microsoft_tokenizer.eos_token_id
 
     outputs = models.microsoft_model.generate(
