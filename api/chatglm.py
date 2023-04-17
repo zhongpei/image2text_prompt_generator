@@ -8,8 +8,9 @@ from pydantic import BaseModel
 from sse_starlette.sse import EventSourceResponse
 
 from utils.chatglm import models as chatglm_model
-from utils.generator import generate_prompt_microsoft
+from utils.generator import generate_prompt
 from utils.translate import zh2en
+from utils.chatglm import chat2text
 
 
 def torch_gc():
@@ -30,11 +31,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.on_event('startup')
-def init():
-    model = chatglm_model.chatglm
 
 
 class Message(BaseModel):
@@ -69,21 +65,6 @@ models = [chatglm_6b_int4, prompt]
 
 @app.post("/chat/completions")
 async def completions(body: Body, request: Request):
-    global models
-
-    def check_model(model_name):
-        for model in models:
-            if model_name == model['model_name']:
-                return True, model
-        return False, None
-
-    exist, model = check_model(body.model)
-    if not exist:
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Not Implemented")
-
-    if not model["enable"]:
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Disabled")
-
     question = body.messages[-1]
     if question.role == 'user':
         question = question.content
@@ -115,8 +96,8 @@ AI: 好的, 如果有什么需要, 随时告诉我"""
 
     async def eval_chatglm():
         if body.stream:
-            for response in model["model"].stream_chat(
-                    model["tokenizer"],
+            for response in chatglm_model.chatglm.model.stream_chat(
+                    chatglm_model.chatglm.tokenizer,
                     question,
                     history,
                     max_length=max(2048, body.max_tokens)
@@ -127,8 +108,8 @@ AI: 好的, 如果有什么需要, 随时告诉我"""
                 yield json.dumps({"response": response[0]})
             yield "[DONE]"
         else:
-            response, _ = model["model"].chat(
-                model["tokenizer"],
+            response, _ = chatglm_model.chatglm.model.chat(
+                chatglm_model.chatglm.tokenizer,
                 question,
                 history,
                 max_length=max(2048, body.max_tokens)
@@ -136,18 +117,28 @@ AI: 好的, 如果有什么需要, 随时告诉我"""
             yield json.dumps({"response": response[0]})
         torch_gc()
 
-    async def eval_prompt():
+    async def eval_prompt(model_name):
 
         def get_question():
-            if '0' < question[0] < 'Z':
-                return question
-            return zh2en(question)
+            q = question
+            if model_name.find('chatglm') != -1:
+                q = chat2text(question)
 
-        yield json.dumps({"response": generate_prompt_microsoft(plain_text=get_question(), max_length=body.max_tokens)})
+            return zh2en(q)
+
+        q = get_question()
+        if model_name.find('gpt2') != -1:
+            yield json.dumps({"response": generate_prompt(plain_text=q, max_length=body.max_tokens)})
+        elif model_name.find('mj') != -1:
+            yield json.dumps({"response": generate_prompt(plain_text=q, max_length=body.max_tokens, model_name="mj")})
+        else:
+            yield json.dumps(
+                {"response": generate_prompt(plain_text=q, max_length=body.max_tokens, model_name="gpt2_650k")}
+            )
         torch_gc()
 
-    if body.model == 'prompt':
-        return EventSourceResponse(eval_prompt())
+    if body.model.startswith('prompt'):
+        return EventSourceResponse(eval_prompt(body.model))
 
     return EventSourceResponse(eval_chatglm())
 
