@@ -8,6 +8,8 @@ from pydantic import BaseModel
 from sse_starlette.sse import EventSourceResponse
 
 from utils.chatglm import models as chatglm_model
+from utils.generator import generate_prompt_microsoft
+from utils.translate import zh2en
 
 
 def torch_gc():
@@ -56,7 +58,13 @@ chatglm_6b_int4 = {
 
 }
 
-models = [chatglm_6b_int4]
+prompt = {
+    "enable": True,
+    "model_name": 'prompt',
+    "type": 'prompt',
+}
+
+models = [chatglm_6b_int4, prompt]
 
 
 @app.post("/chat/completions")
@@ -127,6 +135,19 @@ AI: 好的, 如果有什么需要, 随时告诉我"""
             )
             yield json.dumps({"response": response[0]})
         torch_gc()
+
+    async def eval_prompt():
+
+        def get_question():
+            if '0' < question[0] < 'Z':
+                return question
+            return zh2en(question)
+
+        yield json.dumps({"response": generate_prompt_microsoft(plain_text=get_question(), max_length=body.max_tokens)})
+        torch_gc()
+
+    if body.model == 'prompt':
+        return EventSourceResponse(eval_prompt())
 
     return EventSourceResponse(eval_chatglm())
 

@@ -162,7 +162,8 @@ def generate_prompt_pipe(pipe, prompt: str, min_length=60, max_length: int = 255
             pipe(
                 prompt,
                 max_new_tokens=rand_length(min_length, max_length),
-                num_return_sequences=num_return_sequences
+                num_return_sequences=num_return_sequences,
+
             )
         ]
         output = list(set(output))
