@@ -83,7 +83,7 @@ async def completions(body: Body, request: Request):
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "No Question Found")
 
     user_question = ''
-
+    print(question)
     history = []
     for message in body.messages:
         if message.role == 'user':
