@@ -80,7 +80,7 @@ def zh2en(text: str, max_new_tokens: int = 512) -> str:
 def en2zh(text: str, max_new_tokens: int = 512) -> str:
     text = fix_text(text)
     with torch.no_grad():
-        encoded = models.en2zh_tokenizer([text], return_tensors="pt").to(models.en2zh_tokenizer.device)
+        encoded = models.en2zh_tokenizer([text], return_tensors="pt").to(models.zh2en_model.device)
         sequences = models.en2zh_model.generate(**encoded, max_new_tokens=max_new_tokens)
         return models.en2zh_tokenizer.batch_decode(sequences, skip_special_tokens=True)[0]
 
