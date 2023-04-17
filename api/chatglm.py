@@ -104,8 +104,11 @@ AI: 好的, 如果有什么需要, 随时告诉我"""
             return all(ord(c) < 128 for c in s)
 
         def get_question():
-            q = question
-            prompt = re.search(r"^prompt.*:", question).group(0)
+            prompt = re.search(r"^prompt.*:", question)
+            if prompt is None:
+                return '', question
+            prompt = prompt.group(0).strip()
+            q = question.replace(prompt, '').strip()
             if prompt.find('chatglm') != -1:
                 q = chat2text(question)
 
@@ -140,7 +143,7 @@ AI: 好的, 如果有什么需要, 随时告诉我"""
         )
         torch_gc()
 
-    if body.model.startswith('prompt'):
+    if question.startswith('prompt'):
         return EventSourceResponse(eval_prompt())
 
     return EventSourceResponse(eval_chatglm())
