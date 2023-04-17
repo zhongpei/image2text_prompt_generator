@@ -6,6 +6,9 @@ from config import settings
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
+if settings.translate.device == "cpu":
+    device = "cpu"
+
 
 @Singleton
 class Models(object):

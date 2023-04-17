@@ -4,9 +4,12 @@ from transformers import pipeline, set_seed
 import random
 import re
 from .singleton import Singleton
+from config import settings
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 device_pipe = 0 if torch.cuda.is_available() else -1
+if settings.generator.device == "cpu":
+    device = "cpu"
 
 
 @Singleton
@@ -34,7 +37,7 @@ class Models(object):
         return pipeline(
             'text-generation',
             model='DrishtiSharma/StableDiffusion-Prompt-Generator-GPT-Neo-125M',
-            device=device_pipe
+
         )
 
     @classmethod
@@ -42,7 +45,7 @@ class Models(object):
         return pipeline(
             'text-generation',
             model='Ar4ikov/gpt2-650k-stable-diffusion-prompt-generator',
-            device=device_pipe
+
         )
 
     @classmethod
@@ -50,12 +53,12 @@ class Models(object):
         return pipeline(
             'text-generation',
             model='succinctly/text2image-prompt-generator',
-            device=device_pipe
+
         )
 
     @classmethod
     def load_microsoft_model(cls):
-        prompter_model = AutoModelForCausalLM.from_pretrained("microsoft/Promptist")
+        prompter_model = AutoModelForCausalLM.from_pretrained("microsoft/Promptist").to(device).eval()
         tokenizer = AutoTokenizer.from_pretrained("gpt2")
         tokenizer.pad_token = tokenizer.eos_token
         tokenizer.padding_side = "left"
@@ -134,7 +137,11 @@ def generate_prompt_microsoft(
         pad_token_id=eos_id,
         length_penalty=length_penalty
     )
-    output_texts = models.microsoft_tokenizer.batch_decode(outputs, skip_special_tokens=True)
+    output_texts = models.microsoft_tokenizer.batch_decode(
+        outputs,
+        skip_special_tokens=True,
+        device=models.microsoft_model.device
+    )
     result = []
     for output_text in output_texts:
         result.append(output_text.replace(plain_text + " Rephrase:", "").strip())
@@ -163,6 +170,7 @@ def generate_prompt_pipe(pipe, prompt: str, min_length=60, max_length: int = 255
                 prompt,
                 max_new_tokens=rand_length(min_length, max_length),
                 num_return_sequences=num_return_sequences,
+                device=device_pipe,
 
             )
         ]
