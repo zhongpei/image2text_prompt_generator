@@ -163,7 +163,8 @@ class ChatGLM(BasePredictor):
         ).to(model.device)
 
         attention_mask = model.get_masks(
-            final_input_ids, device=final_input_ids.device)
+            final_input_ids, device=final_input_ids.device
+        )
 
         batch_input['input_ids'] = final_input_ids
         batch_input['attention_mask'] = attention_mask
