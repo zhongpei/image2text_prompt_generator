@@ -143,8 +143,7 @@ def generate_prompt_microsoft(
     input_ids = models.microsoft_tokenizer(
         plain_text.strip() + " Rephrase:",
         return_tensors="pt",
-        device=models.microsoft_model.device,
-    ).input_ids
+    ).to(device).input_ids
 
     eos_id = models.microsoft_tokenizer.eos_token_id
 
@@ -156,7 +155,7 @@ def generate_prompt_microsoft(
         num_return_sequences=num_return_sequences,
         eos_token_id=eos_id,
         pad_token_id=eos_id,
-        length_penalty=length_penalty
+        length_penalty=length_penalty,
     )
     output_texts = models.microsoft_tokenizer.batch_decode(
         outputs,
