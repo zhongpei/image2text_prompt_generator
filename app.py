@@ -29,7 +29,7 @@ def text_generate_prompter(
         num_return_sequences=prompt_num_return_sequences
     )
     empty_cache()
-    return "\n\n".join(result), "\n\n".join(translate_en2zh(line) for line in result.split("\n") if len(line) > 0)
+    return "\n\n".join(result), "\n\n".join(translate_en2zh(line) for line in result if len(line) > 0)
 
 
 def image_generate_prompter(

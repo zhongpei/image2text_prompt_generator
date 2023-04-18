@@ -198,7 +198,7 @@ def generate_prompt_microsoft(
 
     if settings.generator.fix_sd_prompt:
         return [fix_sd_prompt(x) for x in result]
-    
+
     return result
 
 
