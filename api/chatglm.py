@@ -133,7 +133,7 @@ AI: 好的, 如果有什么需要, 随时告诉我"""
                             plain_text=q,
                             max_length=body.max_tokens,
                             model_name="gpt2_650k",
-                            num_return_sequences=settings.num_return_sequences
+                            num_return_sequences=settings.generate_num_return_sequences
                         )
                     )
                 }
@@ -146,7 +146,7 @@ AI: 好的, 如果有什么需要, 随时告诉我"""
                             plain_text=q,
                             max_length=body.max_tokens,
                             model_name="mj",
-                            num_return_sequences=settings.num_return_sequences
+                            num_return_sequences=settings.generate_num_return_sequences
                         )
                     )
                 }
@@ -159,7 +159,7 @@ AI: 好的, 如果有什么需要, 随时告诉我"""
                         plain_text=q,
                         max_length=body.max_tokens,
                         model_name='microsoft',
-                        num_return_sequences=settings.num_return_sequences
+                        num_return_sequences=settings.generate_num_return_sequences
                     )
                 )
             }

@@ -7,8 +7,8 @@ show_api = false
 debug = true
 
 [api]
-generate_retrun_num = 2 # 生成返回数量
-generate_translate = true # 是否启用生成翻译功能
+generate_num_return = 2 # 生成返回数量
+generate_num_return_sequences = true # 是否启用生成翻译功能
 
 [image_tools]
 enable = true # 是否启用图片处理功能
