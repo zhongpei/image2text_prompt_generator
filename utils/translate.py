@@ -72,16 +72,17 @@ def en2zh(text: str, max_new_tokens: int = 512) -> str:
 
 @torch.no_grad()
 def prompt_en2zh(text: str, max_new_tokens: int = 512) -> str:
-    text = fix_text(text)
+    def fix_prompt(text_input: str) -> str:
+        text_lines = text_input.split(",")
+        return ",".join([t.strip() for t in text_lines if len(t.strip()) > 0])
 
-    def fix_prompt(text: str) -> list:
-        text_lines = text.split(",")
-        return [t.strip() for t in text_lines if len(t.strip()) > 0]
+    text = fix_text(text)
+    text = fix_prompt(text)
 
     with torch.no_grad():
-        encoded = models.en2zh_tokenizer(fix_prompt(text), return_tensors="pt").to(models.zh2en_model.device)
+        encoded = models.en2zh_tokenizer([text], return_tensors="pt").to(models.zh2en_model.device)
         sequences = models.en2zh_model.generate(**encoded, max_new_tokens=max_new_tokens)
-        return ",".join(models.en2zh_tokenizer.batch_decode(sequences, skip_special_tokens=True))
+        return models.en2zh_tokenizer.batch_decode(sequences, skip_special_tokens=True)[0]
 
 
 if __name__ == "__main__":
