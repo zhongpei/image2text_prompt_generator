@@ -66,18 +66,18 @@ class Models(object):
 
     @classmethod
     def load_microsoft_model(cls):
-        prompter_model = AutoModelForCausalLM.from_pretrained(
+        model = AutoModelForCausalLM.from_pretrained(
             "microsoft/Promptist",
             trust_remote_code=True,
             resume_download=True,
             local_files_only=settings.translate.local_files_only,
-        ).eval()
+        ).to(device).eval()
         tokenizer = AutoTokenizer.from_pretrained(
             "gpt2",
         )
         tokenizer.pad_token = tokenizer.eos_token
         tokenizer.padding_side = "left"
-        return prompter_model, tokenizer
+        return model, tokenizer
 
 
 models = Models.instance()
@@ -143,7 +143,7 @@ def generate_prompt_microsoft(
     input_ids = models.microsoft_tokenizer(
         plain_text.strip() + " Rephrase:",
         return_tensors="pt",
-
+        device=models.microsoft_model.device,
     ).input_ids
 
     eos_id = models.microsoft_tokenizer.eos_token_id
