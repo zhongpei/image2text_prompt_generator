@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 from utils.translate import en2zh as translate_en2zh
 import os
@@ -34,7 +34,7 @@ def load_translated_tags(input_dir: str):
     return translate_tags(tags)
 
 
-def translate_tags(tags: List[str]) -> Dict[str, str]:
+def translate_tags(tags: List[str]) -> Tuple[List[str], List[str]]:
     """Translate a tag to a human readable string."""
     tags_zh = [translate_en2zh(tag) for tag in tags]
-    return dict(zip(tags, tags_zh))
+    return tags, tags_zh
