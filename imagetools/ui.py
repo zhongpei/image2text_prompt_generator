@@ -98,9 +98,9 @@ def image_tools_ui():
         with gr.Tab("rename(改名)"):
             rename_input_dir = gr.Textbox(label='input_dir')
             rename_postfix = gr.Textbox(label='文件后缀', value="txt")
-            rename_replace_source = gr.Textbox(label='rename_replace_source', value=r"\d+-\d+-")
-            rename_replace_target = gr.Textbox(label='rename_replace_targete', value="")
-            rename_btn = gr.Button("autocrop")
+            rename_replace_source = gr.Textbox(label='replace_source', value=r"\d+-\d+-")
+            rename_replace_target = gr.Textbox(label='replace_targete', value="")
+            rename_btn = gr.Button("rename")
 
         text_output = gr.Textbox(label="result")
         rename_btn.click(
