@@ -9,8 +9,9 @@ from sse_starlette.sse import EventSourceResponse
 
 from utils.chatglm import models as chatglm_model
 from utils.generator import generate_prompt
-from utils.translate import zh2en
+from utils.translate import zh2en, en2zh
 from utils.chatglm import chat2text
+from config import settings
 
 
 def torch_gc():
@@ -100,6 +101,12 @@ AI: 好的, 如果有什么需要, 随时告诉我"""
         torch_gc()
 
     async def eval_prompt():
+
+        def format_prompt(plist: list) -> str:
+            if settings.generate_translate:
+                return '\n\n'.join(["{}\n{}".format(p, en2zh(p)) for p in plist])
+            return '\n\n'.join(plist)
+
         def is_ascii(s):
             return all(ord(c) < 128 for c in s)
 
@@ -120,31 +127,42 @@ AI: 好的, 如果有什么需要, 随时告诉我"""
         prompt, q = get_question()
         if prompt.find('gpt2') != -1:
             yield json.dumps(
-                {"response": generate_prompt(
-                    plain_text=q,
-                    max_length=body.max_tokens,
-                    model_name="gpt2_650k",
-                    num_return_sequences=1
-                )
+                {
+                    "response": format_prompt(
+                        generate_prompt(
+                            plain_text=q,
+                            max_length=body.max_tokens,
+                            model_name="gpt2_650k",
+                            num_return_sequences=settings.num_return_sequences
+                        )
+                    )
                 }
             )
         elif prompt.find('mj') != -1:
             yield json.dumps(
-                {"response": generate_prompt(
-                    plain_text=q,
-                    max_length=body.max_tokens,
-                    model_name="mj",
-                    num_return_sequences=1
-                )}
+                {
+                    "response": format_prompt(
+                        generate_prompt(
+                            plain_text=q,
+                            max_length=body.max_tokens,
+                            model_name="mj",
+                            num_return_sequences=settings.num_return_sequences
+                        )
+                    )
+                }
             )
 
         yield json.dumps(
-            {"response": generate_prompt(
-                plain_text=q,
-                max_length=body.max_tokens,
-                model_name='microsoft',
-                num_return_sequences=2
-            ).replace("\n", "\n\n")}
+            {
+                "response": format_prompt(
+                    generate_prompt(
+                        plain_text=q,
+                        max_length=body.max_tokens,
+                        model_name='microsoft',
+                        num_return_sequences=settings.num_return_sequences
+                    )
+                )
+            }
         )
         torch_gc()
 

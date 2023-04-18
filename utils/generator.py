@@ -84,8 +84,6 @@ models = Models.instance()
 
 
 def rand_length(min_length: int = 60, max_length: int = 90) -> int:
-    seed = random.randint(100, 1000000)
-    set_seed(seed)
     if min_length > max_length:
         return max_length
 
@@ -168,7 +166,7 @@ def generate_prompt_microsoft(
     result = []
     for output_text in output_texts:
         result.append(output_text.replace(plain_text + " Rephrase:", "").strip())
-
+    result = list(set(result))
     return "\n".join(result)
 
 
