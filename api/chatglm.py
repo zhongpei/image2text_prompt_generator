@@ -139,7 +139,12 @@ AI: 好的, 如果有什么需要, 随时告诉我"""
             )
 
         yield json.dumps(
-            {"response": generate_prompt(plain_text=q, max_length=body.max_tokens, model_name='microsoft')}
+            {"response": generate_prompt(
+                plain_text=q,
+                max_length=body.max_tokens,
+                model_name='microsoft',
+                num_return_sequences=2
+            ).replace("\n", "\n\n")}
         )
         torch_gc()
 
