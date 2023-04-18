@@ -34,7 +34,7 @@ def load_translated_tags(input_dir: str):
     return translate_tags(tags)
 
 
-def translate_tags(tags: List[str]) -> List[List[str]]:
+def translate_tags(tags: List[str]) -> Dict[str, str]:
     """Translate a tag to a human readable string."""
-
-    return [[t, translate_en2zh(t)] for t in tags]
+    tags_zh = [translate_en2zh(tag) for tag in tags]
+    return dict(zip(tags, tags_zh))

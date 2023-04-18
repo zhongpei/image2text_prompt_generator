@@ -69,6 +69,14 @@ def rename_func(input_dir, postfix, source, target):
     return "rename success"
 
 
+def load_translated_tags_fn(input_dir: str) -> str:
+    tags = load_translated_tags(input_dir)
+    output = ""
+    for k, v in tags:
+        output += f"{k} : {v}\n"
+    return output
+
+
 def image_tools_ui():
     with gr.Tab("image tools"):
         with gr.Tab("remove background(扣背)"):
@@ -107,20 +115,14 @@ def image_tools_ui():
             tags_input_dir = gr.Textbox(label='input_dir')
             translate_tags_btn = gr.Button("load tags")
 
-            tags_output = gr.Dataframe(
-                headers=["tag", "zh"],
-                datatype=["str", "str"],
-                row_count=100,
-                col_count=(2, "fixed"),
-            )
+        text_output = gr.Textbox(label="result", lines=10, max_lines=100)
 
         translate_tags_btn.click(
             load_translated_tags,
             inputs=tags_input_dir,
-            outputs=tags_output,
+            outputs=text_output,
         )
 
-        text_output = gr.Textbox(label="result")
         rename_btn.click(
             rename_func,
             inputs=[rename_input_dir, rename_postfix, rename_replace_source, rename_replace_target],
