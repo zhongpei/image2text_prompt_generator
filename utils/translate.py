@@ -34,10 +34,10 @@ class Models(object):
             local_files_only=settings.translate.local_files_only,
         ).to(device).eval()
         tokenizer = AutoTokenizer.from_pretrained(
-            settings.translate.en2zh_model,
+            model_name,
             trust_remote_code=True,
             resume_download=True,
-            local_files_only=model_name,
+            local_files_only=settings.translate.local_files_only,
         )
         return model, tokenizer
 
