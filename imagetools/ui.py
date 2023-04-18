@@ -106,10 +106,12 @@ def image_tools_ui():
         with gr.Tab("tags(标签)"):
             tags_input_dir = gr.Textbox(label='input_dir')
             translate_tags_btn = gr.Button("load tags")
-            tags_output = gr.HighlightedText(
-                label="tags ",
-                combine_adjacent=True,
-                show_legend=True,
+
+            tags_output = gr.Dataframe(
+                headers=["tag", "zh"],
+                datatype=["str", "str"],
+                row_count=100,
+                col_count=(2, "fixed"),
             )
 
         translate_tags_btn.click(
