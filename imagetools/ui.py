@@ -4,7 +4,7 @@ import gradio as gr
 import os
 from .mesh_face import mesh_face, mesh_hand
 from config import settings
-
+from .tags import load_translated_tags
 
 def bz_autocrop(input_dir, output_dir, reject_dir, height=512, width=512, facePercent=50):
     if not os.path.exists(output_dir):
@@ -93,14 +93,25 @@ def image_tools_ui():
             reject_dir = gr.Textbox(label='reject_dir')
             height = gr.Slider(0, 1024, value=512, label='height', step=1)
             width = gr.Slider(0, 1024, value=512, label='width', step=1)
-            facePercent = gr.Slider(0, 100, value=50, label='facePercent', step=1)
+            facePercent = gr.Slider(0, 100, value=40, label='facePercent', step=1)
             autocrop_button = gr.Button("autocrop")
+
         with gr.Tab("rename(改名)"):
             rename_input_dir = gr.Textbox(label='input_dir')
             rename_postfix = gr.Textbox(label='文件后缀', value="txt")
             rename_replace_source = gr.Textbox(label='replace_source', value=r"\d+-\d+-")
             rename_replace_target = gr.Textbox(label='replace_targete', value="")
             rename_btn = gr.Button("rename")
+        with gr.Tab("tags(标签)"):
+            tags_input_dir = gr.Textbox(label='input_dir')
+            translate_tags_btn = gr.Button("load tags")
+            tags_output_label = gr.Label("tags")
+
+        translate_tags_btn.click(
+            load_translated_tags,
+            inputs=tags_input_dir,
+            outputs=tags_output_label,
+        )
 
         text_output = gr.Textbox(label="result")
         rename_btn.click(
