@@ -14,6 +14,8 @@ generate_translate = true # 是否启用生成翻译功能
 enable = true # 是否启用图片处理功能
 transparent_background_path = ".\\system\\python\\Scripts\\transparent-background.exe" # transparent-background.exe路径
 
+
+
 [generator]
 enable = true # 是否启用generator功能
 device = "cuda" # cpu mps cuda
@@ -24,6 +26,11 @@ gpt2_650k_model = "Ar4ikov/gpt2-650k-stable-diffusion-prompt-generator"
 gpt_neo_125m_model = "DrishtiSharma/StableDiffusion-Prompt-Generator-GPT-Neo-125M"
 mj_model = "succinctly/text2image-prompt-generator"
 local_files_only = false # 是否只使用本地模型
+
+[clip]
+default_model_name = "vit_l_14" # vit_h_14 vit_l_14
+default_model_type = "fast" # fast best classic negative
+
 
 [translate]
 enable = true # 是否启用翻译功能

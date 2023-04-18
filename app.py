@@ -120,7 +120,7 @@ def ui(enable_chat: bool = False):
                 output_img_prompter_zh = gr.Textbox(lines=6, label='优化的 Prompt(zh)')
                 with gr.Row():
                     img_exif_btn = gr.Button('EXIF')
-                    img_blip_btn = gr.Button('BLIP图片转描述')
+                    img_blip_btn = gr.Button('GIT图片转描述')
                     img_w14_btn = gr.Button('W14图片转描述')
                     img_clip_btn = gr.Button('CLIP图片转描述')
                     img_prompter_btn = gr.Button('优化Prompt')
@@ -141,11 +141,19 @@ def ui(enable_chat: bool = False):
                     prompt_max_length = gr.Slider(1, 512, 200, label='max_length', step=1)
                     prompt_num_return_sequences = gr.Slider(1, 30, 8, label='num_return_sequences', step=1)
 
-                with gr.Accordion('BLIP参数', open=True):
-                    blip_max_length = gr.Slider(1, 512, 100, label='max_length', step=1)
+                with gr.Accordion('GIT参数', open=True):
+                    blip_max_length = gr.Slider(1, 512, 200, label='max_length', step=1)
                 with gr.Accordion('CLIP参数', open=True):
-                    clip_mode_type = gr.Radio(['best', 'classic', 'fast', 'negative'], value='best', label='mode_type')
-                    clip_model_name = gr.Radio(['vit_h_14', 'vit_l_14', ], value='vit_h_14', label='model_name')
+                    clip_mode_type = gr.Radio(
+                        ['best', 'classic', 'fast', 'negative'],
+                        value=settings.clip.default_model_type,
+                        label='mode_type'
+                    )
+                    clip_model_name = gr.Radio(
+                        ['vit_h_14', 'vit_l_14', ],
+                        value=settings.clip.default_model_name,
+                        label='model_name'
+                    )
                 with gr.Accordion('WD14参数', open=True):
                     image2text_model = gr.Radio(
                         [
