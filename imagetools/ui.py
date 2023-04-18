@@ -6,6 +6,7 @@ from .mesh_face import mesh_face, mesh_hand
 from config import settings
 from .tags import load_translated_tags
 
+
 def bz_autocrop(input_dir, output_dir, reject_dir, height=512, width=512, facePercent=50):
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
@@ -105,12 +106,16 @@ def image_tools_ui():
         with gr.Tab("tags(标签)"):
             tags_input_dir = gr.Textbox(label='input_dir')
             translate_tags_btn = gr.Button("load tags")
-            tags_output_label = gr.Label("tags")
+            tags_output = gr.HighlightedText(
+                label="tags ",
+                combine_adjacent=True,
+                show_legend=True,
+            )
 
         translate_tags_btn.click(
             load_translated_tags,
             inputs=tags_input_dir,
-            outputs=tags_output_label,
+            outputs=tags_output,
         )
 
         text_output = gr.Textbox(label="result")
