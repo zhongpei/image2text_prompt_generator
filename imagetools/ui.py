@@ -53,7 +53,7 @@ def remove_background_func(input_dir, output_dir, background_type, background_mo
         image_path=input_dir,
         output_path=output_dir,
         background_type=background_type,
-        ckpt=settings.image_tools.transparent_background_model_path,
+        ckpt=settings.image_tools.get('transparent_background_model_path'),
         fast=True if background_mode == "fast" else False,
         jit=False,
     )
