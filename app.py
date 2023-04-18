@@ -5,7 +5,7 @@ from utils.chatglm import chat2text
 from utils.exif import get_image_info
 from utils.generator import generate_prompt
 from utils.image2text import git_image2text, w14_image2text, clip_image2text
-from utils.translate import en2zh as translate_en2zh
+from utils.translate import prompt_en2zh as translate_en2zh
 from utils.translate import zh2en as translate_zh2en
 from ui.chat import chatglm_ui
 import click
