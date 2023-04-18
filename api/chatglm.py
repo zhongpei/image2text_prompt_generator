@@ -102,8 +102,8 @@ AI: 好的, 如果有什么需要, 随时告诉我"""
 
     async def eval_prompt():
 
-        def format_prompt(text: str) -> str:
-            plist = text.split("\n")
+        def format_prompt(plist: list) -> str:
+
             if settings.api.generate_translate:
                 return '\n\n'.join(["{}\n{}".format(p, en2zh(p)) for p in plist])
             return '\n\n'.join(plist)

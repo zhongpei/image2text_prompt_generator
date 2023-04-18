@@ -17,7 +17,7 @@ transparent_background_path = ".\\system\\python\\Scripts\\transparent-backgroun
 [generator]
 enable = true # 是否启用generator功能
 device = "cuda" # cpu mps cuda
-
+fix_sd_prompt = true # 是否修复sd prompt
 # models
 microsoft_model = "microsoft/Promptist"
 gpt2_650k_model = "Ar4ikov/gpt2-650k-stable-diffusion-prompt-generator"

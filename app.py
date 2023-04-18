@@ -5,7 +5,7 @@ from utils.chatglm import chat2text
 from utils.exif import get_image_info
 from utils.generator import generate_prompt
 from utils.image2text import git_image2text, w14_image2text, clip_image2text
-from utils.translate import prompt_en2zh as translate_en2zh
+from utils.translate import en2zh as translate_en2zh
 from utils.translate import zh2en as translate_zh2en
 from ui.chat import chatglm_ui
 import click
@@ -29,7 +29,7 @@ def text_generate_prompter(
         num_return_sequences=prompt_num_return_sequences
     )
     empty_cache()
-    return result, "\n".join(translate_en2zh(line) for line in result.split("\n") if len(line) > 0)
+    return "\n\n".join(result), "\n\n".join(translate_en2zh(line) for line in result.split("\n") if len(line) > 0)
 
 
 def image_generate_prompter(
@@ -48,13 +48,13 @@ def image_generate_prompter(
         max_length=prompt_max_length,
         num_return_sequences=prompt_num_return_sequences
     )
-    prompter_list = ["{},{}".format(line.strip(), w14_text.strip()) for line in result.split("\n") if len(line) > 0]
+    prompter_list = ["{},{}".format(line.strip(), w14_text.strip()) for line in result if len(line) > 0]
     prompter_zh_list = [
         "{},{}".format(translate_en2zh(line.strip()), translate_en2zh(w14_text.strip())) for line in
-        result.split("\n") if len(line) > 0
+        result if len(line) > 0
     ]
     empty_cache()
-    return "\n".join(prompter_list), "\n".join(prompter_zh_list)
+    return "\n\n".join(prompter_list), "\n\n".join(prompter_zh_list)
 
 
 def translate_input(text: str, chatglm_text: str) -> str:
