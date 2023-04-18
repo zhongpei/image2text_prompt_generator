@@ -12,8 +12,8 @@ generate_translate = true # 是否启用生成翻译功能
 
 [image_tools]
 enable = true # 是否启用图片处理功能
-transparent_background_path = ".\\system\\python\\Scripts\\transparent-background.exe" # transparent-background.exe路径
 
+transparent_background_model_path = "./models/transparent-background/ckpt_base.pth" # transparent-background模型路径
 
 
 [generator]

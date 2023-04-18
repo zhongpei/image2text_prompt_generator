@@ -47,16 +47,16 @@ def bz_mesh(input_dir, output_dir, max_faces=1, thickness=10, circle_radius=10, 
     return result
 
 
-def remove_background_func(input_dir, output_dir, background_type):
-    if os.path.exists(settings.image_tools.transparent_background_path):
-        bin_path = settings.image_tools.transparent_background_path
-    elif os.path.exists(os.path.join("venv", "Scripts", "transparent-background.exe")):
-        bin_path = os.path.join("venv", "Scripts", "transparent-background.exe")
-    elif os.path.exists(os.path.join("venv", "bin", "transparent-background")):
-        bin_path = os.path.join("venv", "bin", "transparent-background")
-    else:
-        bin_path = "transparent-background"
-    remove_background(input_dir, output_dir, background_type, bin_path=bin_path)
+def remove_background_func(input_dir, output_dir, background_type, background_mode):
+
+    remove_background(
+        image_path=input_dir,
+        output_path=output_dir,
+        background_type=background_type,
+        ckpt=settings.image_tools.transparent_background_model_path,
+        fast=True if background_mode == "fast" else False,
+        jit=False,
+    )
 
 
 def image_tools_ui():
@@ -64,7 +64,8 @@ def image_tools_ui():
         with gr.Tab("remove background(扣背)"):
             remove_input_dir = gr.Textbox(label='input_dir')
             remove_output_dir = gr.Textbox(label='output_dir')
-            background_type = gr.Radio(choices=["white", "green"], label="background_type", value="white")
+            background_type = gr.Radio(choices=["white", "green", "rgba"], label="background_type", value="white")
+            background_mode = gr.Radio(choices=["fast", "base", ], label="background_mode", value="base")
             remove_background_button = gr.Button("remove")
 
         with gr.Tab("mesh face(糊脸)"):
@@ -94,7 +95,7 @@ def image_tools_ui():
 
         remove_background_button.click(
             remove_background_func,
-            inputs=[remove_input_dir, remove_output_dir, background_type],
+            inputs=[remove_input_dir, remove_output_dir, background_type, background_mode],
             outputs=text_output
 
         )
