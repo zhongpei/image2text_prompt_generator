@@ -134,12 +134,18 @@ def ui(enable_chat: bool = False):
                             'gpt2_650k',
                             'gpt_neo_125m',
                         ],
-                        value='gpt2_650k',
+                        value=settings.generator.default_model_name,
                         label='model_name'
                     )
                     prompt_min_length = gr.Slider(1, 512, 100, label='min_length', step=1)
                     prompt_max_length = gr.Slider(1, 512, 200, label='max_length', step=1)
-                    prompt_num_return_sequences = gr.Slider(1, 30, 8, label='num_return_sequences', step=1)
+                    prompt_num_return_sequences = gr.Slider(
+                        1,
+                        30,
+                        value=settings.generator.default_num_return_sequences,
+                        label='num_return_sequences',
+                        step=1
+                    )
 
                 with gr.Accordion('GIT参数', open=True):
                     blip_max_length = gr.Slider(1, 512, 200, label='max_length', step=1)

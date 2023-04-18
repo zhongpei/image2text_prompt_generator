@@ -27,6 +27,9 @@ gpt_neo_125m_model = "DrishtiSharma/StableDiffusion-Prompt-Generator-GPT-Neo-125
 mj_model = "succinctly/text2image-prompt-generator"
 local_files_only = false # 是否只使用本地模型
 
+default_model_name = "microsoft" # microsoft gpt2_650k gpt_neo_125m mj
+default_num_return_sequences = 4 # 生成返回数量
+
 [clip]
 default_model_name = "vit_l_14" # vit_h_14 vit_l_14
 default_model_type = "fast" # fast best classic negative
