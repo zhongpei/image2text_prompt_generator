@@ -48,7 +48,6 @@ def bz_mesh(input_dir, output_dir, max_faces=1, thickness=10, circle_radius=10, 
 
 
 def remove_background_func(input_dir, output_dir, background_type, background_mode):
-
     remove_background(
         image_path=input_dir,
         output_path=output_dir,
@@ -57,6 +56,16 @@ def remove_background_func(input_dir, output_dir, background_type, background_mo
         fast=True if background_mode == "fast" else False,
         jit=False,
     )
+
+
+def rename_func(input_dir, postfix, source, target):
+    import re
+    files = os.listdir(input_dir)
+    for file in files:
+        if file.endswith(postfix):
+            new_file = re.sub(source, target, file)
+            os.rename(os.path.join(input_dir, file), os.path.join(input_dir, new_file))
+    return "rename success"
 
 
 def image_tools_ui():
@@ -86,7 +95,19 @@ def image_tools_ui():
             width = gr.Slider(0, 1024, value=512, label='width', step=1)
             facePercent = gr.Slider(0, 100, value=50, label='facePercent', step=1)
             autocrop_button = gr.Button("autocrop")
+        with gr.Tab("rename(改名)"):
+            rename_input_dir = gr.Textbox(label='input_dir')
+            rename_postfix = gr.Textbox(label='文件后缀', value="txt")
+            rename_replace_source = gr.Textbox(label='rename_replace_source', value=r"\d+-\d+-")
+            rename_replace_target = gr.Textbox(label='rename_replace_targete', value="")
+            rename_btn = gr.Button("autocrop")
+
         text_output = gr.Textbox(label="result")
+        rename_btn.click(
+            rename_func,
+            inputs=[rename_input_dir, rename_postfix, rename_replace_source, rename_replace_target],
+            outputs=text_output,
+        )
         mesh_face_button.click(
             bz_mesh,
             inputs=[mash_input_dir, mash_output_dir, max_faces, thickness, circle_radius, mesh_type],
