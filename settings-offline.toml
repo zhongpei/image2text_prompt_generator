@@ -1,7 +1,7 @@
 [server]
 port = 7868 # 端口
 host = '127.0.0.1' # 局域网访问需要改成 "0.0.0.0"
-enable_queue = false # chat功能需要开启，如错误，需要关闭代理
+enable_queue = true # chat功能需要开启，如错误，需要关闭代理
 queue_size = 10
 show_api = false
 debug = true
@@ -21,11 +21,11 @@ enable = true # 是否启用generator功能
 device = "cuda" # cpu mps cuda
 fix_sd_prompt = true # 是否修复sd prompt
 # models
-microsoft_model = "microsoft/Promptist"
-gpt2_650k_model = "Ar4ikov/gpt2-650k-stable-diffusion-prompt-generator"
-gpt_neo_125m_model = "DrishtiSharma/StableDiffusion-Prompt-Generator-GPT-Neo-125M"
-mj_model = "succinctly/text2image-prompt-generator"
-local_files_only = false # 是否只使用本地模型
+microsoft_model = "./Promptist"
+gpt2_650k_model = "./gpt2-650k-stable-diffusion-prompt-generator"
+gpt_neo_125m_model = "./StableDiffusion-Prompt-Generator-GPT-Neo-125M"
+mj_model = "./text2image-prompt-generator"
+local_files_only = true # 是否只使用本地模型
 
 default_model_name = "microsoft" # microsoft gpt2_650k gpt_neo_125m mj
 default_num_return_sequences = 4 # 生成返回数量
@@ -38,20 +38,13 @@ default_model_type = "fast" # fast best classic negative
 [translate]
 enable = true # 是否启用翻译功能
 device = "cuda" # cpu mps cuda
-local_files_only = false # 是否只使用本地模型
-
-zh2en_model = "Helsinki-NLP/opus-mt-zh-en"
-en2zh_model = "Helsinki-NLP/opus-mt-en-zh"
-
-# zh2en_model = "./models/opus-mt-zh-en"
-# en2zh_model = "./models/opus-mt-en-zh"
+local_files_only = true # 是否只使用本地模型
+zh2en_model = "./models/opus-mt-zh-en"
+en2zh_model = "./models/opus-mt-en-zh"
 
 [chatglm]
-model = "THUDM/chatglm-6b-int4" # THUDM/chatglm-6b-int4 THUDM/chatglm-6b-int8 THUDM/chatglm-6b
-
 # 本地模型 https://github.com/THUDM/ChatGLM-6B#从本地加载模型
-# model = "./models/chatglm-6b-int4"
-
+model = ".\\models\\chatglm-6b-int4" # ./chatglm-6b-int4 ./chatglm-6b-int8 ./chatglm-6b
 device = "cuda" # cpu mps cuda
-enable_chat = false # 是否启用聊天功能
-local_files_only = false # 是否只使用本地模型
+enable_chat = true # 是否启用聊天功能
+local_files_only = true # 是否只使用本地模型

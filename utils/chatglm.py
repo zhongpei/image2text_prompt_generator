@@ -91,10 +91,13 @@ class ChatGLM(BasePredictor):
             resume_download=True,
             local_files_only=settings.chatglm.local_files_only,
         )
-        if device == 'cuda' or "mps":
+        if device == 'cuda' or device ==  "mps":
+            print("\n\n\n\ncuda\n\n\n\n")
             model = model.half().to(device)
         else:
-            model = model.float().to(device)
+            print("\n\n\n\ncpu\n\n\n\n")
+            model = model.to(device).float()
+            #model = model.quantize(bits=4, kernel_file=kernel_file)
         model = model.eval()
         self.model = model
         self.model_name = model_name

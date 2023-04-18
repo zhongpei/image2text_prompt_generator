@@ -28,7 +28,8 @@ def text_generate_prompter(
         max_length=prompt_max_length,
         num_return_sequences=prompt_num_return_sequences
     )
-    return result, "\n".join(translate_en2zh(line) for line in result.split("\n") if len(line) > 0)
+    empty_cache()
+    return "\n\n".join(result), "\n\n".join(translate_en2zh(line) for line in result if len(line) > 0)
 
 
 def image_generate_prompter(
@@ -47,12 +48,13 @@ def image_generate_prompter(
         max_length=prompt_max_length,
         num_return_sequences=prompt_num_return_sequences
     )
-    prompter_list = ["{},{}".format(line.strip(), w14_text.strip()) for line in result.split("\n") if len(line) > 0]
+    prompter_list = ["{},{}".format(line.strip(), w14_text.strip()) for line in result if len(line) > 0]
     prompter_zh_list = [
         "{},{}".format(translate_en2zh(line.strip()), translate_en2zh(w14_text.strip())) for line in
-        result.split("\n") if len(line) > 0
+        result if len(line) > 0
     ]
-    return "\n".join(prompter_list), "\n".join(prompter_zh_list)
+    empty_cache()
+    return "\n\n".join(prompter_list), "\n\n".join(prompter_zh_list)
 
 
 def translate_input(text: str, chatglm_text: str) -> str:
@@ -118,7 +120,7 @@ def ui(enable_chat: bool = False):
                 output_img_prompter_zh = gr.Textbox(lines=6, label='优化的 Prompt(zh)')
                 with gr.Row():
                     img_exif_btn = gr.Button('EXIF')
-                    img_blip_btn = gr.Button('BLIP图片转描述')
+                    img_blip_btn = gr.Button('GIT图片转描述')
                     img_w14_btn = gr.Button('W14图片转描述')
                     img_clip_btn = gr.Button('CLIP图片转描述')
                     img_prompter_btn = gr.Button('优化Prompt')
@@ -132,18 +134,32 @@ def ui(enable_chat: bool = False):
                             'gpt2_650k',
                             'gpt_neo_125m',
                         ],
-                        value='gpt2_650k',
+                        value=settings.generator.default_model_name,
                         label='model_name'
                     )
                     prompt_min_length = gr.Slider(1, 512, 100, label='min_length', step=1)
                     prompt_max_length = gr.Slider(1, 512, 200, label='max_length', step=1)
-                    prompt_num_return_sequences = gr.Slider(1, 30, 8, label='num_return_sequences', step=1)
+                    prompt_num_return_sequences = gr.Slider(
+                        1,
+                        30,
+                        value=settings.generator.default_num_return_sequences,
+                        label='num_return_sequences',
+                        step=1
+                    )
 
-                with gr.Accordion('BLIP参数', open=True):
-                    blip_max_length = gr.Slider(1, 512, 100, label='max_length', step=1)
+                with gr.Accordion('GIT参数', open=True):
+                    blip_max_length = gr.Slider(1, 512, 200, label='max_length', step=1)
                 with gr.Accordion('CLIP参数', open=True):
-                    clip_mode_type = gr.Radio(['best', 'classic', 'fast', 'negative'], value='best', label='mode_type')
-                    clip_model_name = gr.Radio(['vit_h_14', 'vit_l_14', ], value='vit_h_14', label='model_name')
+                    clip_mode_type = gr.Radio(
+                        ['best', 'classic', 'fast', 'negative'],
+                        value=settings.clip.default_model_type,
+                        label='mode_type'
+                    )
+                    clip_model_name = gr.Radio(
+                        ['vit_h_14', 'vit_l_14', ],
+                        value=settings.clip.default_model_name,
+                        label='model_name'
+                    )
                 with gr.Accordion('WD14参数', open=True):
                     image2text_model = gr.Radio(
                         [

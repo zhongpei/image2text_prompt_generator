@@ -4,9 +4,13 @@ from transformers import pipeline, set_seed
 import random
 import re
 from .singleton import Singleton
+from config import settings
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-device_pipe = 0 if torch.cuda.is_available() else -1
+device_id = 0 if torch.cuda.is_available() else -1
+if settings.generator.device == "cpu":
+    device = "cpu"
+    device_id = -1
 
 
 @Singleton
@@ -25,16 +29,19 @@ class Models(object):
         if item in ('gpt2_650k_pipe',):
             self.gpt2_650k_pipe = self.load_gpt2_650k_pipe()
 
-        if item in ('gpt_neo_125m',):
-            self.gpt2_650k_pipe = self.load_gpt_neo_125m()
+        if item in ('gpt_neo_125m_pipe',):
+            self.gpt_neo_125m_pipe = self.load_gpt_neo_125m()
         return getattr(self, item)
 
     @classmethod
     def load_gpt_neo_125m(cls):
         return pipeline(
             'text-generation',
-            model='DrishtiSharma/StableDiffusion-Prompt-Generator-GPT-Neo-125M',
-            device=device_pipe
+            model=settings.generator.gpt_neo_125m_model,
+            tokenizer=settings.generator.gpt_neo_125m_model,
+            device=device_id,
+            trust_remote_code=True,
+
         )
 
     @classmethod
@@ -42,7 +49,9 @@ class Models(object):
         return pipeline(
             'text-generation',
             model='Ar4ikov/gpt2-650k-stable-diffusion-prompt-generator',
-            device=device_pipe
+            device=device_id,
+            trust_remote_code=True,
+
         )
 
     @classmethod
@@ -50,16 +59,25 @@ class Models(object):
         return pipeline(
             'text-generation',
             model='succinctly/text2image-prompt-generator',
-            device=device_pipe
+            device=device_id,
+            trust_remote_code=True,
+
         )
 
     @classmethod
     def load_microsoft_model(cls):
-        prompter_model = AutoModelForCausalLM.from_pretrained("microsoft/Promptist")
-        tokenizer = AutoTokenizer.from_pretrained("gpt2")
+        model = AutoModelForCausalLM.from_pretrained(
+            "microsoft/Promptist",
+            trust_remote_code=True,
+            resume_download=True,
+            local_files_only=settings.translate.local_files_only,
+        ).to(device).eval()
+        tokenizer = AutoTokenizer.from_pretrained(
+            "gpt2",
+        )
         tokenizer.pad_token = tokenizer.eos_token
         tokenizer.padding_side = "left"
-        return prompter_model, tokenizer
+        return model, tokenizer
 
 
 models = Models.instance()
@@ -72,7 +90,8 @@ def rand_length(min_length: int = 60, max_length: int = 90) -> int:
     return random.randint(min_length, max_length)
 
 
-def generate_prompt(
+@torch.no_grad()
+def _generate_prompt(
         plain_text,
         min_length=60,
         max_length=90,
@@ -89,11 +108,11 @@ def generate_prompt(
         )
     elif model_name == 'gpt_neo_125m':
         return generate_prompt_pipe(
-            models.gpt_neo_125m,
+            models.gpt_neo_125m_pipe,
             prompt=plain_text,
             min_length=min_length,
             max_length=max_length,
-            num_return_sequences=num_return_sequences,
+            num_return_sequences=1,
         )
     elif model_name == 'mj':
         return generate_prompt_mj(
@@ -113,6 +132,35 @@ def generate_prompt(
 
 
 @torch.no_grad()
+def generate_prompt(
+        plain_text,
+        min_length=60,
+        max_length=90,
+        num_return_sequences=8,
+        model_name='microsoft',
+):
+    result = _generate_prompt(
+        plain_text,
+        min_length=min_length,
+        max_length=max_length,
+        num_return_sequences=num_return_sequences,
+        model_name=model_name
+    )
+    if settings.generator.fix_sd_prompt:
+        return [fix_sd_prompt(x) for x in result]
+    return result
+
+
+def fix_sd_prompt(text_input: str) -> str:
+    text_input = re.sub(r",+", ",", text_input)
+    text_input = re.sub(r"\.\.+", ".", text_input)
+    text_input = re.sub(r"!!+", ".", text_input)
+    text_input = re.sub(r"\|", ",", text_input)
+    text_input = re.sub(r"<|>|\(|\)", "", text_input)
+    return text_input
+
+
+@torch.no_grad()
 def generate_prompt_microsoft(
         plain_text,
         min_length=60,
@@ -120,8 +168,12 @@ def generate_prompt_microsoft(
         num_beams=8,
         num_return_sequences=8,
         length_penalty=-1.0
-) -> str:
-    input_ids = models.microsoft_tokenizer(plain_text.strip() + " Rephrase:", return_tensors="pt").input_ids
+) -> list:
+    input_ids = models.microsoft_tokenizer(
+        plain_text.strip() + " Rephrase:",
+        return_tensors="pt",
+    ).to(device).input_ids
+
     eos_id = models.microsoft_tokenizer.eos_token_id
 
     outputs = models.microsoft_model.generate(
@@ -132,18 +184,27 @@ def generate_prompt_microsoft(
         num_return_sequences=num_return_sequences,
         eos_token_id=eos_id,
         pad_token_id=eos_id,
-        length_penalty=length_penalty
+        length_penalty=length_penalty,
     )
-    output_texts = models.microsoft_tokenizer.batch_decode(outputs, skip_special_tokens=True)
+    output_texts = models.microsoft_tokenizer.batch_decode(
+        outputs,
+        skip_special_tokens=True,
+
+    )
     result = []
     for output_text in output_texts:
         result.append(output_text.replace(plain_text + " Rephrase:", "").strip())
+    result = list(set(result))
 
-    return "\n".join(result)
+    if settings.generator.fix_sd_prompt:
+        return [fix_sd_prompt(x) for x in result]
+
+    return result
 
 
 @torch.no_grad()
-def generate_prompt_pipe(pipe, prompt: str, min_length=60, max_length: int = 255, num_return_sequences: int = 8) -> str:
+def generate_prompt_pipe(pipe, prompt: str, min_length=60, max_length: int = 255,
+                         num_return_sequences: int = 8) -> list:
     def get_valid_prompt(text: str) -> str:
         dot_split = text.split('.')[0]
         n_split = text.split('\n')[0]
@@ -162,7 +223,8 @@ def generate_prompt_pipe(pipe, prompt: str, min_length=60, max_length: int = 255
             pipe(
                 prompt,
                 max_new_tokens=rand_length(min_length, max_length),
-                num_return_sequences=num_return_sequences
+                num_return_sequences=num_return_sequences,
+
             )
         ]
         output = list(set(output))
@@ -170,32 +232,32 @@ def generate_prompt_pipe(pipe, prompt: str, min_length=60, max_length: int = 255
             break
 
     # valid_prompt = get_valid_prompt(models.gpt2_650k_pipe(prompt, max_length=max_length)[0]['generated_text'])
-    return "\n".join([o.strip() for o in output])
+    return [o.strip() for o in output if len(o.strip()) > 0]
 
 
 @torch.no_grad()
-def generate_prompt_mj(text_in_english: str, num_return_sequences: int = 8, min_length=60, max_length=90) -> str:
+def generate_prompt_mj(text_in_english: str, num_return_sequences: int = 8, min_length=60, max_length=90) -> list:
     seed = random.randint(100, 1000000)
     set_seed(seed)
 
-    result = ""
+    result_list = []
     for _ in range(6):
         sequences = models.mj_pipe(
             text_in_english,
             max_new_tokens=rand_length(min_length, max_length),
             num_return_sequences=num_return_sequences
         )
-        list = []
+
         for sequence in sequences:
             line = sequence['generated_text'].strip()
             if line != text_in_english and len(line) > (len(text_in_english) + 4) and line.endswith(
                     (':', '-', '—')) is False:
-                list.append(line)
-
-        result = "\n".join(list)
-        result = re.sub('[^ ]+\.[^ ]+', '', result)
-        result = result.replace('<', '').replace('>', '')
-        if result != '':
+                result_list.append(line)
+        if len(result_list) >= num_return_sequences:
             break
-    return result
+    result_list = list(set(result_list))
+    result_list = [re.sub(r'[^ ]+\.[^ ]+', '', r) for r in result_list if len(r) > 0]
+    result_list = [r.replace('<', '').replace('>', '') for r in result_list if len(r) > 0]
+
+    return result_list
     # return result, "\n".join(translate_en2zh(line) for line in result.split("\n") if len(line) > 0)
