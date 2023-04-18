@@ -69,6 +69,11 @@ def rename_func(input_dir, postfix, source, target):
     return "rename success"
 
 
+def load_translated_tags_fn(input_dir: str):
+    tags, zh_tags = load_translated_tags(input_dir)
+    return "\n".join(tags), "\n".join(zh_tags)
+
+
 def image_tools_ui():
     with gr.Tab("image tools"):
         with gr.Tab("remove background(扣背)"):
@@ -107,13 +112,13 @@ def image_tools_ui():
             tags_input_dir = gr.Textbox(label='input_dir')
             translate_tags_btn = gr.Button("load tags")
             with gr.Row():
-                tags_label = gr.Label("tags")
-                tags_zh_label = gr.Label("tags_zh")
+                tags_label = gr.Textbox("tags")
+                tags_zh_label = gr.Textbox("tags_zh")
 
         text_output = gr.Textbox(label="result", lines=1, max_lines=100)
 
         translate_tags_btn.click(
-            load_translated_tags,
+            load_translated_tags_fn,
             inputs=tags_input_dir,
             outputs=[tags_label, tags_zh_label]
         )
