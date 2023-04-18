@@ -73,8 +73,13 @@ def en2zh(text: str, max_new_tokens: int = 512) -> str:
 @torch.no_grad()
 def prompt_en2zh(text: str, max_new_tokens: int = 512) -> str:
     def fix_prompt(text_input: str) -> str:
+        text_input = re.sub(r",+", ",", text_input)
+
         text_lines = text_input.split(",")
-        return ",".join([t.strip() for t in text_lines if len(t.strip()) > 0])
+        text_input = ",".join([t.strip() for t in text_lines if len(t.strip()) > 0])
+        text_lines = text_input.split(".")
+        text_input = ".".join([t.strip() for t in text_lines if len(t.strip()) > 0])
+        return text_input
 
     text = fix_text(text)
     text = fix_prompt(text)
