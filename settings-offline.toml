@@ -1,7 +1,7 @@
 [server]
 port = 7868 # 端口
 host = '127.0.0.1' # 局域网访问需要改成 "0.0.0.0"
-enable_queue = false # chat功能需要开启，如错误，需要关闭代理
+enable_queue = true # chat功能需要开启，如错误，需要关闭代理
 queue_size = 10
 show_api = false
 debug = true
@@ -44,7 +44,7 @@ en2zh_model = "./models/opus-mt-en-zh"
 
 [chatglm]
 # 本地模型 https://github.com/THUDM/ChatGLM-6B#从本地加载模型
-model = "./models/chatglm-6b-int4" # ./chatglm-6b-int4 ./chatglm-6b-int8 ./chatglm-6b
+model = ".\\models\\chatglm-6b-int4" # ./chatglm-6b-int4 ./chatglm-6b-int8 ./chatglm-6b
 device = "cuda" # cpu mps cuda
-enable_chat = false # 是否启用聊天功能
+enable_chat = true # 是否启用聊天功能
 local_files_only = true # 是否只使用本地模型
