@@ -64,7 +64,7 @@ class TranslateLocalCache(object):
         for cache_file in os.listdir(cache_dir):
             if not cache_file.endswith(".txt"):
                 continue
-            with open(os.path.join(cache_dir, cache_file), "r") as f:
+            with open(os.path.join(cache_dir, cache_file), "r", encoding='utf8') as f:
                 lines = f.readlines()
                 print(f"Loading cache from {cache_file} count: {len(lines)}")
                 for line in lines:
