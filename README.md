@@ -38,14 +38,30 @@ Prompt 生成器
 
 ## 一键包
 
-百度云盘下载
+### 百度云盘下载
+
+ChatGLM 模型需要单独下载(下载int4版本)，放到程序目录 models 下面
 
 * [v1.0](https://pan.baidu.com/s/1pKtpPmiuliX7rf0z-5HY_w?pwd=79sk) 提取码: 79sk
 * [v1.5](https://pan.baidu.com/s/1vMzDGbtTO0-CD7wk-4GrcQ?pwd=eb33) 提取码: eb33
 * [开发版](https://pan.baidu.com/s/1w1D3PdJjn3iOQFap4a-hWg?pwd=x964) 提取码: x964
 * [ChatGLM模型](https://pan.baidu.com/s/1_Hs-MRjSxg0gaIRDaUTD8Q?pwd=6ti4) 提取码: 6ti4
-* 运行webui.bat
-* 运行webui_chat.bat,提供chatGLM聊天界面
+
+### 更新程序
+```bash
+cd image2text_prompt_generator
+git pull
+```
+
+或github打包下载zip，覆盖程序目录
+
+
+### 启动程序 
+
+* webui.bat 主要功能
+* webui_chat.bat  主要功能+chatGLM聊天界面
+* webui_imagetools.bat 图片处理工具
+* webui_offline.bat 使用离线模式，需要修改settings.offline.toml里面的模型路径
 * 第一次运行会自动下载模型，默认下载在用户目录.cache/huggingface
 
 ## 使用方式
@@ -158,6 +174,7 @@ python app.py
 
 ## 更新信息
 
+* v1.6  翻译本地标签缓存
 * v1.5  增加chatGLM模型
 * v1.0  增加webui
 
@@ -178,4 +195,10 @@ python app.py
   * [X] 抠背景
   * [X] 抠人物大头
   * [X] 遮挡人物脸部
-* [ ] clip + w14 混合批量图片标签
+  * [X] 批量修改文件名
+  * [X] 加载目录标签并翻译
+* [X] 翻译
+  * WD14 tags 翻译本地缓存
+* [ ] 标签
+  * [ ] clip + w14 混合批量图片标签
+
