@@ -87,7 +87,7 @@ def send2open_prompt(text: str):
     url = settings.others.open_prompt_url
     data = urllib.parse.quote(data)
 
-    webbrowser.open(f'{url}?prompts={data}')
+    webbrowser.open(f'{url}?prompts={data}',new=2)
 
 
 def ui(enable_chat: bool = False):
@@ -202,7 +202,7 @@ def ui(enable_chat: bool = False):
             choice_prompt = gr.Textbox("选中的prompt")
             with gr.Row():
                 send2open_prompt_btn = gr.Button('发送到OpenPromptStudio')
-        
+
         send2open_prompt_btn.click(
             fn=send2open_prompt,
             inputs=choice_prompt,
