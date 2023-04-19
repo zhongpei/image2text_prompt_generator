@@ -1,0 +1,4 @@
+含文字=text
+含签名=signature
+含水印=watermark
+含用户名=username

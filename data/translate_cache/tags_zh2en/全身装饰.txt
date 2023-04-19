@@ -1,0 +1,9 @@
+创可贴=bandaid
+手杖=cane
+锁链=chains
+手枷=cuffs
+警用手铐=handcuffs
+宽手铐=shackles
+纹身=tattoo
+莎笼/沙滩浴巾=sarong
+纽扣=buttons

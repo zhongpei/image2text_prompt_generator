@@ -1,0 +1,5 @@
+摩天大楼=skyscrapers
+霓虹灯=neon lights
+城市风景=cityscape
+栏杆=fences
+建筑=building
