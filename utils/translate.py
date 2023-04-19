@@ -72,7 +72,7 @@ class TranslateLocalCache(object):
         cache = {}
 
         for cache_file in cls.get_cache_fns(cache_dir):
-            with open(os.path.join(cache_dir, cache_file), "r", encoding='utf8') as f:
+            with open(cache_file, "r", encoding='utf8') as f:
                 lines = f.readlines()
                 print(f"Loading cache from {cache_file} count: {len(lines)}")
                 for line in lines:
