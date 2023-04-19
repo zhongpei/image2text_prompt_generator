@@ -23,20 +23,22 @@ def get_files(tags_dir):
 
 
 def parse_files(fns):
+    if not os.path.exists("./translate_cache"):
+        os.mkdir("./translate_cache")
+    if not os.path.exists(os.path.join("./translate_cache", "tags")):
+        os.mkdir(os.path.join("./translate_cache", "tags"))
+
+    if not os.path.exists(os.path.join("./translate_cache", "tags_zh2en")):
+        os.mkdir(os.path.join("./translate_cache", "tags_zh2en"))
+    all_tags_fn = open(os.path.join('./translate_cache', 'zh-CN.txt'), 'w+', encoding='utf8')
     for fn in fns:
         stream = open(fn, 'r')
         data = load(stream, Loader=Loader)
         tag_type, tags = parse_tag(data)
 
-        if not os.path.exists("./translate_cache"):
-            os.mkdir("./translate_cache")
-        if not os.path.exists(os.path.join("./translate_cache", "tags")):
-            os.mkdir(os.path.join("./translate_cache", "tags"))
-
-        if not os.path.exists(os.path.join("./translate_cache", "tags_zh2en")):
-            os.mkdir(os.path.join("./translate_cache", "tags_zh2en"))
-
         tag_type = tag_type.replace('/', '_').replace('\\', '_')
+        for name, tag in tags:
+            all_tags_fn.write(f'{name}={tag}\n')
 
         output_file = os.path.join("./translate_cache", "tags", f"{tag_type}.txt")
         with open(output_file, 'w+', encoding='utf8') as f:
@@ -47,6 +49,7 @@ def parse_files(fns):
         with open(output_file, 'w+', encoding='utf8') as f:
             for name, tag in tags:
                 f.write(f'{tag}={name}\n')
+    all_tags_fn.close()
 
 
 def parse_tag(data):
