@@ -112,8 +112,8 @@ def image_tools_ui():
             tags_input_dir = gr.Textbox(label='input_dir')
             translate_tags_btn = gr.Button("load tags")
             with gr.Row():
-                tags_label = gr.Textbox("tags")
-                tags_zh_label = gr.Textbox("tags_zh")
+                tags_label = gr.Label("tags")
+                tags_zh_label = gr.Label("tags_zh")
 
         text_output = gr.Textbox(label="result", lines=1, max_lines=100)
 

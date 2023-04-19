@@ -23,18 +23,25 @@ def get_tag_files(input_dir: str) -> Dict[str, List[str]]:
     return tag_files
 
 
-def load_translated_tags(input_dir: str):
+def load_translated_tags(input_dir: str) -> Tuple[List[Tuple[str, int]], List[Tuple[str, int]]]:
     if not os.path.exists(input_dir) or not os.path.isdir(input_dir):
-        return {}
+        return [], []
+
     tag_files = get_tag_files(input_dir)
-    tags = []
+    tags_count = {}
+
     for _, v in tag_files.items():
-        tags += v
-    tags = list(set(tags))
-    return translate_tags(tags)
+        tags_count.setdefault(v, 0)
+        tags_count[v] += 1
+
+    tags_list = sorted(tags_count.keys())
+    tags_map = translate_tags(
+        sorted(tags_count.keys())
+    )
+    return [(t, tags_count[t]) for t in tags_list], [(tags_map[t], tags_count[t]) for t in tags_list]
 
 
-def translate_tags(tags: List[str]) -> Tuple[List[str], List[str]]:
+def translate_tags(tags: List[str]) -> Dict[str, str]:
     """Translate a tag to a human readable string."""
     tags_zh = [translate_en2zh(tag) for tag in tags]
-    return tags, tags_zh
+    return dict(zip(tags, tags_zh))
