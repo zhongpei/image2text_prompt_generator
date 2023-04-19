@@ -6,6 +6,9 @@ queue_size = 10
 show_api = false
 debug = true
 
+[others]
+open_prompt_url = "https://moonvy.com/apps/ops/"
+
 [api]
 generate_num_return_sequences = 2 # 生成返回数量
 generate_translate = true # 是否启用生成翻译功能

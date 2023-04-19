@@ -77,6 +77,19 @@ def empty_cache(force_clear_cache: bool = False):
                 pass
 
 
+def send2open_prompt(text: str):
+    import webbrowser
+    import json
+    import urllib.parse
+
+    tags = text.split(',')
+    data = json.dumps(tags)
+    url = settings.others.open_prompt_url
+    data = urllib.parse.quote(data)
+
+    webbrowser.open(f'{url}?prompts={data}')
+
+
 def ui(enable_chat: bool = False):
     with gr.Blocks(title="Prompt生成器") as block:
         with gr.Column():
@@ -185,6 +198,15 @@ def ui(enable_chat: bool = False):
                         value=0.85,
                         label="Character Tags Threshold",
                     )
+        with gr.Column():
+            choice_prompt = gr.Textbox("选中的prompt")
+            with gr.Row():
+                send2open_prompt_btn = gr.Button('发送到OpenPromptStudio')
+        
+        send2open_prompt_btn.click(
+            fn=send2open_prompt,
+            inputs=choice_prompt,
+        )
 
         empty_cache_btn.click(fn=empty_cache, inputs=force_clear_cache)
         img_prompter_btn.click(
