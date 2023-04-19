@@ -1,7 +1,10 @@
+import os
+
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 from .singleton import Singleton
 import re
+import threading
 from config import settings
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -45,6 +48,57 @@ class Models(object):
 models = Models.instance()
 
 
+@Singleton
+class TranslateLocalCache(object):
+    def __init__(self):
+
+        if os.path.exists(settings.translate.cache_dir) and os.path.isdir(settings.translate.cache_dir):
+            self.cache = self.load_cache(settings.translate.cache_dir)
+        else:
+            self.cache = {}
+
+    @classmethod
+    def get_cache_fns(cls, cache_dir):
+        fns = []
+        for root, dirs, files in os.walk(cache_dir, topdown=False):
+            for name in files:
+                lower_name = name.lower()
+                if lower_name.endswith(".txt"):
+                    fns.append(os.path.join(root, name))
+        return fns
+
+    @classmethod
+    def load_cache(cls, cache_dir):
+        cache = {}
+
+        for cache_file in cls.get_cache_fns(cache_dir):
+            with open(cache_file, "r", encoding='utf8') as f:
+                lines = f.readlines()
+                print(f"Loading cache from {cache_file} count: {len(lines)}")
+                for line in lines:
+                    if len(line.split("=")) != 2:
+                        continue
+                    key, value = line.split("=")
+                    cache[key] = value
+        return cache
+
+    def __call__(self, func):
+        def wrapper(*args, **kwargs):
+            key = args[0]
+            if key in self.cache:
+                return self.cache[key]
+            else:
+                result = func(*args, **kwargs)
+                with threading.Lock():
+                    self.cache[key] = result
+                    return result
+
+        return wrapper
+
+
+translate_cache = TranslateLocalCache.instance()
+
+
 def fix_text(text: str) -> str:
     text = text.strip()
     text_lines = [t.strip() for t in text.split("\n") if len(t.strip()) > 0]
@@ -53,7 +107,7 @@ def fix_text(text: str) -> str:
 
 
 @torch.no_grad()
-def zh2en(text: str, max_new_tokens: int = 512) -> str:
+def _zh2en(text: str, max_new_tokens: int = 512) -> str:
     text = fix_text(text)
     with torch.no_grad():
         encoded = models.zh2en_tokenizer([text], return_tensors="pt").to(models.zh2en_model.device)
@@ -62,7 +116,7 @@ def zh2en(text: str, max_new_tokens: int = 512) -> str:
 
 
 @torch.no_grad()
-def en2zh(text: str, max_new_tokens: int = 512) -> str:
+def _en2zh(text: str, max_new_tokens: int = 512) -> str:
     text = fix_text(text)
     with torch.no_grad():
         encoded = models.en2zh_tokenizer([text], return_tensors="pt").to(models.zh2en_model.device)
@@ -70,6 +124,20 @@ def en2zh(text: str, max_new_tokens: int = 512) -> str:
         return models.en2zh_tokenizer.batch_decode(sequences, skip_special_tokens=True)[0]
 
 
+def tags_en2zh(text: str, max_new_tokens: int = 512) -> str:
+    output = translate_cache(_en2zh)(text, max_new_tokens)
+    output = output.strip(",")
+    output = re.sub(r",,+", ",", output)
+    output = ",".join(list(set(output.split(","))))
+    return output
+
+
+def en2zh(text: str, max_new_tokens: int = 512) -> str:
+    return translate_cache(_en2zh)(text, max_new_tokens)
+
+
+def zh2en(text: str, max_new_tokens: int = 512) -> str:
+    return translate_cache(_zh2en)(text, max_new_tokens)
 
 
 if __name__ == "__main__":

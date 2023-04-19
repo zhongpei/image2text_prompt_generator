@@ -1,0 +1,5 @@
+bad anatomy=身体结构错误
+bad hands=手型错误
+fewer digits=缺少手指
+extra digit=多余手指
+missing arms=缺少手臂

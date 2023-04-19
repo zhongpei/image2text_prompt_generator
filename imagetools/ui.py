@@ -4,6 +4,7 @@ import gradio as gr
 import os
 from .mesh_face import mesh_face, mesh_hand
 from config import settings
+from .tags import load_translated_tags
 
 
 def bz_autocrop(input_dir, output_dir, reject_dir, height=512, width=512, facePercent=50):
@@ -48,7 +49,6 @@ def bz_mesh(input_dir, output_dir, max_faces=1, thickness=10, circle_radius=10, 
 
 
 def remove_background_func(input_dir, output_dir, background_type, background_mode):
-
     remove_background(
         image_path=input_dir,
         output_path=output_dir,
@@ -57,6 +57,21 @@ def remove_background_func(input_dir, output_dir, background_type, background_mo
         fast=True if background_mode == "fast" else False,
         jit=False,
     )
+
+
+def rename_func(input_dir, postfix, source, target):
+    import re
+    files = os.listdir(input_dir)
+    for file in files:
+        if file.endswith(postfix):
+            new_file = re.sub(source, target, file)
+            os.rename(os.path.join(input_dir, file), os.path.join(input_dir, new_file))
+    return "rename success"
+
+
+def load_translated_tags_fn(input_dir: str):
+    tags, zh_tags = load_translated_tags(input_dir)
+    return dict(tags),dict(zh_tags)
 
 
 def image_tools_ui():
@@ -84,9 +99,35 @@ def image_tools_ui():
             reject_dir = gr.Textbox(label='reject_dir')
             height = gr.Slider(0, 1024, value=512, label='height', step=1)
             width = gr.Slider(0, 1024, value=512, label='width', step=1)
-            facePercent = gr.Slider(0, 100, value=50, label='facePercent', step=1)
+            facePercent = gr.Slider(0, 100, value=40, label='facePercent', step=1)
             autocrop_button = gr.Button("autocrop")
-        text_output = gr.Textbox(label="result")
+
+        with gr.Tab("rename(改名)"):
+            rename_input_dir = gr.Textbox(label='input_dir')
+            rename_postfix = gr.Textbox(label='文件后缀', value="txt")
+            rename_replace_source = gr.Textbox(label='replace_source', value=r"\d+-\d+-")
+            rename_replace_target = gr.Textbox(label='replace_targete', value="")
+            rename_btn = gr.Button("rename")
+        with gr.Tab("tags(标签)"):
+            tags_input_dir = gr.Textbox(label='input_dir')
+            translate_tags_btn = gr.Button("load tags")
+            with gr.Row():
+                tags_label = gr.Label("tags")
+                tags_zh_label = gr.Label("tags_zh")
+
+        text_output = gr.Textbox(label="result", lines=1, max_lines=100)
+
+        translate_tags_btn.click(
+            load_translated_tags_fn,
+            inputs=tags_input_dir,
+            outputs=[tags_label, tags_zh_label]
+        )
+
+        rename_btn.click(
+            rename_func,
+            inputs=[rename_input_dir, rename_postfix, rename_replace_source, rename_replace_target],
+            outputs=text_output,
+        )
         mesh_face_button.click(
             bz_mesh,
             inputs=[mash_input_dir, mash_output_dir, max_faces, thickness, circle_radius, mesh_type],

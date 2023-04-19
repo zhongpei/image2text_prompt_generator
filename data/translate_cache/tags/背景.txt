@@ -1,0 +1,15 @@
+landscape=风景
+science fiction=科幻
+gradient background=渐变的背景
+simple background=简单背景/无背景
+transparent background=透明背景
+pentagram=五角星
+magic circle=魔法阵
+valentine=情人节
+halloween=万圣节
+christmas=圣诞节
+outdoors=户外
+indoors=室内
+feather=场景飘羽毛
+beautiful detailed water=漂亮的水
+white background=白色背景
