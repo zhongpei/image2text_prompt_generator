@@ -27,15 +27,26 @@ def parse_files(fns):
         stream = open(fn, 'r')
         data = load(stream, Loader=Loader)
         tag_type, tags = parse_tag(data)
+
         if not os.path.exists("./translate_cache"):
             os.mkdir("./translate_cache")
         if not os.path.exists(os.path.join("./translate_cache", "tags")):
             os.mkdir(os.path.join("./translate_cache", "tags"))
+
+        if not os.path.exists(os.path.join("./translate_cache", "tags_zh2en")):
+            os.mkdir(os.path.join("./translate_cache", "tags_zh2en"))
+
         tag_type = tag_type.replace('/', '_').replace('\\', '_')
+
         output_file = os.path.join("./translate_cache", "tags", f"{tag_type}.txt")
         with open(output_file, 'w+', encoding='utf8') as f:
             for name, tag in tags:
                 f.write(f'{name}={tag}\n')
+
+        output_file = os.path.join("./translate_cache", "tags_zh2en", f"{tag_type}.txt")
+        with open(output_file, 'w+', encoding='utf8') as f:
+            for name, tag in tags:
+                f.write(f'{tag}={name}\n')
 
 
 def parse_tag(data):
@@ -43,7 +54,7 @@ def parse_tag(data):
     tags = []
     for name, item in data['content'].items():
         print(name, item['name'], tag_type)
-        tags.append((name, item['name']))
+        tags.append((name.strip(), item['name'].strip()))
     return tag_type, tags
 
 
