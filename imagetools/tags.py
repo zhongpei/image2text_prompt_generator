@@ -8,6 +8,7 @@ def get_tag_from_file(fn: str) -> List[str]:
     with open(fn, "r") as f:
         data = f.read().split(",")
         tags = [d.strip().replace("_", " ") for d in data if len(d.strip()) > 0]
+    print(f'Found {len(tags)} tags in {fn}')
     return tags
 
 
@@ -17,6 +18,7 @@ def get_tag_files(input_dir: str) -> Dict[str, List[str]]:
         for name in files:
             lower_name = name.lower()
             if lower_name.endswith(".txt"):
+                print('Processing', os.path.join(root, name))
                 tag_files.update(
                     {os.path.join(root, name): get_tag_from_file(os.path.join(root, name))}
                 )

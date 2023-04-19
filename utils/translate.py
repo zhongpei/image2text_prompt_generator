@@ -58,12 +58,20 @@ class TranslateLocalCache(object):
             self.cache = {}
 
     @classmethod
+    def get_cache_fns(cls, cache_dir):
+        fns = []
+        for root, dirs, files in os.walk(cache_dir, topdown=False):
+            for name in files:
+                lower_name = name.lower()
+                if lower_name.endswith(".txt"):
+                    fns.append(os.path.join(root, name))
+        return fns
+
+    @classmethod
     def load_cache(cls, cache_dir):
         cache = {}
 
-        for cache_file in os.listdir(cache_dir):
-            if not cache_file.endswith(".txt"):
-                continue
+        for cache_file in cls.get_cache_fns(cache_dir):
             with open(os.path.join(cache_dir, cache_file), "r", encoding='utf8') as f:
                 lines = f.readlines()
                 print(f"Loading cache from {cache_file} count: {len(lines)}")

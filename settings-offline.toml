@@ -41,7 +41,7 @@ device = "cuda" # cpu mps cuda
 local_files_only = true # 是否只使用本地模型
 zh2en_model = "./models/opus-mt-zh-en"
 en2zh_model = "./models/opus-mt-en-zh"
-cache_dir = "./translate_cache" # 翻译缓存目录
+cache_dir = "./data/translate_cache" # 翻译缓存目录
 
 [chatglm]
 # 本地模型 https://github.com/THUDM/ChatGLM-6B#从本地加载模型
