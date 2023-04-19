@@ -43,6 +43,8 @@ local_files_only = false # 是否只使用本地模型
 zh2en_model = "Helsinki-NLP/opus-mt-zh-en"
 en2zh_model = "Helsinki-NLP/opus-mt-en-zh"
 
+cache_dir = "./translate_cache" # 翻译缓存目录
+
 # zh2en_model = "./models/opus-mt-zh-en"
 # en2zh_model = "./models/opus-mt-en-zh"
 

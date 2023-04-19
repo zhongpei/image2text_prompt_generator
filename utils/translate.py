@@ -51,9 +51,9 @@ models = Models.instance()
 @Singleton
 class TranslateLocalCache(object):
     def __init__(self):
-        cache_dir = os.path.join(os.path.dirname(__file__), "cache", "translate")
-        if os.path.exists(cache_dir) and os.path.isdir(cache_dir):
-            self.cache = self.load_cache(cache_dir)
+
+        if os.path.exists(settings.translate.cache_dir) and os.path.isdir(settings.translate.cache_dir):
+            self.cache = self.load_cache(settings.translate.cache_dir)
         else:
             self.cache = {}
 
