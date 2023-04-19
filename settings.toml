@@ -11,7 +11,7 @@ generate_num_return_sequences = 2 # 生成返回数量
 generate_translate = true # 是否启用生成翻译功能
 
 [image_tools]
-enable = true # 是否启用图片处理功能
+enable = true # 是否启用图片处理功能plugin
 
 transparent_background_model_path = "./models/transparent-background/ckpt_base.pth" # transparent-background模型路径
 
@@ -55,5 +55,5 @@ model = "THUDM/chatglm-6b-int4" # THUDM/chatglm-6b-int4 THUDM/chatglm-6b-int8 TH
 # model = "./models/chatglm-6b-int4"
 
 device = "cuda" # cpu mps cuda
-enable_chat = false # 是否启用聊天功能
+enable_chat = false # 是否启用聊天功能plugin
 local_files_only = false # 是否只使用本地模型

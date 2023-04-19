@@ -7,7 +7,7 @@ import os
 def get_tag_from_file(fn: str) -> List[str]:
     with open(fn, "r") as f:
         data = f.read().split(",")
-        tags = [d.strip() for d in data if len(d.strip()) > 0]
+        tags = [d.strip().replace("_", " ") for d in data if len(d.strip()) > 0]
     return tags
 
 
