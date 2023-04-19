@@ -31,8 +31,9 @@ def load_translated_tags(input_dir: str) -> Tuple[List[Tuple[str, int]], List[Tu
     tags_count = {}
 
     for _, v in tag_files.items():
-        tags_count.setdefault(v, 0)
-        tags_count[v] += 1
+        for t in v:
+            tags_count.setdefault(t, 0)
+            tags_count[t] += 1
 
     tags_list = sorted(tags_count.keys())
     tags_map = translate_tags(

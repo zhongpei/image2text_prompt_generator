@@ -71,7 +71,7 @@ def rename_func(input_dir, postfix, source, target):
 
 def load_translated_tags_fn(input_dir: str):
     tags, zh_tags = load_translated_tags(input_dir)
-    return "\n".join(tags), "\n".join(zh_tags)
+    return dict(tags),dict(zh_tags)
 
 
 def image_tools_ui():
