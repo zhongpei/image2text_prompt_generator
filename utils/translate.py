@@ -128,7 +128,7 @@ def tags_en2zh(text: str, max_new_tokens: int = 512) -> str:
     output = translate_cache(_en2zh)(text, max_new_tokens)
     output = output.strip(",")
     output = re.sub(r",,+", ",", output)
-    output = ",".join(list(set(output.strip(","))))
+    output = ",".join(list(set(output.split(","))))
     return output
 
 
