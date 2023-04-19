@@ -124,6 +124,14 @@ def _en2zh(text: str, max_new_tokens: int = 512) -> str:
         return models.en2zh_tokenizer.batch_decode(sequences, skip_special_tokens=True)[0]
 
 
+def tags_en2zh(text: str, max_new_tokens: int = 512) -> str:
+    output = translate_cache(_en2zh)(text, max_new_tokens)
+    output = output.strip(",")
+    output = re.sub(r",,+", ",", output)
+    output = ",".join(list(set(output.strip(","))))
+    return output
+
+
 def en2zh(text: str, max_new_tokens: int = 512) -> str:
     return translate_cache(_en2zh)(text, max_new_tokens)
 

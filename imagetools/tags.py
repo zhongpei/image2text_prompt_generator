@@ -1,6 +1,6 @@
 from typing import List, Dict, Tuple
 
-from utils.translate import en2zh as translate_en2zh
+from utils.translate import tags_en2zh as translate_en2zh
 import os
 
 
