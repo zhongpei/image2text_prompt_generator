@@ -5,7 +5,7 @@ import os
 from .mesh_face import mesh_face, mesh_hand
 from config import settings
 from .tags import load_translated_tags
-from .tags import gen_clip_tags_files
+from .tags import gen_clip_tags_files, gen_wd14_tags_files
 
 
 def bz_autocrop(input_dir, output_dir, reject_dir, height=512, width=512, facePercent=50):
@@ -75,7 +75,13 @@ def load_translated_tags_fn(input_dir: str):
     return dict(tags), dict(zh_tags)
 
 
-def image_tools_ui(clip_mode_type, clip_model_name):
+def image_tools_ui(
+        clip_mode_type,
+        clip_model_name,
+        wd14_model,
+        wd14_general_threshold,
+        wd14_character_threshold,
+):
     with gr.Tab("image tools"):
         with gr.Tab("remove background(扣背)"):
             remove_input_dir = gr.Textbox(label='input_dir')
@@ -114,9 +120,10 @@ def image_tools_ui(clip_mode_type, clip_model_name):
 
             gr.Markdown("top(最前面) down(最后） center(中间) cover(覆盖) random(随机)")
             gen_tags_pos = gr.Radio(["top", "down", "center", "cover", "random"], label="tags pos", value="top")
-
+            w14_tags_max_count = gr.Slider(1, 100, value=10, label='tags max count', step=1)
             with gr.Row():
                 gen_clip_tags_btn = gr.Button("clip tags(生成CLIP标签签)")
+                gen_wd14_tags_btn = gr.Button("wd14 tags(生成wd14标签签)")
                 translate_tags_btn = gr.Button("load tags(加载+翻译标签)")
 
             with gr.Accordion("tags", open=False):
@@ -124,6 +131,11 @@ def image_tools_ui(clip_mode_type, clip_model_name):
                 tags_zh_label = gr.Label("tags_zh")
 
         text_output = gr.Textbox(label="result", lines=1, max_lines=100)
+        gen_wd14_tags_btn.click(
+            gen_wd14_tags_files,
+            inputs=[tags_input_dir, wd14_model, wd14_general_threshold, wd14_character_threshold,w14_tags_max_count],
+            outputs=text_output,
+        )
 
         gen_clip_tags_btn.click(
             gen_clip_tags_files,

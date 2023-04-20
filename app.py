@@ -157,7 +157,7 @@ def ui(enable_chat: bool = False):
                         label='model_name'
                     )
                 with gr.Accordion('WD14参数', open=True):
-                    image2text_model = gr.Radio(
+                    wd14_model_name = gr.Radio(
                         [
                             "SwinV2",
                             "ConvNext",
@@ -167,14 +167,14 @@ def ui(enable_chat: bool = False):
                         value="ConvNextV2",
                         label="Model"
                     )
-                    general_threshold = gr.Slider(
+                    wd14_general_threshold = gr.Slider(
                         0,
                         1,
                         step=0.05,
                         value=0.35,
                         label="General Tags Threshold",
                     )
-                    character_threshold = gr.Slider(
+                    wd14_character_threshold = gr.Slider(
                         0,
                         1,
                         step=0.05,
@@ -186,7 +186,10 @@ def ui(enable_chat: bool = False):
             if settings.image_tools.enable:
                 image_tools_ui(
                     clip_mode_type=clip_mode_type,
-                    clip_model_name=clip_model_name
+                    clip_model_name=clip_model_name,
+                    wd14_model=wd14_model_name,
+                    wd14_general_threshold=wd14_general_threshold,
+                    wd14_character_threshold=wd14_character_threshold,
                 )
 
         empty_cache_btn.click(fn=empty_cache, inputs=force_clear_cache)
@@ -227,7 +230,7 @@ def ui(enable_chat: bool = False):
         )
         img_w14_btn.click(
             fn=w14_image2text,
-            inputs=[input_image, image2text_model, general_threshold, character_threshold],
+            inputs=[input_image, wd14_model_name, wd14_general_threshold, wd14_character_threshold],
             outputs=[
                 output_w14,
                 w14_raw_output,

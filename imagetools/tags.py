@@ -2,7 +2,7 @@ from typing import List, Dict, Tuple
 
 from utils.translate import tags_en2zh as translate_en2zh
 import os
-from utils.image2text import clip_image2text
+from utils.image2text import clip_image2text, w14_image2text
 import random
 import PIL.Image
 
@@ -69,6 +69,30 @@ def insert_tag2file(new_tags: str, fn: str, tags_pos: str):
     tags = [t.strip().replace("_", " ") for t in tags if len(t.strip()) > 0]
     with open(fn, "w+") as f:
         f.write(",".join(tags))
+
+
+def gen_wd14_tags_files(
+        input_dir: str,
+        tags_pos: str,
+        model_name: str,
+        general_threshold: float,
+        character_threshold: float,
+        w14_tags_max_count: int,
+) -> str:
+    tag_files = get_image_tags_fns(input_dir)
+    output = []
+    for image_fn, tags_fn in tag_files:
+        with PIL.Image.open(image_fn) as image:
+            tags = w14_image2text(
+                image=image,
+                model_name=model_name,
+                general_threshold=general_threshold,
+                character_threshold=character_threshold
+            )
+            tags = tags[:w14_tags_max_count]
+            insert_tag2file(new_tags=tags, tags_pos=tags_pos, fn=tags_fn)
+            output.append(tags_fn)
+    return "\n".join(output)
 
 
 def gen_clip_tags_files(input_dir: str, tags_pos: str, clip_mode_type: str, clip_model_name: str) -> str:
