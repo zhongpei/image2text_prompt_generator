@@ -10,6 +10,7 @@ from utils.translate import zh2en as translate_zh2en
 from ui.chat import chatglm_ui
 import click
 from imagetools.ui import image_tools_ui
+from ui.image2text import image2text_settings_ui
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -142,45 +143,8 @@ def ui(enable_chat: bool = False):
                         label='num_return_sequences',
                         step=1
                     )
+                git_max_length, clip_mode_type, clip_model_name, wd14_model_name, wd14_general_threshold, wd14_character_threshold = image2text_settings_ui()
 
-                with gr.Accordion('GIT参数', open=True):
-                    blip_max_length = gr.Slider(1, 512, 200, label='max_length', step=1)
-                with gr.Accordion('CLIP参数', open=True):
-                    clip_mode_type = gr.Radio(
-                        ['best', 'classic', 'fast', 'negative'],
-                        value=settings.clip.default_model_type,
-                        label='mode_type'
-                    )
-                    clip_model_name = gr.Radio(
-                        ['vit_h_14', 'vit_l_14', ],
-                        value=settings.clip.default_model_name,
-                        label='model_name'
-                    )
-                with gr.Accordion('WD14参数', open=True):
-                    wd14_model_name = gr.Radio(
-                        [
-                            "SwinV2",
-                            "ConvNext",
-                            "ConvNextV2",
-                            "ViT",
-                        ],
-                        value="ConvNextV2",
-                        label="Model"
-                    )
-                    wd14_general_threshold = gr.Slider(
-                        0,
-                        1,
-                        step=0.05,
-                        value=0.35,
-                        label="General Tags Threshold",
-                    )
-                    wd14_character_threshold = gr.Slider(
-                        0,
-                        1,
-                        step=0.05,
-                        value=0.85,
-                        label="Character Tags Threshold",
-                    )
             if enable_chat:
                 chatglm_ui()
             if settings.image_tools.enable:
@@ -243,7 +207,7 @@ def ui(enable_chat: bool = False):
 
         img_blip_btn.click(
             fn=git_image2text,
-            inputs=[input_image, blip_max_length],
+            inputs=[input_image, git_max_length],
             outputs=output_blip_or_clip
         )
         img_clip_btn.click(

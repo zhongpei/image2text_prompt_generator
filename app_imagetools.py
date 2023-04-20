@@ -4,6 +4,7 @@ import click
 from config import settings
 from imagetools.ui import image_tools_ui
 import signal
+from ui.image2text import image2text_settings_ui
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -11,13 +12,15 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 @click.command()
 @click.option("--port", type=int, default=None, help="server port")
 def ui(port):
-    with gr.Blocks(title="图片处理工具") as block:
+    with gr.Blocks(title="image tools(图片处理工具)") as block:
+        with gr.Accordion("settings(参数)"):
+            blip_max_length, clip_mode_type, clip_model_name, wd14_model_name, wd14_general_threshold, wd14_character_threshold = image2text_settings_ui()
         image_tools_ui(
-            clip_mode_type=settings.clip.default_model_type,
-            clip_model_name=settings.clip.default_model_name,
-            wd14_model=settings.wd14.default_model_name,
-            wd14_general_threshold=settings.wd14.default_general_threshold,
-            wd14_character_threshold=settings.wd14.default_character_threshold,
+            clip_mode_type=clip_mode_type,
+            clip_model_name=clip_model_name,
+            wd14_model=wd14_model_name,
+            wd14_general_threshold=wd14_general_threshold,
+            wd14_character_threshold=wd14_character_threshold
         )
 
     block.queue(max_size=settings.server.queue_size).launch(
