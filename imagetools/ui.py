@@ -133,7 +133,14 @@ def image_tools_ui(
         text_output = gr.Textbox(label="result", lines=1, max_lines=100)
         gen_wd14_tags_btn.click(
             gen_wd14_tags_files,
-            inputs=[tags_input_dir, wd14_model, wd14_general_threshold, wd14_character_threshold,w14_tags_max_count],
+            inputs=[
+                tags_input_dir,
+                gen_tags_pos,
+                wd14_model,
+                wd14_general_threshold,
+                wd14_character_threshold,
+                w14_tags_max_count
+            ],
             outputs=text_output,
         )
 
