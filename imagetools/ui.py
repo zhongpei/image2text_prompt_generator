@@ -112,11 +112,15 @@ def image_tools_ui(clip_mode_type: str, clip_model_name: str):
         with gr.Tab("tags(标签)"):
             tags_input_dir = gr.Textbox(label='input_dir')
             translate_tags_btn = gr.Button("load tags(加载标签)")
+
             gen_tags_mode = gr.Radio(["top", "down", "center", "convert", "random"], label="tags mode", value="top")
+
             gen_clip_tags_btn = gr.Button("gen clip tags(生成CLIP标签签)")
-            with gr.Row():
+
+            with gr.Accordion():
                 tags_label = gr.Label("tags")
                 tags_zh_label = gr.Label("tags_zh")
+
         text_output = gr.Textbox(label="result", lines=1, max_lines=100)
 
         gen_clip_tags_btn.click(
