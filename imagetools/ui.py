@@ -117,7 +117,7 @@ def image_tools_ui(clip_mode_type: str, clip_model_name: str):
 
             gen_clip_tags_btn = gr.Button("gen clip tags(生成CLIP标签签)")
 
-            with gr.Accordion():
+            with gr.Accordion("tags"):
                 tags_label = gr.Label("tags")
                 tags_zh_label = gr.Label("tags_zh")
 
