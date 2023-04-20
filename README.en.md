@@ -51,7 +51,7 @@ The ChatGLM model needs to be downloaded separately (download the int4 version),
 
 -   [v1.0](https://pan.baidu.com/s/1pKtpPmiuliX7rf0z-5HY_w?pwd=79sk)Extraction code: 79sk
 -   [v1.5](https://pan.baidu.com/s/1vMzDGbtTO0-CD7wk-4GrcQ?pwd=eb33)Extraction code: eb33
--   [v1.8](https://pan.baidu.com/s/1bup8Oa56e_S4andbU8wk0g?pwd=7hbt)Extraction code: 7hbt
+-   [v1.8](https://pan.baidu.com/s/1bup8Oa56e_S4andbU8wk0g?pwd=7hbt)Extract code: 7hbt
 -   [ChatGLM model](https://pan.baidu.com/s/1_Hs-MRjSxg0gaIRDaUTD8Q?pwd=6ti4)Extraction code: 6ti4
 
 ### update program
@@ -102,7 +102,7 @@ Or github package and download zip, covering the program directory
 
 ![img.png](./img/image2text.png)
 
-## image processing tool
+## image processing tools
 
 -   Batch buckle background
 -   paste face (for refining clothes)
@@ -190,7 +190,7 @@ local_files_only = true # 是否只使用本地模型
 
 # Install
 
-First, make sure you have Python 3 installed on your computer. If you don't have Python installed, go to the official website ([https://www.python.org/downloads/) to download and install the latest version of](https://www.python.org/downloads/）下载并安装最新版本的)Python 3.
+First, make sure you have Python 3 installed on your computer. If you don't have Python installed, go to the official site ([https://www.python.org/downloads/) to download and install the latest version of](https://www.python.org/downloads/）下载并安装最新版本的)Python 3.
 Next, download and unzip our tools installation package.
 Open the command line window (Windows users can press Win + R keys, enter "cmd" in the run box and press Enter to open the command line window), and enter the directory where the tool installation package is located.
 Enter the following command in a command line window to install the required dependencies:
@@ -241,14 +241,14 @@ From the chatGPTBox project, modify some prompt words
 
 ## hg cache configuration
 
-To prevent the C disk from being full, you can configure the cache directory to other disks
+To prevent the c drive from being full, you can configure the cache directory to other drives
 
 ![img.png](./img/hg_cache.png)
 
 ## limit
 
 -   cuda is not supported, and clip is not recommended
--   显存&lt;6G, 不建议使用ChatGLM
+-   Video memory &lt;6G, it is not recommended to use ChatGLM
 
 ## Update information
 
