@@ -122,9 +122,9 @@ def image_tools_ui(
             gen_tags_pos = gr.Radio(["top", "bottom", "center", "cover", "random"], label="tags pos", value="top")
             wd14_tags_max_count = gr.Slider(1, 100, value=30, label='w14 tags max count', step=1)
             with gr.Row():
-                gen_clip_tags_btn = gr.Button("clip tags(生成CLIP标签签)")
-                gen_wd14_tags_btn = gr.Button("wd14 tags(生成wd14标签签)")
-                translate_tags_btn = gr.Button("load tags(加载+翻译标签)")
+                gen_clip_tags_btn = gr.Button("clip(生成CLIP标签)")
+                gen_wd14_tags_btn = gr.Button("wd14(生成wd14标签)")
+                translate_tags_btn = gr.Button("load(加载+翻译签)")
 
             with gr.Accordion("tags", open=False):
                 tags_label = gr.Label("tags")
