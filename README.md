@@ -36,6 +36,8 @@ Prompt 生成器
 * 支持stable diffusion和midjourney两种prompt生成方式
 * 使用[ChatGLM-6b-int4](https://huggingface.co/THUDM/chatglm-6b-int4)节省显存
 
+
+
 ## 一键包
 
 ### 百度云盘下载
@@ -232,12 +234,19 @@ python app.py
  来源于 chatGPTBox 项目，修改部分提示词语
 * 使用 api.bat 启动
 * 配置 chatGPTBox 插件为 自定义模型 http://localhost:8000
+* 在release里面下载插件
 
 ## hg cache 配置
 
 防止c盘沾满，可以配置cache目录到其他盘
 
 ![img.png](./img/hg_cache.png)
+
+## 限制
+
+* 不支持cuda，不建议使用clip
+* 显存<6G, 不建议使用ChatGLM
+
 
 ## 更新信息
 * v1.8  打标签工具
