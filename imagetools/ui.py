@@ -5,6 +5,7 @@ import os
 from .mesh_face import mesh_face, mesh_hand
 from config import settings
 from .tags import load_translated_tags
+from .tags import gen_clip_tags_files
 
 
 def bz_autocrop(input_dir, output_dir, reject_dir, height=512, width=512, facePercent=50):
@@ -71,10 +72,10 @@ def rename_func(input_dir, postfix, source, target):
 
 def load_translated_tags_fn(input_dir: str):
     tags, zh_tags = load_translated_tags(input_dir)
-    return dict(tags),dict(zh_tags)
+    return dict(tags), dict(zh_tags)
 
 
-def image_tools_ui():
+def image_tools_ui(clip_mode_type: str, clip_model_name: str):
     with gr.Tab("image tools"):
         with gr.Tab("remove background(扣背)"):
             remove_input_dir = gr.Textbox(label='input_dir')
@@ -110,12 +111,19 @@ def image_tools_ui():
             rename_btn = gr.Button("rename")
         with gr.Tab("tags(标签)"):
             tags_input_dir = gr.Textbox(label='input_dir')
-            translate_tags_btn = gr.Button("load tags")
+            translate_tags_btn = gr.Button("load tags(加载标签)")
+            gen_tags_mode = gr.Radio(["top", "down", "center", "convert", "random"], label="tags mode", value="top")
+            gen_clip_tags_btn = gr.Button("gen clip tags(生成CLIP标签签)")
             with gr.Row():
                 tags_label = gr.Label("tags")
                 tags_zh_label = gr.Label("tags_zh")
-
         text_output = gr.Textbox(label="result", lines=1, max_lines=100)
+
+        gen_clip_tags_btn.click(
+            gen_clip_tags_files,
+            inputs=[tags_input_dir, gen_tags_mode, clip_mode_type, clip_model_name],
+            outputs=text_output
+        )
 
         translate_tags_btn.click(
             load_translated_tags_fn,

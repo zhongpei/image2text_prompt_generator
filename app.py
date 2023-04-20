@@ -84,11 +84,6 @@ def ui(enable_chat: bool = False):
                 force_clear_cache = gr.Checkbox(False, label='强制清显存', width=60)
                 empty_cache_btn = gr.Button('清显存')
 
-            if enable_chat:
-                chatglm_ui()
-            if settings.image_tools.enable:
-                image_tools_ui()
-
             with gr.Tab('文本生成'):
                 with gr.Row():
                     input_text = gr.Textbox(lines=6, label='你的想法', placeholder='在此输入内容...')
@@ -185,6 +180,13 @@ def ui(enable_chat: bool = False):
                         value=0.85,
                         label="Character Tags Threshold",
                     )
+            if enable_chat:
+                chatglm_ui()
+            if settings.image_tools.enable:
+                image_tools_ui(
+                    clip_mode_type=clip_mode_type.value,
+                    clip_model_name=clip_model_name.value
+                )
 
         empty_cache_btn.click(fn=empty_cache, inputs=force_clear_cache)
         img_prompter_btn.click(
