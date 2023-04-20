@@ -90,7 +90,8 @@ def gen_wd14_tags_files(
                 general_threshold=general_threshold,
                 character_threshold=character_threshold
             )
-            tags = ",".join(tags.strip(",")[:w14_tags_max_count])
+
+            tags = ",".join(tags.split(",")[:w14_tags_max_count])
             print(f'{image_fn} -> {tags}')
             insert_tag2file(new_tags=tags, tags_pos=tags_pos, fn=tags_fn)
             output.append(tags_fn)
