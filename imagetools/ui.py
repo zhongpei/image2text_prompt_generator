@@ -118,8 +118,8 @@ def image_tools_ui(
         with gr.Tab("tags(标签)"):
             tags_input_dir = gr.Textbox(label='input_dir')
 
-            gr.Markdown("top(最前面) down(最后） center(中间) cover(覆盖) random(随机)")
-            gen_tags_pos = gr.Radio(["top", "down", "center", "cover", "random"], label="tags pos", value="top")
+            gr.Markdown("top(最前面) bottom(最后） center(中间) cover(覆盖) random(随机)")
+            gen_tags_pos = gr.Radio(["top", "bottom", "center", "cover", "random"], label="tags pos", value="top")
             wd14_tags_max_count = gr.Slider(1, 100, value=10, label='tags max count', step=1)
             with gr.Row():
                 gen_clip_tags_btn = gr.Button("clip tags(生成CLIP标签签)")
