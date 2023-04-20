@@ -68,6 +68,7 @@ def empty_cache(force_clear_cache: bool = False):
         with torch.cuda.device(0):
             torch.cuda.empty_cache()
             torch.cuda.ipc_collect()
+
         if force_clear_cache:
             try:
                 from numba import cuda
@@ -184,8 +185,8 @@ def ui(enable_chat: bool = False):
                 chatglm_ui()
             if settings.image_tools.enable:
                 image_tools_ui(
-                    clip_mode_type=clip_mode_type.value,
-                    clip_model_name=clip_model_name.value
+                    clip_mode_type=clip_mode_type,
+                    clip_model_name=clip_model_name
                 )
 
         empty_cache_btn.click(fn=empty_cache, inputs=force_clear_cache)

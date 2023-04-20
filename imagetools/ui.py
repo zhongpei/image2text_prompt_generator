@@ -75,7 +75,7 @@ def load_translated_tags_fn(input_dir: str):
     return dict(tags), dict(zh_tags)
 
 
-def image_tools_ui(clip_mode_type: str, clip_model_name: str):
+def image_tools_ui(clip_mode_type, clip_model_name):
     with gr.Tab("image tools"):
         with gr.Tab("remove background(扣背)"):
             remove_input_dir = gr.Textbox(label='input_dir')
