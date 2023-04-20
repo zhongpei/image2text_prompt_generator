@@ -3,7 +3,7 @@
 ## README Translation
 - [English](README.en.md)
 - [简体中文](README.md)
-- [Japanese](README.jp.md)
+- [Japanese](README.ja.md)
 
 
 ## 介绍
