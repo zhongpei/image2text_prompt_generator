@@ -237,7 +237,7 @@ python app.py
 
 防止c盘沾满，可以配置cache目录到其他盘
 
-![img.png](img.png)
+![img.png](./img/hg_cache.png)
 
 ## 更新信息
 
