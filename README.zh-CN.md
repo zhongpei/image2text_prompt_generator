@@ -2,7 +2,7 @@
 
 ## 自述文件翻译
 
--   [英语](README.en.md)
+-   [English](README.en.md)
 -   [简体中文](README.md)
 -   [日本人](README.ja.md)
 
@@ -119,7 +119,7 @@ git pull
 | **量化等级**  | **最低 GPU 显存**（推理） | **最低 GPU 显存**（高效参数微调） |
 | --------- | ----------------- | --------------------- |
 | FP16（无量化） | 13GB              | 14GB                  |
-| 整数8       | 8 GB              | 9GB                   |
+| 整数8       | 8GB               | 9GB                   |
 | 整数4       | 6GB               | 7GB                   |
 
 ![img.png](./img/chatglm.png)
@@ -278,7 +278,7 @@ python app.py
     -   [x] 批量修改文件名
     -   [x] 加载目录标签并翻译
 -   [x] 翻译
-    -   [x] f2m, f2f
+    -   [x] f2men, men2f
     -   [x] WD14 tags 翻译本地缓存
     -   [x] 翻译缓存
 -   [ ] 标签
