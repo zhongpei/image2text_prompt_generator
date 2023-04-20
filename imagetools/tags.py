@@ -50,34 +50,34 @@ def get_image_tags_fns(input_dir: str) -> List[Tuple[str, str]]:
     return image_tags_files
 
 
-def insert_tag2file(new_tags: str, fn: str, mode: str):
+def insert_tag2file(new_tags: str, fn: str, pos: str):
     tags = get_tag_from_file(fn)
     new_tags = [t.strip().replace("_", " ") for t in new_tags.split(",") if len(t.strip()) > 0]
-    if mode == "top":
+    if pos == "top":
         tags = new_tags + tags
-    elif mode == "bottom":
+    elif pos == "bottom":
         tags = tags + new_tags
-    elif mode == "center":
+    elif pos == "center":
         tags = tags[:len(tags) // 2] + new_tags + tags[len(tags) // 2:]
-    elif mode == "random":
+    elif pos == "random":
         rlen = random.randint(0, len(tags))
         tags = tags[:rlen] + new_tags + tags[rlen:]
-    elif mode == "convert":
+    elif pos == "cover":
         tags = new_tags
     else:
-        raise ValueError(f"Unknown mode {mode}")
+        raise ValueError(f"Unknown mode {pos}")
     tags = [t.strip().replace("_", " ") for t in tags if len(t.strip()) > 0]
     with open(fn, "w+") as f:
         f.write(",".join(tags))
 
 
-def gen_clip_tags_files(input_dir: str, tags_mode: str, clip_mode_type: str, clip_model_name: str) -> str:
+def gen_clip_tags_files(input_dir: str, tags_pos: str, clip_mode_type: str, clip_model_name: str) -> str:
     tag_files = get_image_tags_fns(input_dir)
     output = []
     for image_fn, tags_fn in tag_files:
         with PIL.Image.open(image_fn) as image:
             tags = clip_image2text(image=image, mode_type=clip_mode_type, model_name=clip_model_name)
-            insert_tag2file(new_tags=tags, mode=tags_mode, fn=tags_fn)
+            insert_tag2file(new_tags=tags, tags_pos=tags_pos, fn=tags_fn)
             output.append(tags_fn)
     return "\n".join(output)
 
