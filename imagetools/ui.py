@@ -100,7 +100,7 @@ def image_tools_ui(clip_mode_type, clip_model_name):
             reject_dir = gr.Textbox(label='reject_dir')
             height = gr.Slider(0, 1024, value=512, label='height', step=1)
             width = gr.Slider(0, 1024, value=512, label='width', step=1)
-            facePercent = gr.Slider(0, 100, value=40, label='facePercent', step=1)
+            face_percent = gr.Slider(0, 100, value=40, label='facePercent', step=1)
             autocrop_button = gr.Button("autocrop")
 
         with gr.Tab("rename(改名)"):
@@ -113,7 +113,7 @@ def image_tools_ui(clip_mode_type, clip_model_name):
             tags_input_dir = gr.Textbox(label='input_dir')
 
             gr.Markdown("top(最前面) down(最后） center(中间) cover(覆盖) random(随机)")
-            gen_tags_pos = gr.Radio(["top", "down", "center", "cover", "random"], label="tags mode", value="top")
+            gen_tags_pos = gr.Radio(["top", "down", "center", "cover", "random"], label="tags pos", value="top")
 
             with gr.Row():
                 gen_clip_tags_btn = gr.Button("clip tags(生成CLIP标签签)")
@@ -156,6 +156,6 @@ def image_tools_ui(clip_mode_type, clip_model_name):
         )
         autocrop_button.click(
             bz_autocrop,
-            inputs=[input_dir, output_dir, reject_dir, height, width, facePercent],
+            inputs=[input_dir, output_dir, reject_dir, height, width, face_percent],
             outputs=text_output
         )

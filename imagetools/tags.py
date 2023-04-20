@@ -50,22 +50,22 @@ def get_image_tags_fns(input_dir: str) -> List[Tuple[str, str]]:
     return image_tags_files
 
 
-def insert_tag2file(new_tags: str, fn: str, pos: str):
+def insert_tag2file(new_tags: str, fn: str, tags_pos: str):
     tags = get_tag_from_file(fn)
     new_tags = [t.strip().replace("_", " ") for t in new_tags.split(",") if len(t.strip()) > 0]
-    if pos == "top":
+    if tags_pos == "top":
         tags = new_tags + tags
-    elif pos == "bottom":
+    elif tags_pos == "bottom":
         tags = tags + new_tags
-    elif pos == "center":
+    elif tags_pos == "center":
         tags = tags[:len(tags) // 2] + new_tags + tags[len(tags) // 2:]
-    elif pos == "random":
+    elif tags_pos == "random":
         rlen = random.randint(0, len(tags))
         tags = tags[:rlen] + new_tags + tags[rlen:]
-    elif pos == "cover":
+    elif tags_pos == "cover":
         tags = new_tags
     else:
-        raise ValueError(f"Unknown mode {pos}")
+        raise ValueError(f"Unknown mode {tags_pos}")
     tags = [t.strip().replace("_", " ") for t in tags if len(t.strip()) > 0]
     with open(fn, "w+") as f:
         f.write(",".join(tags))
