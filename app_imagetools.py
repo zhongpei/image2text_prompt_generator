@@ -13,7 +13,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 @click.option("--port", type=int, default=None, help="server port")
 def ui(port):
     with gr.Blocks(title="image tools(图片处理工具)") as block:
-        with gr.Accordion("settings(参数)"):
+        with gr.Accordion("settings(参数)", open=False):
             blip_max_length, clip_mode_type, clip_model_name, wd14_model_name, wd14_general_threshold, wd14_character_threshold = image2text_settings_ui()
         image_tools_ui(
             clip_mode_type=clip_mode_type,

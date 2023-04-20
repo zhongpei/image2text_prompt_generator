@@ -52,6 +52,7 @@ def get_image_tags_fns(input_dir: str) -> List[Tuple[str, str]]:
 
 def insert_tag2file(new_tags: str, fn: str, tags_pos: str):
     tags = get_tag_from_file(fn)
+
     new_tags = [t.strip().replace("_", " ") for t in new_tags.split(",") if len(t.strip()) > 0]
     if tags_pos == "top":
         tags = new_tags + tags
@@ -83,13 +84,13 @@ def gen_wd14_tags_files(
     output = []
     for image_fn, tags_fn in tag_files:
         with PIL.Image.open(image_fn) as image:
-            tags = w14_image2text(
+            tags, c, d, _, _, _ = w14_image2text(
                 image=image,
                 model_name=model_name,
                 general_threshold=general_threshold,
                 character_threshold=character_threshold
             )
-            tags = tags[:w14_tags_max_count]
+            tags = ",".join(tags.strip(",")[:w14_tags_max_count])
             insert_tag2file(new_tags=tags, tags_pos=tags_pos, fn=tags_fn)
             output.append(tags_fn)
     return "\n".join(output)
