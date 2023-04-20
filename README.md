@@ -36,6 +36,8 @@ Prompt 生成器
 * 支持stable diffusion和midjourney两种prompt生成方式
 * 使用[ChatGLM-6b-int4](https://huggingface.co/THUDM/chatglm-6b-int4)节省显存
 
+
+
 ## 一键包
 
 ### 百度云盘下载
@@ -61,7 +63,10 @@ git pull
 * webui.bat 主要功能
 * webui_chat.bat  主要功能+chatGLM聊天界面
 * webui_imagetools.bat 图片处理工具
-* webui_offline.bat 使用离线模式，需要修改settings.offline.toml里面的模型路径
+* webui_offline.bat 使用离线模式
+  * 修改settings.offline.toml里面的模型路径
+  * 模型git clone到models目录（不能直接从cache拷贝）
+* webui_venv.bat 自己手动安装venv环境，用这个启动，默认venv目录。
 * 第一次运行会自动下载模型，默认下载在用户目录.cache/huggingface
 
 ## 使用方式
@@ -91,6 +96,16 @@ git pull
 * prompt 生成会自动合并 blip或clip + wd14
 
 ![img.png](./img/image2text.png)
+
+## 图片处理工具
+* 批量扣背景
+* 糊脸（炼衣服用）
+* 扣大头
+* 批量改名（正则）
+* 打标签 （Clip+W14标签和翻译）
+
+![img.png](./img/imagetools.png)
+![img.png](./img/imagetools.tags.png)
 
 ## chatglm 生成
 
@@ -127,6 +142,48 @@ device = "cuda" # cpu mps cuda
 enable_chat = false # 是否启用聊天功能
 local_files_only = false # 是否只使用本地模型
 ```
+
+## 离线模型
+
+模型git clone到models目录（不能直接从cache拷贝），然后修改settings-offline.toml里面的模型路径
+* windows路径最好使用绝对路径，不要包含中文
+* linux/mac路径可以使用相对路径
+* 模型目录结构参考
+![img.png](./img/setting.offline.png)
+
+```toml
+[generator]
+enable = true # 是否启用generator功能
+device = "cuda" # cpu mps cuda
+fix_sd_prompt = true # 是否修复sd prompt
+# models
+microsoft_model = "./Promptist"
+gpt2_650k_model = "./gpt2-650k-stable-diffusion-prompt-generator"
+gpt_neo_125m_model = "./StableDiffusion-Prompt-Generator-GPT-Neo-125M"
+mj_model = "./text2image-prompt-generator"
+local_files_only = true # 是否只使用本地模型
+
+
+[translate]
+enable = true # 是否启用翻译功能
+device = "cuda" # cpu mps cuda
+local_files_only = true # 是否只使用本地模型
+zh2en_model = "./models/opus-mt-zh-en"
+en2zh_model = "./models/opus-mt-en-zh"
+
+cache_dir = "./data/translate_cache" # 翻译缓存目录
+
+[chatglm]
+# 本地模型 https://github.com/THUDM/ChatGLM-6B#从本地加载模型
+model = ".\\models\\chatglm-6b-int4" # ./chatglm-6b-int4 ./chatglm-6b-int8 ./chatglm-6b
+device = "cuda" # cpu mps cuda
+enable_chat = true # 是否启用聊天功能
+local_files_only = true # 是否只使用本地模型
+
+
+```
+
+
 
 # 安装
 
@@ -177,9 +234,22 @@ python app.py
  来源于 chatGPTBox 项目，修改部分提示词语
 * 使用 api.bat 启动
 * 配置 chatGPTBox 插件为 自定义模型 http://localhost:8000
+* 在release里面下载插件
+
+## hg cache 配置
+
+防止c盘沾满，可以配置cache目录到其他盘
+
+![img.png](./img/hg_cache.png)
+
+## 限制
+
+* 不支持cuda，不建议使用clip
+* 显存<6G, 不建议使用ChatGLM
+
 
 ## 更新信息
-
+* v1.8  打标签工具
 * v1.7  翻译本地标签缓存，翻译缓存, API
 * v1.6  图片工具 
 * v1.5  增加chatGLM模型
