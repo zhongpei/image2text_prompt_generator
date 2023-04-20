@@ -59,7 +59,7 @@ def image_generate_prompter(
 
 
 def translate_input(text: str, chatglm_text: str) -> str:
-    if chatglm_text is not None and len(chatglm_text) > 0:
+    if chatglm_text is not None and len(chatglm_text.strip()) > 0:
         return translate_zh2en(chatglm_text)
     return translate_zh2en(text)
 
@@ -80,13 +80,13 @@ def empty_cache(force_clear_cache: bool = False):
 
 
 def ui(enable_chat: bool = False):
-    with gr.Blocks(title="Prompt生成器") as block:
+    with gr.Blocks(title="Prompt generator(生成器)") as block:
         with gr.Column():
             with gr.Row():
-                force_clear_cache = gr.Checkbox(False, label='强制清显存', width=60)
-                empty_cache_btn = gr.Button('清显存')
+                force_clear_cache = gr.Checkbox(False, label='force 强制清显存(谨慎使用)', width=60)
+                empty_cache_btn = gr.Button('clean VRam(清显存)')
 
-            with gr.Tab('文本生成'):
+            with gr.Tab('text2text(文本生成)'):
                 with gr.Row():
                     input_text = gr.Textbox(lines=6, label='你的想法', placeholder='在此输入内容...')
                     chatglm_output = gr.Textbox(lines=6, label='ChatGLM', placeholder='在此输入内容...')
@@ -100,14 +100,14 @@ def ui(enable_chat: bool = False):
                     translate_btn = gr.Button('翻译')
                     generate_prompter_btn = gr.Button('优化Prompt')
 
-            with gr.Tab('从图片中生成'):
+            with gr.Tab('image2text(从图片中生成)'):
                 with gr.Row():
                     input_image = gr.Image(type='pil')
                     exif_info = gr.HTML()
                 output_blip_or_clip = gr.Textbox(label='生成的 Prompt', lines=4)
                 output_w14 = gr.Textbox(label='W14的 Prompt', lines=4)
 
-                with gr.Accordion('W14', open=False):
+                with gr.Accordion('WD14', open=False):
                     w14_raw_output = gr.Textbox(label="Output (raw string)")
                     w14_booru_output = gr.Textbox(label="Output (booru string)")
                     w14_rating_output = gr.Label(label="Rating")
@@ -122,7 +122,7 @@ def ui(enable_chat: bool = False):
                     img_clip_btn = gr.Button('CLIP图片转描述')
                     img_prompter_btn = gr.Button('优化Prompt')
 
-            with gr.Tab('参数设置'):
+            with gr.Tab('settings(参数设置)'):
                 with gr.Accordion('Prompt优化参数', open=True):
                     prompt_mode_name = gr.Radio(
                         [
@@ -144,7 +144,8 @@ def ui(enable_chat: bool = False):
                         step=1
                     )
                 git_max_length, clip_mode_type, clip_model_name, wd14_model_name, wd14_general_threshold, wd14_character_threshold = image2text_settings_ui()
-
+                with gr.Accordion('ChatGLM', open=False):
+                    glm_image_prompt = gr.Textbox(label='ChatGLM prompt', lines=1, value="描述画面:")
             if enable_chat:
                 chatglm_ui()
             if settings.image_tools.enable:
@@ -172,7 +173,7 @@ def ui(enable_chat: bool = False):
         )
         chatglm_btn.click(
             fn=chat2text,
-            inputs=input_text,
+            inputs=[input_text, glm_image_prompt],
             outputs=chatglm_output,
         )
         translate_btn.click(
