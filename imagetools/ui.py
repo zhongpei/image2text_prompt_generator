@@ -76,11 +76,11 @@ def load_translated_tags_fn(input_dir: str):
 
 
 def image_tools_ui(
-        clip_mode_type,
-        clip_model_name,
-        wd14_model,
-        wd14_general_threshold,
-        wd14_character_threshold,
+        clip_mode_type: str,
+        clip_model_name: str,
+        wd14_model: str,
+        wd14_general_threshold: float,
+        wd14_character_threshold: float,
 ):
     with gr.Tab("image tools"):
         with gr.Tab("remove background(扣背)"):
@@ -136,9 +136,9 @@ def image_tools_ui(
             inputs=[
                 tags_input_dir,
                 gen_tags_pos,
-                wd14_model,
-                wd14_general_threshold,
-                wd14_character_threshold,
+                gr.Text(wd14_model),
+                gr.Number(wd14_general_threshold),
+                gr.Number(wd14_character_threshold),
                 wd14_tags_max_count
             ],
             outputs=text_output,
@@ -146,7 +146,12 @@ def image_tools_ui(
 
         gen_clip_tags_btn.click(
             gen_clip_tags_files,
-            inputs=[tags_input_dir, gen_tags_pos, clip_mode_type, clip_model_name],
+            inputs=[
+                tags_input_dir,
+                gen_tags_pos,
+                gr.Text(clip_mode_type),
+                gr.Text(clip_model_name)
+            ],
             outputs=text_output
         )
 
