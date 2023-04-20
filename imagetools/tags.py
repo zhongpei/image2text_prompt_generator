@@ -76,7 +76,7 @@ def gen_clip_tags_files(input_dir: str, tags_mode: str, clip_mode_type: str, cli
     output = []
     for image_fn, tags_fn in tag_files:
         with PIL.Image.open(image_fn) as image:
-            tags = clip_image2text(image=image, clip_mode_type=clip_mode_type, clip_model_name=clip_model_name)
+            tags = clip_image2text(image=image, mode_type=clip_mode_type, model_name=clip_model_name)
             insert_tag2file(new_tags=tags, mode=tags_mode, fn=tags_fn)
             output.append(tags_fn)
     return "\n".join(output)

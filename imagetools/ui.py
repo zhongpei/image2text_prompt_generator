@@ -110,14 +110,16 @@ def image_tools_ui(clip_mode_type, clip_model_name):
             rename_replace_target = gr.Textbox(label='replace_targete', value="")
             rename_btn = gr.Button("rename")
         with gr.Tab("tags(标签)"):
-            tags_input_dir = gr.Textbox(label='input_dir')
-            translate_tags_btn = gr.Button("load tags(加载标签)")
+            with gr.Row():
+                tags_input_dir = gr.Textbox(label='input_dir')
+                translate_tags_btn = gr.Button("load tags(加载标签)")
 
-            gen_tags_mode = gr.Radio(["top", "down", "center", "convert", "random"], label="tags mode", value="top")
+            with gr.Row():
+                gen_tags_mode = gr.Radio(["top", "down", "center", "convert", "random"], label="tags mode", value="top")
+                gen_clip_tags_btn = gr.Button("clip tags(生成CLIP标签签)")
 
-            gen_clip_tags_btn = gr.Button("gen clip tags(生成CLIP标签签)")
 
-            with gr.Accordion("tags"):
+            with gr.Accordion("tags", open=False):
                 tags_label = gr.Label("tags")
                 tags_zh_label = gr.Label("tags_zh")
 
