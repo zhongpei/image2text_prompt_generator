@@ -1,5 +1,11 @@
 # Image2text Prompt Generator
 
+## README Translation
+- [English](README.en.md)
+- [简体中文](README.md)
+- [Japanese](README.jp.md)
+
+
 ## 介绍
 
 Prompt 生成器
