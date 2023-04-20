@@ -109,7 +109,7 @@ models = Models.instance()
 
 
 @torch.no_grad()
-def clip_image2text(image, mode_type='best', model_name='vit_h_14'):
+def clip_image2text(image: PIL.Image.Image, mode_type: str = 'best', model_name: str = 'vit_h_14') -> str:
     image = image.convert('RGB')
     model = getattr(models, f'clip_{model_name}_model')
     if mode_type == 'classic':
@@ -126,7 +126,7 @@ def clip_image2text(image, mode_type='best', model_name='vit_h_14'):
 
 
 @torch.no_grad()
-def git_image2text(input_image, max_length=50):
+def git_image2text(input_image: PIL.Image.Image, max_length: int = 50) -> str:
     image = input_image.convert('RGB')
     pixel_values = models.git_processor(images=image, return_tensors="pt").to(device).pixel_values
 
