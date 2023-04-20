@@ -12,7 +12,13 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 @click.option("--port", type=int, default=None, help="server port")
 def ui(port):
     with gr.Blocks(title="图片处理工具") as block:
-        image_tools_ui()
+        image_tools_ui(
+            clip_mode_type=settings.clip.default_model_type,
+            clip_model_name=settings.clip.default_model_name,
+            wd14_model=settings.wd14.default_model_name,
+            wd14_general_threshold=settings.wd14.default_general_threshold,
+            wd14_character_threshold=settings.wd14.default_character_threshold,
+        )
 
     block.queue(max_size=settings.server.queue_size).launch(
         show_api=settings.server.show_api,

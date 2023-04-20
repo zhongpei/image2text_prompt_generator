@@ -36,6 +36,11 @@ default_model_name = "vit_l_14" # vit_h_14 vit_l_14
 default_model_type = "fast" # fast best classic negative
 
 
+[wd14]
+default_model_name="ConvNextV2"
+default_general_threshold=0.35
+default_character_threshold=0.85
+
 [translate]
 enable = true # 是否启用翻译功能
 device = "cuda" # cpu mps cuda

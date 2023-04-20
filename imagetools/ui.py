@@ -120,7 +120,7 @@ def image_tools_ui(
 
             gr.Markdown("top(最前面) down(最后） center(中间) cover(覆盖) random(随机)")
             gen_tags_pos = gr.Radio(["top", "down", "center", "cover", "random"], label="tags pos", value="top")
-            w14_tags_max_count = gr.Slider(1, 100, value=10, label='tags max count', step=1)
+            wd14_tags_max_count = gr.Slider(1, 100, value=10, label='tags max count', step=1)
             with gr.Row():
                 gen_clip_tags_btn = gr.Button("clip tags(生成CLIP标签签)")
                 gen_wd14_tags_btn = gr.Button("wd14 tags(生成wd14标签签)")
@@ -139,7 +139,7 @@ def image_tools_ui(
                 wd14_model,
                 wd14_general_threshold,
                 wd14_character_threshold,
-                w14_tags_max_count
+                wd14_tags_max_count
             ],
             outputs=text_output,
         )
