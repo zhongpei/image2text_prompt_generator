@@ -240,7 +240,7 @@ python app.py
 ![img.png](./img/hg_cache.png)
 
 ## 更新信息
-
+* v1.8  打标签工具
 * v1.7  翻译本地标签缓存，翻译缓存, API
 * v1.6  图片工具 
 * v1.5  增加chatGLM模型
