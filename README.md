@@ -46,7 +46,7 @@ ChatGLM 模型需要单独下载(下载int4版本)，放到程序目录 models �
 
 * [v1.0](https://pan.baidu.com/s/1pKtpPmiuliX7rf0z-5HY_w?pwd=79sk) 提取码: 79sk
 * [v1.5](https://pan.baidu.com/s/1vMzDGbtTO0-CD7wk-4GrcQ?pwd=eb33) 提取码: eb33
-* [开发版](https://pan.baidu.com/s/1w1D3PdJjn3iOQFap4a-hWg?pwd=x964) 提取码: x964
+* [v1.8](https://pan.baidu.com/s/1bup8Oa56e_S4andbU8wk0g?pwd=7hbt) 提取码: 7hbt
 * [ChatGLM模型](https://pan.baidu.com/s/1_Hs-MRjSxg0gaIRDaUTD8Q?pwd=6ti4) 提取码: 6ti4
 
 ### 更新程序
