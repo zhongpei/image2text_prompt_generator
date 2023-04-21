@@ -71,16 +71,27 @@ def parse_codeblock(text):
     return "".join(lines)
 
 
-class BasePredictor(ABC, LLM):
+class InvalidScoreLogitsProcessor(LogitsProcessor):
 
-    @abstractmethod
-    def __init__(self):
-        self.model = None
-        self.tokenizer = None
+    def __init__(self, start_pos=20005):
+        self.start_pos = start_pos
 
-    @abstractmethod
-    def stream_chat_continue(self, *args, **kwargs):
-        raise NotImplementedError
+    def __call__(self, input_ids: torch.LongTensor,
+                 scores: torch.FloatTensor) -> torch.FloatTensor:
+        if torch.isnan(scores).any() or torch.isinf(scores).any():
+            scores.zero_()
+            scores[..., self.start_pos] = 5e4
+        return scores
+
+
+class ChatGLM(LLM):
+    max_token: int = 10000
+    temperature: float = 0.01
+    top_p = 0.9
+    history = []
+    tokenizer: object = None
+    model: object = None
+    history_len: int = 10
 
     def predict_continue(self, query, latest_message, max_length, top_p,
                          temperature, allow_generate, history, *args,
@@ -101,29 +112,6 @@ class BasePredictor(ABC, LLM):
             yield history, '', ''
             if not allow_generate[0]:
                 break
-
-
-class InvalidScoreLogitsProcessor(LogitsProcessor):
-
-    def __init__(self, start_pos=20005):
-        self.start_pos = start_pos
-
-    def __call__(self, input_ids: torch.LongTensor,
-                 scores: torch.FloatTensor) -> torch.FloatTensor:
-        if torch.isnan(scores).any() or torch.isinf(scores).any():
-            scores.zero_()
-            scores[..., self.start_pos] = 5e4
-        return scores
-
-
-class ChatGLM(BasePredictor):
-    max_token: int = 10000
-    temperature: float = 0.01
-    top_p = 0.9
-    history = []
-    tokenizer: object = None
-    model: object = None
-    history_len: int = 10
 
     @property
     def _llm_type(self) -> str:
