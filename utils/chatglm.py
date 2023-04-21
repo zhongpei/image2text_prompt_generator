@@ -1,23 +1,21 @@
 import time
 from abc import ABC, abstractmethod
-from typing import List, Tuple, Optional
-from config import settings
+from typing import Dict, Tuple, Optional
+from typing import List
+
 import torch
-from transformers import AutoModel, AutoTokenizer
+from langchain.llms.base import LLM
+from langchain.llms.utils import enforce_stop_tokens
+from transformers import AutoTokenizer, AutoModel
 from transformers import LogitsProcessor, LogitsProcessorList
 
+from config import settings
 from .singleton import Singleton
-import json
-from langchain.llms.base import LLM
-from typing import Optional, List
-from langchain.llms.utils import enforce_stop_tokens
-from transformers import AutoTokenizer, AutoModel, AutoConfig
-import torch
-from configs.model_config import LLM_DEVICE
 
-from typing import Dict, Tuple, Union, Optional
-
-DEVICE = LLM_DEVICE
+device = "cuda" if torch.cuda.is_available() else "cpu"
+if settings.chatglm.device == "cpu":
+    device = "cpu"
+DEVICE = device
 DEVICE_ID = "0" if torch.cuda.is_available() else None
 CUDA_DEVICE = f"{DEVICE}:{DEVICE_ID}" if DEVICE_ID else DEVICE
 
@@ -59,11 +57,6 @@ def auto_configure_device_map(num_gpus: int) -> Dict[str, int]:
     return device_map
 
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
-if settings.chatglm.device == "cpu":
-    device = "cpu"
-
-
 def parse_codeblock(text):
     lines = text.split("\n")
     for i, line in enumerate(lines):
@@ -78,7 +71,7 @@ def parse_codeblock(text):
     return "".join(lines)
 
 
-class BasePredictor(ABC):
+class BasePredictor(ABC, LLM):
 
     @abstractmethod
     def __init__(self):
