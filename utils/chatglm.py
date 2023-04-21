@@ -133,8 +133,9 @@ class ChatGLM(LLM):
         self.history = self.history + [[None, response]]
         return response
 
-    def __init__(self, model_name):
+    def __init__(self):
         super().__init__()
+        model_name = settings.chatglm.model
 
         print(f'Loading model {model_name} on {device}')
         start = time.perf_counter()
@@ -260,7 +261,7 @@ class Models(object):
             return getattr(self, item)
 
         if item == 'chatglm':
-            self.chatglm = ChatGLM(settings.chatglm.model)
+            self.chatglm = ChatGLM()
 
         return getattr(self, item)
 
