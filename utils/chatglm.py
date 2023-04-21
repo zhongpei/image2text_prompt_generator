@@ -92,6 +92,7 @@ class ChatGLM(LLM):
     tokenizer: object = None
     model: object = None
     history_len: int = 10
+    model_name: str = None
 
     def predict_continue(self, query, latest_message, max_length, top_p,
                          temperature, allow_generate, history, *args,
