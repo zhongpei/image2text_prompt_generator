@@ -13,7 +13,9 @@
 イメージからのプロンプトの説明の解析をサポートし、セカンダリ イメージ生成の説明に基づいて拡張できます。
 を通じて中国語をサポート[ChatGLM](https://github.com/THUDM/ChatGLM-6B)プロンプトの説明を拡張します。
 
-✅ このプロジェクトで使用されるモデル (すべてのモデルは遅延ロードされ、ダウンロードされ、使用される場合にのみロードされます)
+✅ このプロジェクトで使用するモデル
+
+> すべてのモデルは、使用時にのみ遅延ロード、ダウンロード、およびロードされ、ビデオ メモリを占有しません。
 
 -   グラフィックテキスト
     -   [笑顔のオオカミ/wd-v1-4-swinv2-tagger-v2](https://huggingface.co/SmilingWolf/wd-v1-4-swinv2-tagger-v2)
@@ -40,7 +42,7 @@
 -   オンラインデモ[ハグフェイスのデモ](https://huggingface.co/spaces/hahahafofo/image2text_prompt_generator)
 -   グラフィックおよびテキスト機能には GPU の導入が必要です
 -   一部のモデルでは、GPU のメモリ オーバーフローを防止するために CPU (翻訳、Wen Shengwen) を使用します。
--   安定した拡散と旅の途中の2つの迅速な生成方法をサポート
+-   支持`stable diffusion`と`midjourney`二`prompt`生成方法
 -   使用[ChatGlam-6B-Net4](https://huggingface.co/THUDM/chatglm-6b-int4)ビデオメモリを節約
 
 ## ワンキーパッケージ
@@ -54,33 +56,36 @@ ChatGLM モデルは別途ダウンロード (int4 バージョンをダウン�
 -   [v1.8](https://pan.baidu.com/s/1bup8Oa56e_S4andbU8wk0g?pwd=7hbt)抽出コード: 7hbt
 -   [ChatGLM模型](https://pan.baidu.com/s/1_Hs-MRjSxg0gaIRDaUTD8Q?pwd=6ti4)抽出コード: 6ti4
 
+### プログラムの開始
+
+-   `webui.bat`主な機能
+-   `webui_chat.bat`主な機能 +chatGLM チャットインターフェース
+-   `webui_imagetools.bat`画像処理ツール
+-   `webui_offline.bat`オフライン モードを使用する
+    -   改訂`settings.offline.toml`モデルパス内
+    -   模型`git clone`到着`models`ディレクトリ (キャッシュから直接コピーすることはできません)
+-   `webui_venv.bat`手動でインストールする`venv`環境、これで開始、デフォルト`venv`目次。
+-   最初の実行では、モデルが自動的にダウンロードされます。デフォルトのダウンロードはユーザー ディレクトリにあります。`.cache/huggingface`
+
 ### 更新プログラム
 
 ```bash
-cd image2text_prompt_generator
-git pull
+  cd image2text_prompt_generator
+  git pull
 ```
 
-または github パッケージをダウンロードし、プログラム ディレクトリをカバーする zip をダウンロードします。
+また`github`zip をパッケージ化してダウンロードし、プログラム ディレクトリを上書きします。
 
-### プログラムの開始
+## 構成と使用
 
--   webui.bat の主な機能
--   webui_chat.bat メイン関数 +chatGLM チャット インターフェイス
--   webui_imagetools.bat 画像処理ツール
--   webui_offline.bat はオフライン モードを使用します
-    -   settings.offline.toml のモデル パスを変更します。
-    -   モデル ディレクトリへのモデルの git clone (キャッシュから直接コピーすることはできません)
--   webui_venv.bat 自分で venv 環境を手動でインストールします。これを使用して、デフォルトの venv ディレクトリを起動します。
--   最初の実行でモデルが自動的にダウンロードされ、デフォルトのダウンロードはユーザー ディレクトリ .cache/huggingface にあります。
-
-## 使い方
+<details>
+<summary>使用方法</summary>
 
 ### 迅速な最適化モデル
 
--   microsoft は簡単な説明を生成します (安定した拡散)
--   mj ランダムな説明を生成する (旅の途中)
--   gpt2 650k と gpt_neo_125M は、より複雑な記述を生成します
+-   `mircosoft`簡単な説明を生成します (`stable diffusion`）
+-   `mj`ランダムな説明を生成します (`midjourney`）
+-   `gpt2 650k`と`gpt_neo_125M`より複雑な説明を生成する
 
 ![img.png](./img/param.png)
 
@@ -124,9 +129,26 @@ git pull
 
 ![img.png](./img/chatglm.png)
 
-## 構成ファイル (settings.toml)
+## ブラウザプラグイン
 
-を参照してください。[ChatGLM はモデルをローカルに読み込みます](https://github.com/THUDM/ChatGLM-6B#从本地加载模型)
+から`chatGPTBox`プロジェクト、いくつかのプロンプト ワードを変更します
+
+-   使用`api.bat`起動
+-   配置`chatGPTBox`プラグインはカスタムモデル http&#x3A;//localhost:8000 です
+-   存在[リリース](https://github.com/zhongpei/image2text_prompt_generator/releases)中にプラグインをダウンロード
+-   [変更されたプラグイン](https://github.com/zhongpei/chatGPTBox)
+
+## 限界
+
+-   サポートしません`cuda`、クリップの使用はお勧めしません
+-   ビデオ メモリ &lt;6G、ChatGLM の使用は推奨されません
+
+</details>
+
+<details>
+<summary>配置文件</summary>
+
+`settings.toml`
 
 ```toml
 [server]
@@ -150,11 +172,15 @@ local_files_only = false # 是否只使用本地模型
 
 ## オフライン モデル
 
-モデル ディレクトリに git clone し (キャッシュから直接コピーすることはできません)、settings-offline.toml でモデル パスを変更します。
+を参照してください。[ChatGLM はモデルをローカルに読み込みます](https://github.com/THUDM/ChatGLM-6B#从本地加载模型)模型`git clone`到着`models`ディレクトリ（直接ではありません`cache`コピー)、次に変更します`settings-offline.toml`モデルパス内
 
 -   Windows パスは絶対パスを使用するのが最適です。中国語を含めないでください。
 -   linux/mac パスは相対パスを使用できます
--   モデル ディレクトリ構造リファレンス![img.png](./img/setting.offline.png)
+-   モデル ディレクトリ構造リファレンス
+
+![img.png](./img/setting.offline.png)
+
+`settings-offline.toml`
 
 ```toml
 [generator]
@@ -188,9 +214,21 @@ local_files_only = true # 是否只使用本地模型
 
 ```
 
-# インストール
+## hg cache 配置
 
-まず、コンピューターに Python 3 がインストールされていることを確認します。 Python をインストールしていない場合は、公式サイト ([https://www.python.org/downloads/) から最新バージョンをダウンロードしてインストールします。](https://www.python.org/downloads/）下载并安装最新版本的)パイソン3.
+Cドライブがいっぱいになるのを防ぐために、それを構成することができます`cache`ディレクトリを別のディスクに
+
+![img.png](./img/hg_cache.png)
+
+</details>
+
+<details>
+<summary>手动安装</summary>
+
+## 手動インストール
+
+まず、コンピュータに`Python3.10`.インストールしていない場合
+Python、公式サイト ([https://www.python.org/downloads/) から最新バージョンをダウンロードしてインストールします。](https://www.python.org/downloads/）下载并安装最新版本的)`Python3.10`.
 次に、ツールのインストール パッケージをダウンロードして解凍します。
 コマンド ライン ウィンドウを開き (Windows ユーザーは Win + R キーを押して、実行ボックスに「cmd」と入力し、Enter キーを押してコマンド ライン ウィンドウを開きます)、ツールのインストール パッケージが配置されているディレクトリを入力します。
 コマンド ライン ウィンドウに次のコマンドを入力して、必要な依存関係をインストールします。
@@ -228,34 +266,17 @@ python app.py
     
 ```
 
-これにより、ツールが起動し、ブラウザでツールのホームページが開きます。ブラウザが自動的に開かない場合は、次の URL を手動で入力してください: http&#x3A;//localhost:7860/
+これにより、ツールが起動し、ブラウザでツールのホームページが開きます。ブラウザが自動的に開かない場合は、次の URL を手動で入力してください: http&#x3A;//localhost:7869/
 ツールが正常にインストールされ、開始されました。ツールのドキュメントに従って、ツールを使用して画像データを処理することができます。
 
-## ブラウザプラグイン
-
-chatGPTBox プロジェクトから、いくつかのプロンプト ワードを変更します
-
--   api.bat から始めます
--   chatGPTBox プラグインをカスタム モデル http&#x3A;//localhost:8000 として構成します。
--   リリースでプラグインをダウンロードする
-
-## hg cache 配置
-
-c ドライブがいっぱいになるのを防ぐために、キャッシュ ディレクトリを他のドライブに設定できます。
-
-![img.png](./img/hg_cache.png)
-
-## 限界
-
--   cuda はサポートされておらず、clip は推奨されていません
--   ビデオ メモリ &lt;6G、ChatGLM の使用は推奨されません
+</details>
 
 ## 更新情報
 
 -   v1.8 ラベル付けツール
 -   v1.7 翻訳ローカル タグ キャッシュ、翻訳キャッシュ、API
 -   v1.6 画像ツール
--   v1.5 chatGLM モデルを追加
+-   v1.5 增加chatGLM模型
 -   v1.0 追加 webui
 
 ## プラン
