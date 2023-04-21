@@ -13,7 +13,9 @@ Prompt generator
 Supports parsing prompt descriptions from images, and can be extended based on descriptions for secondary image generation.
 Support Chinese through[ChatGLM](https://github.com/THUDM/ChatGLM-6B)Extend the Prompt description.
 
-✅ Models used in this project (all models are lazy loaded, downloaded and loaded only when used)
+✅ Models used in this project
+
+> All models are lazy loaded, downloaded and loaded only when used, and will not occupy video memory.
 
 -   graphic text
     -   [SmilingWolf/wd-v1-4-swinv2-tagger-v2](https://huggingface.co/SmilingWolf/wd-v1-4-swinv2-tagger-v2)
@@ -40,7 +42,7 @@ Support Chinese through[ChatGLM](https://github.com/THUDM/ChatGLM-6B)Extend the 
 -   online demo[hug face demo](https://huggingface.co/spaces/hahahafofo/image2text_prompt_generator)
 -   Graphics and text functions require GPU deployment
 -   Some models use CPU (translation, Wen Shengwen) to prevent GPU memory overflow
--   Support stable diffusion and midjourney two prompt generation methods
+-   支持`stable diffusion`and`midjourney`two`prompt`Generation method
 -   use[ChatGlam-6B-Net4](https://huggingface.co/THUDM/chatglm-6b-int4)save video memory
 
 ## One key package
@@ -54,33 +56,36 @@ The ChatGLM model needs to be downloaded separately (download the int4 version),
 -   [v1.8](https://pan.baidu.com/s/1bup8Oa56e_S4andbU8wk0g?pwd=7hbt)Extract code: 7hbt
 -   [ChatGLM model](https://pan.baidu.com/s/1_Hs-MRjSxg0gaIRDaUTD8Q?pwd=6ti4)Extraction code: 6ti4
 
+### starting program
+
+-   `webui.bat`The main function
+-   `webui_chat.bat`Main function +chatGLM chat interface
+-   `webui_imagetools.bat`image processing tools
+-   `webui_offline.bat`use offline mode
+    -   Revise`settings.offline.toml`inside the model path
+    -   Model`git clone`arrive`models`Directory (cannot be copied directly from cache)
+-   `webui_venv.bat`Install it manually`venv`Environment, start with this, default`venv`Table of contents.
+-   The first run will automatically download the model, and the default download is in the user directory`.cache/huggingface`
+
 ### update program
 
 ```bash
-cd image2text_prompt_generator
-git pull
+  cd image2text_prompt_generator
+  git pull
 ```
 
-Or github package and download zip, covering the program directory
+or`github`Package and download zip, overwrite the program directory
 
-### starting program
+## Configuration and use
 
--   main function of webui.bat
--   webui_chat.bat main function +chatGLM chat interface
--   webui_imagetools.bat image processing tool
--   webui_offline.bat uses offline mode
-    -   Modify the model path in settings.offline.toml
-    -   Model git clone to the models directory (cannot be copied directly from the cache)
--   webui_venv.bat Manually install the venv environment by yourself, use this to start, the default venv directory.
--   The first run will automatically download the model, and the default download is in the user directory .cache/huggingface
-
-## How to use
+<details>
+<summary>使用方法</summary>
 
 ### prompt optimization model
 
--   microsoft generates a simple description (stable diffusion)
--   mj generate random descriptions (midjourney)
--   gpt2 650k and gpt_neo_125M generate more complex descriptions
+-   `mircosoft`Generate a simple description (`stable diffusion`)
+-   `mj`Generate a random description (`midjourney`)
+-   `gpt2 650k`and`gpt_neo_125M`generate more complex descriptions
 
 ![img.png](./img/param.png)
 
@@ -124,9 +129,26 @@ Or github package and download zip, covering the program directory
 
 ![img.png](./img/chatglm.png)
 
-## Configuration file (settings.toml)
+## browser plug-in
 
-Please refer to[ChatGLM loads the model locally](https://github.com/THUDM/ChatGLM-6B#从本地加载模型)
+from`chatGPTBox`project, modify some prompt words
+
+-   use`api.bat`start up
+-   configuration`chatGPTBox`The plugin is custom model http&#x3A;//localhost:8000
+-   exist[release](https://github.com/zhongpei/image2text_prompt_generator/releases)Download the plugin inside
+-   [Modified plugin](https://github.com/zhongpei/chatGPTBox)
+
+## limit
+
+-   not support`cuda`, it is not recommended to use clip
+-   Video memory &lt;6G, it is not recommended to use ChatGLM
+
+</details>
+
+<details>
+<summary>配置文件</summary>
+
+`settings.toml`
 
 ```toml
 [server]
@@ -150,11 +172,15 @@ local_files_only = false # 是否只使用本地模型
 
 ## offline model
 
-Model git clone to the models directory (cannot be copied directly from the cache), and then modify the model path in settings-offline.toml
+Please refer to[ChatGLM loads the model locally](https://github.com/THUDM/ChatGLM-6B#从本地加载模型)Model`git clone`arrive`models`directory (not directly from`cache`copy), then modify the`settings-offline.toml`inside the model path
 
 -   The windows path is best to use an absolute path, do not contain Chinese
 -   linux/mac paths can use relative paths
--   Model Directory Structure Reference![img.png](./img/setting.offline.png)
+-   Model Directory Structure Reference
+
+![img.png](./img/setting.offline.png)
+
+`settings-offline.toml`
 
 ```toml
 [generator]
@@ -188,9 +214,21 @@ local_files_only = true # 是否只使用本地模型
 
 ```
 
-# Install
+## hg cache configuration
 
-First, make sure you have Python 3 installed on your computer. If you don't have Python installed, go to the official site ([https://www.python.org/downloads/) to download and install the latest version of](https://www.python.org/downloads/）下载并安装最新版本的)Python 3.
+To prevent the c drive from being full, it can be configured`cache`directory to another disk
+
+![img.png](./img/hg_cache.png)
+
+</details>
+
+<details>
+<summary>手动安装</summary>
+
+## manual installation
+
+First, make sure your computer has the`Python3.10`. If you have not installed
+Python, go to the official site ([https://www.python.org/downloads/) to download and install the latest version of](https://www.python.org/downloads/）下载并安装最新版本的)`Python3.10`.
 Next, download and unzip our tools installation package.
 Open the command line window (Windows users can press Win + R keys, enter "cmd" in the run box and press Enter to open the command line window), and enter the directory where the tool installation package is located.
 Enter the following command in a command line window to install the required dependencies:
@@ -228,27 +266,10 @@ python app.py
     
 ```
 
-This will launch the tool and open the tool's home page in your browser. If your browser does not open automatically, please manually enter the following URL: http&#x3A;//localhost:7860/
+This will launch the tool and open the tool's home page in your browser. If your browser does not open automatically, please manually enter the following URL: http&#x3A;//localhost:7869/
 The tools are now successfully installed and started. You can follow the tool's documentation to start using it to process your image data.
 
-## browser plug-in
-
-From the chatGPTBox project, modify some prompt words
-
--   Start with api.bat
--   Configure the chatGPTBox plugin as a custom model http&#x3A;//localhost:8000
--   Download plugins in release
-
-## hg cache configuration
-
-To prevent the c drive from being full, you can configure the cache directory to other drives
-
-![img.png](./img/hg_cache.png)
-
-## limit
-
--   cuda is not supported, and clip is not recommended
--   Video memory &lt;6G, it is not recommended to use ChatGLM
+</details>
 
 ## Update information
 
