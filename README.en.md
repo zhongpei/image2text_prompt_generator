@@ -42,7 +42,7 @@ Support Chinese through[ChatGLM](https://github.com/THUDM/ChatGLM-6B)Extend the 
 -   online demo[hug face demo](https://huggingface.co/spaces/hahahafofo/image2text_prompt_generator)
 -   Graphics and text functions require GPU deployment
 -   Some models use CPU (translation, Wen Shengwen) to prevent GPU memory overflow
--   支持`stable diffusion`and`midjourney`two`prompt`Generation method
+-   support`stable diffusion`and`midjourney`two`prompt`Generation method
 -   use[ChatGlam-6B-Net4](https://huggingface.co/THUDM/chatglm-6b-int4)save video memory
 
 ## One key package
@@ -54,17 +54,17 @@ The ChatGLM model needs to be downloaded separately (download the int4 version),
 -   [v1.0](https://pan.baidu.com/s/1pKtpPmiuliX7rf0z-5HY_w?pwd=79sk)Extraction code: 79sk
 -   [v1.5](https://pan.baidu.com/s/1vMzDGbtTO0-CD7wk-4GrcQ?pwd=eb33)Extraction code: eb33
 -   [v1.8](https://pan.baidu.com/s/1bup8Oa56e_S4andbU8wk0g?pwd=7hbt)Extract code: 7hbt
--   [ChatGLM model](https://pan.baidu.com/s/1_Hs-MRjSxg0gaIRDaUTD8Q?pwd=6ti4)Extraction code: 6ti4
+-   [offline model](https://pan.baidu.com/s/1_Hs-MRjSxg0gaIRDaUTD8Q?pwd=6ti4)Extraction code: 6ti4
 
 ### starting program
 
 -   `webui.bat`The main function
 -   `webui_chat.bat`Main function +chatGLM chat interface
--   `webui_imagetools.bat`image processing tools
+-   `webui_imagetools.bat`image processing tool
 -   `webui_offline.bat`use offline mode
-    -   Revise`settings.offline.toml`inside the model path
+    -   修改`settings.offline.toml`inside the model path
     -   Model`git clone`arrive`models`Directory (cannot be copied directly from cache)
--   `webui_venv.bat`Install it manually`venv`Environment, start with this, default`venv`Table of contents.
+-   `webui_venv.bat`Install it manually`venv`环境，用这个启动，默认`venv`Table of contents.
 -   The first run will automatically download the model, and the default download is in the user directory`.cache/huggingface`
 
 ### update program
@@ -107,7 +107,7 @@ or`github`Package and download zip, overwrite the program directory
 
 ![img.png](./img/image2text.png)
 
-## image processing tools
+## image processing tool
 
 -   Batch buckle background
 -   paste face (for refining clothes)
@@ -131,16 +131,16 @@ or`github`Package and download zip, overwrite the program directory
 
 ## browser plug-in
 
-from`chatGPTBox`project, modify some prompt words
+from`chatGPTBox`Project, modify some prompt words
 
 -   use`api.bat`start up
--   configuration`chatGPTBox`The plugin is custom model http&#x3A;//localhost:8000
+-   configuration`chatGPTBox`Plugins for custom models`http://localhost:8000/chat/completions`
 -   exist[release](https://github.com/zhongpei/image2text_prompt_generator/releases)Download the plugin inside
 -   [Modified plugin](https://github.com/zhongpei/chatGPTBox)
 
 ## limit
 
--   not support`cuda`, it is not recommended to use clip
+-   不支持`cuda`, it is not recommended to use clip
 -   Video memory &lt;6G, it is not recommended to use ChatGLM
 
 </details>
@@ -172,7 +172,7 @@ local_files_only = false # 是否只使用本地模型
 
 ## offline model
 
-Please refer to[ChatGLM loads the model locally](https://github.com/THUDM/ChatGLM-6B#从本地加载模型)Model`git clone`arrive`models`directory (not directly from`cache`copy), then modify the`settings-offline.toml`inside the model path
+Please refer to[ChatGLM local load model](https://github.com/THUDM/ChatGLM-6B#从本地加载模型)Model`git clone`arrive`models`directory (not directly from`cache`copy), then modify the`settings-offline.toml`inside the model path
 
 -   The windows path is best to use an absolute path, do not contain Chinese
 -   linux/mac paths can use relative paths
@@ -207,6 +207,8 @@ cache_dir = "./data/translate_cache" # 翻译缓存目录
 [chatglm]
 # 本地模型 https://github.com/THUDM/ChatGLM-6B#从本地加载模型
 model = ".\\models\\chatglm-6b-int4" # ./chatglm-6b-int4 ./chatglm-6b-int8 ./chatglm-6b
+## windows 绝对路径配置方法
+# model = "E:\\zhangsan\\models\\chatglm-6b-int4" 
 device = "cuda" # cpu mps cuda
 enable_chat = true # 是否启用聊天功能
 local_files_only = true # 是否只使用本地模型
@@ -299,7 +301,7 @@ The tools are now successfully installed and started. You can follow the tool's 
     -   [x] Modify file names in batches
     -   [x] Load catalog tags and translate
 -   [x] translate
-    -   [x] f2m, f2f
+    -   [x] f2men, men2f
     -   [x] WD14 tags translation local cache
     -   [x] translation cache
 -   [ ] Label
