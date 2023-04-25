@@ -35,11 +35,15 @@ default_num_return_sequences = 4 # 生成返回数量
 default_model_name = "vit_l_14" # vit_h_14 vit_l_14
 default_model_type = "fast" # fast best classic negative
 
+[git]
+model = "microsoft/git-large-coco" # "microsoft/git-large-coco"
 
 [wd14]
 default_model_name="ConvNextV2"
 default_general_threshold=0.35
 default_character_threshold=0.85
+local_files_only = true # 是否只使用本地模型
+model_dir = ".\\models"
 
 [translate]
 enable = true # 是否启用翻译功能
