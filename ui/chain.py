@@ -76,7 +76,7 @@ def reinit_model(embedding_model, llm_history_len, top_k, history):
 def upload_files(files):
     filelist = []
     for file in files:
-        filename = os.path.split(file.name)[-1].splitext()[0]
+        filename = os.path.split(file.name)[-1].split(".")[0]
         ext = os.path.splitext(filename)[-1]
 
         filename = filename.replace(" ", "_")
