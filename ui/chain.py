@@ -1,6 +1,6 @@
 import os
 import shutil
-
+from typing import List, Tuple
 import gradio as gr
 import nltk
 import torch
@@ -78,21 +78,25 @@ def reinit_model(embedding_model, llm_history_len, top_k, history):
     return history + [[None, model_status]]
 
 
-def upload_files(files):
+def upload_files(fpath: List | str) -> List[str]:
     filelist = []
 
-    if os.path.isdir(files):
-        files = os.listdir(files)
+    if isinstance(fpath, str) and os.path.isdir(fpath):
+        for fn in os.listdir(fpath):
+            filelist.append(os.path.join(fpath, fn))
 
-    for file in files:
-        filename = os.path.split(file.name)[-1]
+    if isinstance(fpath, list):
+        filelist = [fn.name for fn in fpath]
+
+    for fn in filelist:
+        filename = os.path.split(fn)[-1]
         ext = os.path.splitext(filename)[-1]
 
         filename = filename.split(".")[0]
         filename = filename.replace(" ", "_")
 
         filename = "{}_{}{}".format(filename, datetime.now().strftime("%Y%m%d%H%M%S"), ext)
-        shutil.move(file.name, os.path.join(UPLOAD_ROOT_PATH, filename))
+        shutil.move(fn, os.path.join(UPLOAD_ROOT_PATH, filename))
         filelist.append(os.path.join(UPLOAD_ROOT_PATH, filename))
     return filelist
 
