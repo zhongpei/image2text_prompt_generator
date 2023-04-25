@@ -29,7 +29,9 @@ class ModelsBase(ABC):
     def register(self, name: str, model: Any) -> None:
         with self.lock:
             if name in self.models:
-                del self.models[name]
                 delattr(self, name)
+                del self.models[name]
             self.models[name] = model
+
             setattr(self, name, model)
+            print(f'Loading {name} ... {getattr(self, name)}')
