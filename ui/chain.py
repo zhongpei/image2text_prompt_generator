@@ -80,6 +80,7 @@ def reinit_model(embedding_model, llm_history_len, top_k, history):
 
 def upload_files(fpath: List | str) -> List[str]:
     filelist = []
+    output = []
     move = False
 
     if isinstance(fpath, str) and os.path.isdir(fpath):
@@ -99,12 +100,13 @@ def upload_files(fpath: List | str) -> List[str]:
         filename = filename.replace(" ", "_")
 
         filename = "{}_{}{}".format(filename, datetime.now().strftime("%Y%m%d%H%M%S"), ext)
+        print(f"filename: {filename}, fn: {fn}")
         if move:
             shutil.move(fn, os.path.join(UPLOAD_ROOT_PATH, filename))
         else:
             shutil.copy(fn, os.path.join(UPLOAD_ROOT_PATH, filename))
-        filelist.append(os.path.join(UPLOAD_ROOT_PATH, filename))
-    return filelist
+        output.append(os.path.join(UPLOAD_ROOT_PATH, filename))
+    return output
 
 
 def uplaod_vector_store(vs_id: str, input_files, max_length=512, min_length=100) -> bool:
