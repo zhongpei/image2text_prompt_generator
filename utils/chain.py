@@ -85,13 +85,13 @@ def load_docs(input_path: str | List[str]) -> List[Any]:
     if isinstance(input_path, list):
         for f in input_path:
             docs += file2doc(f)
-            
+
     elif os.path.isfile(input_path):
         docs = [file2doc(input_path), ]
 
     elif os.path.isdir(input_path):
         docs = [file2doc(os.path.join(input_path, f)) for f in os.listdir(input_path)]
-    print(f"load {input_path} ==> docs: {docs}")
+    print(f"load {input_path} ==> docs: {len(docs)}")
     return docs
 
 
