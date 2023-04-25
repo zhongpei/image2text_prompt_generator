@@ -37,14 +37,14 @@ def get_answer(query, history):
     if not local_doc_qa.is_initialized() or not local_doc_qa.is_active():
         history[-1][-1] += ["""知识库未成功加载，请到页面左上角"知识库"选项卡中重新选择后加载"""]
         return history
-    
+
     resp, history = local_doc_qa.get_knowledge_based_answer(
         query=query,
         chat_history=history
     )
     source = "".join(
-        [f"""<details> <summary>出处 {i + 1}</summary>
-{doc.page_content}
+        [f"""<details> <summary>出处 {i + 1}: {doc.page_content}</summary>
+
 <b>所属文件：</b>{doc.metadata["source"]}
 </details>""" for i, doc in enumerate(resp["source_documents"])
          ]
