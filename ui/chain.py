@@ -125,7 +125,6 @@ def add_vs_name(vs_name):
 
 def chain_upload_ui(select_vs, result):
     with gr.Column(visible=True):
-        # load_vs = gr.Button("加载知识库")
         gr.Markdown("向知识库中添加文件")
         with gr.Tab("上传文件"):
             files = gr.File(
@@ -161,27 +160,38 @@ def chain_upload_ui(select_vs, result):
 def chain_ui(chatbot, query):
     init_model()
     vs_list = gr.State(get_vs_list(VS_ROOT_PATH))
+    history = gr.State([])
+
+
     chatbot = gr.Chatbot(
         elem_id="chat-box",
         show_label=False
     ).style(height=800)
-    history = gr.State([])
+
     query = gr.Textbox(show_label=False, placeholder="Prompts", lines=4).style(container=False)
     generate_button = gr.Button("生成")
     generate_button.click(get_answer, inputs=[query, history], outputs=[chatbot])
     result = gr.Textbox(label="结果", lines=1, interactive=False)
 
     with gr.Accordion("加载知识库", open=False):
-        select_vs = gr.Dropdown(
-            vs_list.value,
-            label="请选择要加载的知识库",
-            interactive=True,
-            value=vs_list.value[0] if len(vs_list.value) > 0 else None
-        )
-
+        with gr.Row():
+            select_vs = gr.Dropdown(
+                vs_list.value,
+                label="请选择要加载的知识库",
+                interactive=True,
+                value=vs_list.value[0] if len(vs_list.value) > 0 else None
+            )
+            load_vs_btn = gr.Button("加载知识库")
+            load_vs_btn.click(
+                init_vector_store,
+                show_progress=True,
+                inputs=[select_vs, []],
+                outputs=[result],
+            )
         chain_upload_ui(select_vs=select_vs, result=result)
 
     with gr.Accordion("新建知识库", open=False):
+
         vs_name = gr.Textbox(
             label="请输入新建知识库名称",
             lines=1,

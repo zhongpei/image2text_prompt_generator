@@ -146,13 +146,15 @@ class LocalDocQA:
         if vs_path is None:
             vs_path = os.path.join(VS_ROOT_PATH, vs_id)
         print(f"vector store path: {vs_path} \n docs: {docs}")
+        index_file = os.path.join(vs_path, "index.faiss")
 
-        if os.path.isfile(os.path.join(vs_path, "index.faiss")):
+        if os.path.isfile(index_file):
             # add doc to exist vector store
-            index_file = os.path.join(vs_path, "index.faiss")
+
             print(f"add doc to exist vector store {index_file}")
             vector_store = FAISS.load_local(vs_path, self.embeddings)
-            vector_store.add_documents(docs)
+            if len(docs) > 0:
+                vector_store.add_documents(docs)
         else:
             if not os.path.exists(vs_path):
                 os.makedirs(vs_path, exist_ok=True)
