@@ -5,6 +5,7 @@ import random
 import re
 from .singleton import Singleton
 from config import settings
+from .models import ModelsBase
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 device_id = 0 if torch.cuda.is_available() else -1
@@ -14,24 +15,28 @@ if settings.generator.device == "cpu":
 
 
 @Singleton
-class Models(object):
+class Models(ModelsBase):
 
-    def __getattr__(self, item):
-        if item in self.__dict__:
-            return getattr(self, item)
+    def __init__(self):
+        super().__init__()
 
+    def load(self, item):
         if item in ('microsoft_model', 'microsoft_tokenizer'):
-            self.microsoft_model, self.microsoft_tokenizer = self.load_microsoft_model()
+            microsoft_model, microsoft_tokenizer = self.load_microsoft_model()
+            self.register('microsoft_model', microsoft_model)
+            self.register('microsoft_tokenizer', microsoft_tokenizer)
 
         if item in ('mj_pipe',):
-            self.mj_pipe = self.load_mj_pipe()
+            mj_pipe = self.load_mj_pipe()
+            self.register('mj_pipe', mj_pipe)
 
         if item in ('gpt2_650k_pipe',):
-            self.gpt2_650k_pipe = self.load_gpt2_650k_pipe()
+            gpt2_650k_pipe = self.load_gpt2_650k_pipe()
+            self.register('gpt2_650k_pipe', gpt2_650k_pipe)
 
         if item in ('gpt_neo_125m_pipe',):
-            self.gpt_neo_125m_pipe = self.load_gpt_neo_125m()
-        return getattr(self, item)
+            gpt_neo_125m_pipe = self.load_gpt_neo_125m()
+            self.register('gpt_neo_125m_pipe', gpt_neo_125m_pipe)
 
     @classmethod
     def load_gpt_neo_125m(cls):
@@ -48,7 +53,7 @@ class Models(object):
     def load_gpt2_650k_pipe(cls):
         return pipeline(
             'text-generation',
-            model='Ar4ikov/gpt2-650k-stable-diffusion-prompt-generator',
+            model=settings.generator.gpt2_650k_model,
             device=device_id,
             trust_remote_code=True,
 
@@ -58,7 +63,7 @@ class Models(object):
     def load_mj_pipe(cls):
         return pipeline(
             'text-generation',
-            model='succinctly/text2image-prompt-generator',
+            model=settings.generator.mj_model,
             device=device_id,
             trust_remote_code=True,
 
@@ -67,7 +72,7 @@ class Models(object):
     @classmethod
     def load_microsoft_model(cls):
         model = AutoModelForCausalLM.from_pretrained(
-            "microsoft/Promptist",
+            pretrained_model_name_or_path=settings.generator.microsoft_model,
             trust_remote_code=True,
             resume_download=True,
             local_files_only=settings.translate.local_files_only,

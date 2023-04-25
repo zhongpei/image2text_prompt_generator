@@ -11,15 +11,17 @@ from transformers import AutoProcessor
 
 from . import dbimutils
 from .singleton import Singleton
-
+import os
 import torch
 from clip_interrogator import Config, Interrogator
+from .models import ModelsBase
+from config import settings
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 @Singleton
-class Models(object):
+class Models(ModelsBase):
     # WD14 models
     SWIN_MODEL_REPO = "SmilingWolf/wd-v1-4-swinv2-tagger-v2"
     CONV_MODEL_REPO = "SmilingWolf/wd-v1-4-convnext-tagger-v2"
@@ -34,7 +36,7 @@ class Models(object):
     VIT_L_14_MODEL_REPO = "ViT-L-14/openai"  # Stable Diffusion 1.X
 
     def __init__(self):
-        pass
+        super().__init__()
 
     @classmethod
     def load_clip_model(cls, model_repo):
@@ -45,49 +47,73 @@ class Models(object):
         config.flavor_intermediate_count = 512
         config.blip_num_beams = 64
         config.clip_model_name = model_repo
-
         ci = Interrogator(config)
         return ci
 
-    def __getattr__(self, item):
-        if item in self.__dict__:
-            return getattr(self, item)
+    def load(self, item: str) -> None:
         print(f"Loading {item}...")
         if item in ('clip_vit_h_14_model',):
-            self.clip_vit_h_14_model = self.load_clip_model(self.VIT_H_14_MODEL_REPO)
+            clip_vit_h_14_model = self.load_clip_model(self.VIT_H_14_MODEL_REPO)
+            self.register('clip_vit_h_14_model', clip_vit_h_14_model)
 
         if item in ('clip_vit_l_14_model',):
-            self.clip_vit_l_14_model = self.load_clip_model(self.VIT_L_14_MODEL_REPO)
+            clip_vit_l_14_model = self.load_clip_model(self.VIT_L_14_MODEL_REPO)
+            self.register('clip_vit_l_14_model', clip_vit_l_14_model)
 
         if item in ('swinv2_model',):
-            self.swinv2_model = self.load_model(self.SWIN_MODEL_REPO, self.MODEL_FILENAME)
+            swinv2_model = self.load_model(self.SWIN_MODEL_REPO, self.MODEL_FILENAME)
+            self.register('swinv2_model', swinv2_model)
         if item in ('convnext_model',):
-            self.convnext_model = self.load_model(self.CONV_MODEL_REPO, self.MODEL_FILENAME)
+            convnext_model = self.load_model(self.CONV_MODEL_REPO, self.MODEL_FILENAME)
+            self.register('convnext_model', convnext_model)
         if item in ('vit_model',):
-            self.vit_model = self.load_model(self.VIT_MODEL_REPO, self.MODEL_FILENAME)
+            vit_model = self.load_model(self.VIT_MODEL_REPO, self.MODEL_FILENAME)
+            self.register('vit_model', vit_model)
         if item in ('convnextv2_model',):
-            self.convnextv2_model = self.load_model(self.CONV2_MODEL_REPO, self.MODEL_FILENAME)
+            convnextv2_model = self.load_model(self.CONV2_MODEL_REPO, self.MODEL_FILENAME)
+            self.register('convnextv2_model', convnextv2_model)
 
         if item in ('git_model', 'git_processor'):
-            self.git_model, self.git_processor = self.load_git_model()
+            git_model, git_processor = self.load_git_model()
+            self.register('git_model', git_model)
+            self.register('git_processor', git_processor)
 
         if item in ('tag_names', 'rating_indexes', 'general_indexes', 'character_indexes'):
-            self.tag_names, self.rating_indexes, self.general_indexes, self.character_indexes = self.load_w14_labels()
-
-        return getattr(self, item)
+            tag_names, rating_indexes, general_indexes, character_indexes = self.load_w14_labels()
+            self.register('tag_names', tag_names)
+            self.register('rating_indexes', rating_indexes)
+            self.register('general_indexes', general_indexes)
+            self.register('character_indexes', character_indexes)
 
     @classmethod
     def load_git_model(cls):
-        model = AutoModelForCausalLM.from_pretrained("microsoft/git-large-coco")
-        processor = AutoProcessor.from_pretrained("microsoft/git-large-coco")
+
+        model = AutoModelForCausalLM.from_pretrained(
+            pretrained_model_name_or_path=settings.git.model if settings.git.model else "microsoft/git-large-coco",
+
+        )
+        processor = AutoProcessor.from_pretrained(
+            pretrained_model_name_or_path=settings.git.model if settings.git.model else "microsoft/git-large-coco"
+        )
 
         return model, processor
 
     @staticmethod
     def load_model(model_repo: str, model_filename: str) -> rt.InferenceSession:
+        model_name = model_repo.split('/')[-1]
+
+        local_dir = os.path.join(settings.wd14.model_dir, model_name)
+
+        if os.path.exists(local_dir) and settings.wd14.local_files_only:
+            path = os.path.join(local_dir, model_filename)
+            model = rt.InferenceSession(path)
+            return model
+
         path = huggingface_hub.hf_hub_download(
-            model_repo, model_filename,
+            model_repo,
+            model_filename,
         )
+
         model = rt.InferenceSession(path)
         return model
 

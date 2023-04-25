@@ -1,11 +1,12 @@
 import os
-
+from typing import Any
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 from .singleton import Singleton
 import re
 import threading
 from config import settings
+from .models import ModelsBase
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -14,22 +15,25 @@ if settings.translate.device == "cpu":
 
 
 @Singleton
-class Models(object):
+class Models(ModelsBase):
+    def __init__(self):
+        super().__init__()
 
-    def __getattr__(self, item):
-        if item in self.__dict__:
-            return getattr(self, item)
+    def load(self, item: str) -> None:
 
         if item in ('zh2en_model', 'zh2en_tokenizer',):
-            self.zh2en_model, self.zh2en_tokenizer = self.load_model(settings.translate.zh2en_model)
+            zh2en_model, zh2en_tokenizer = self.load_model(settings.translate.zh2en_model)
+
+            self.register('zh2en_model', zh2en_model)
+            self.register('zh2en_tokenizer', zh2en_tokenizer)
 
         if item in ('en2zh_model', 'en2zh_tokenizer',):
-            self.en2zh_model, self.en2zh_tokenizer = self.load_model(settings.translate.en2zh_model)
-
-        return getattr(self, item)
+            en2zh_model, en2zh_tokenizer = self.load_model(settings.translate.en2zh_model)
+            self.register('en2zh_model', en2zh_model)
+            self.register('en2zh_tokenizer', en2zh_tokenizer)
 
     @classmethod
-    def load_model(cls, model_name):
+    def load_model(cls, model_name: str):
         model = AutoModelForSeq2SeqLM.from_pretrained(
             model_name,
             trust_remote_code=True,

@@ -66,6 +66,17 @@ ChatGLM 模型需要单独下载(下载int4版本)，放到程序目录 models �
 * `webui_venv.bat` 自己手动安装`venv`环境，用这个启动，默认`venv`目录。
 * 第一次运行会自动下载模型，默认下载在用户目录`.cache/huggingface`
 
+### 启动程序
+
+* `webui.bat` 主要功能
+* `webui_chat.bat`  主要功能+chatGLM聊天界面
+* `webui_imagetools.bat` 图片处理工具
+* `webui_offline.bat` 使用离线模式
+    * 修改`settings.offline.toml`里面的模型路径
+    * 模型`git clone`到`models`目录（不能直接从cache拷贝）
+* `webui_venv.bat` 自己手动安装`venv`环境，用这个启动，默认`venv`目录。
+* 第一次运行会自动下载模型，默认下载在用户目录`.cache/huggingface`
+
 ### 更新程序
 
 ```bash
@@ -135,7 +146,9 @@ ChatGLM 模型需要单独下载(下载int4版本)，放到程序目录 models �
 来源于 `chatGPTBox` 项目，修改部分提示词语
 
 * 使用 `api.bat` 启动
+
 * 配置 `chatGPTBox` 插件为 自定义模型 `http://localhost:8000/chat/completions`
+
 * 在[release](https://github.com/zhongpei/image2text_prompt_generator/releases)里面下载插件
 * [修改版插件](https://github.com/zhongpei/chatGPTBox)
 
