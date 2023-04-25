@@ -83,8 +83,9 @@ def load_docs(input_path: str | List[str]) -> List[Any]:
     docs = []
     print(f"load_docs: {input_path}, {type(input_path)}")
     if isinstance(input_path, list):
-        docs = [file2doc(f) for f in input_path]
-
+        for f in input_path:
+            docs += file2doc(f)
+            
     elif os.path.isfile(input_path):
         docs = [file2doc(input_path), ]
 
