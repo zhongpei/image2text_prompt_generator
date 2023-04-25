@@ -10,7 +10,7 @@ class ModelsBase(object):
 
     def unload(self):
         with self.lock:
-            for name, _ in self.models.items():
+            for name in list(self.models.keys()):
                 del self.models[name]
             del self.models
             self.models = {}
