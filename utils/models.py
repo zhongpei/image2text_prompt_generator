@@ -15,13 +15,13 @@ class ModelsBase(ABC):
                 del model
 
     def __getitem__(self, item):
-        with self.lock:
-            if hasattr(self, item):
-                return getattr(self, item)
-
-            self.load(item)
-
+        print(f'Getting {item} ...')
+        if hasattr(self, item):
             return getattr(self, item)
+
+        self.load(item)
+
+        return getattr(self, item)
 
     def load(self, item: str) -> None:
         raise NotImplementedError
