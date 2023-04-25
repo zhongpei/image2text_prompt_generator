@@ -86,7 +86,7 @@ def chatglm_ui():
 
         with gr.Tab("Chain"):
             chat_mode = gr.Radio(
-                ["ChatGLM 对话", "知识库问答"],
+                ["ChatGLM", "Chain"],
                 label="请选择使用模式",
                 value="知识库问答",
             )

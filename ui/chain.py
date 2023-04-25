@@ -161,8 +161,16 @@ def chain_upload_ui(select_vs, result):
 def chain_ui(chatbot, query):
     init_model()
     vs_list = gr.State(get_vs_list(VS_ROOT_PATH))
-
+    chatbot = gr.Chatbot(
+        elem_id="chat-box",
+        show_label=False
+    ).style(height=800)
+    history = gr.State([])
+    query = gr.Textbox(show_label=False, placeholder="Prompts", lines=4).style(container=False)
+    generate_button = gr.Button("生成")
+    generate_button.click(get_answer, inputs=[query, history], outputs=[chatbot])
     result = gr.Textbox(label="结果", lines=1, interactive=False)
+
     with gr.Accordion("加载知识库", open=False):
         select_vs = gr.Dropdown(
             vs_list.value,
