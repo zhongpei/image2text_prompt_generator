@@ -114,6 +114,7 @@ class LocalDocQA:
         self.llm.history_len = llm_history_len
 
         self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model_dict[embedding_model], )
+
         # self.embeddings.client = sentence_transformers.SentenceTransformer(
         #     self.embeddings.model_name,
         #     device=embedding_device
@@ -142,7 +143,10 @@ class LocalDocQA:
             vector_store = FAISS.load_local(vs_path, self.embeddings)
             vector_store.add_documents(docs)
         else:
+            if not os.path.exists(vs_path):
+                os.makedirs(vs_path, exist_ok=True)
             print(f"create new vector store {vs_path}")
+
             vector_store = FAISS.from_documents(docs, self.embeddings)
 
         vector_store.save_local(vs_path)
