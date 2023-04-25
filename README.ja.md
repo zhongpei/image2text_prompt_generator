@@ -13,7 +13,7 @@
 イメージからのプロンプトの説明の解析をサポートし、セカンダリ イメージ生成の説明に基づいて拡張できます。
 を通じて中国語をサポート[ChatGLM](https://github.com/THUDM/ChatGLM-6B)プロンプトの説明を拡張します。
 
-✅ このプロジェクトで使用するモデル
+✅ このプロジェクトで使用されたモデル
 
 > すべてのモデルは、使用時にのみ遅延ロード、ダウンロード、およびロードされ、ビデオ メモリを占有しません。
 
@@ -37,11 +37,11 @@
     -   [ヘルシンキ-NLP/opus-mt-en-zh](https://huggingface.co/Helsinki-NLP/opus-mt-en-zh)
     -   [ヘルシンキ-NLP/opus-mt-zh-en](https://huggingface.co/Helsinki-NLP/opus-mt-zh-en)
 
-🚩 このプロジェクトは独立して存在し、統合されていません[自動111/webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui)，便于随时关闭节省显存。
+🚩 このプロジェクトは独立して存在し、統合されていません[自動111/webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui)、ビデオメモリを節約するためにいつでも閉じるのに便利です。
 
 -   オンラインデモ[ハグフェイスのデモ](https://huggingface.co/spaces/hahahafofo/image2text_prompt_generator)
 -   グラフィックスとテキスト機能には GPU の導入が必要
--   一部のモデルでは、GPU のメモリ オーバーフローを防ぐために CPU (翻訳、Wen Shengwen) を使用します。
+-   一部のモデルでは、GPU のメモリ オーバーフローを防止するために CPU (翻訳、Wen Shengwen) を使用します。
 -   支持`stable diffusion`と`midjourney`二`prompt`生成方法
 -   使用[ChatGlam-6B-Net4](https://huggingface.co/THUDM/chatglm-6b-int4)ビデオメモリを節約
 
@@ -55,6 +55,17 @@ ChatGLM モデルは別途ダウンロード (int4 バージョンをダウン�
 -   [v1.5](https://pan.baidu.com/s/1vMzDGbtTO0-CD7wk-4GrcQ?pwd=eb33)抽出コード: eb33
 -   [v1.8](https://pan.baidu.com/s/1bup8Oa56e_S4andbU8wk0g?pwd=7hbt)抽出コード: 7hbt
 -   [オフライン モデル](https://pan.baidu.com/s/1_Hs-MRjSxg0gaIRDaUTD8Q?pwd=6ti4)抽出コード: 6ti4
+
+### プログラムの開始
+
+-   `webui.bat`主な機能
+-   `webui_chat.bat`主な機能 +chatGLM チャットインターフェース
+-   `webui_imagetools.bat`画像処理ツール
+-   `webui_offline.bat`オフライン モードを使用する
+    -   改訂`settings.offline.toml`モデルパス内
+    -   模型`git clone`到着`models`ディレクトリ (キャッシュから直接コピーすることはできません)
+-   `webui_venv.bat`手動でインストールする`venv`環境、これで開始、デフォルト`venv`目次。
+-   最初の実行では、モデルが自動的にダウンロードされます。デフォルトのダウンロードはユーザー ディレクトリにあります。`.cache/huggingface`
 
 ### プログラムの開始
 
@@ -121,11 +132,11 @@ ChatGLM モデルは別途ダウンロード (int4 バージョンをダウン�
 
 ### ハードウェア要件
 
-| **量子化レベル** | **最小 GPU メモリ**（推理） | **最小 GPU メモリ**（効率的なパラメータ微調整） |
-| ---------- | ------------------ | ---------------------------- |
-| FP16（无量化）  | 13GB               | 14GB                         |
-| INT8       | 8GB                | 9GB                          |
-| INT4       | 6GB                | 7GB                          |
+| **量子化レベル**   | **最小 GPU メモリ**（推理） | **最小 GPU メモリ**（効率的なパラメータ微調整） |
+| ------------ | ------------------ | ---------------------------- |
+| FP16 (量子化なし) | 13GB               | 14GB                         |
+| INT8         | 8GB                | 9GB                          |
+| INT4         | 6GB                | 7GB                          |
 
 ![img.png](./img/chatglm.png)
 
@@ -134,8 +145,11 @@ ChatGLM モデルは別途ダウンロード (int4 バージョンをダウン�
 から`chatGPTBox`プロジェクト、いくつかのプロンプト ワードを変更します
 
 -   使用`api.bat`起動
+
 -   配置`chatGPTBox`カスタムモデルのプラグイン`http://localhost:8000/chat/completions`
+
 -   存在[リリース](https://github.com/zhongpei/image2text_prompt_generator/releases)中にプラグインをダウンロード
+
 -   [変更されたプラグイン](https://github.com/zhongpei/chatGPTBox)
 
 ## 限界
@@ -275,7 +289,7 @@ python app.py
 
 ## 更新情報
 
--   v1.8 ラベル付けツール
+-   v1.8 打标签工具
 -   v1.7 翻訳ローカル タグ キャッシュ、翻訳キャッシュ、API
 -   v1.6 画像ツール
 -   v1.5 chatGLM モデルを追加
@@ -301,7 +315,7 @@ python app.py
     -   [x] ファイル名をバッチで変更する
     -   [x] カタログタグを読み込んで翻訳する
 -   [x] 翻訳
-    -   [x] f2m、f2f
+    -   [x] f2men、men2f
     -   [x] WD14 タグ変換ローカル キャッシュ
     -   [x] 翻訳キャッシュ
 -   [ ] ラベル
