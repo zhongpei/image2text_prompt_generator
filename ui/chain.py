@@ -82,7 +82,7 @@ def upload_files(fpath: List | str, vs_id: str) -> List[str]:
     filelist = []
     output = []
     move = False
-    txt_dir = os.path.join(VS_ROOT_PATH, vs_id)
+    txt_dir = os.path.join(UPLOAD_ROOT_PATH, vs_id)
     if not os.path.exists(txt_dir):
         os.makedirs(txt_dir, exist_ok=True)
 
