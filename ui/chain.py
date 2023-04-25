@@ -80,6 +80,10 @@ def reinit_model(embedding_model, llm_history_len, top_k, history):
 
 def upload_files(files):
     filelist = []
+
+    if os.path.isdir(files):
+        files = os.listdir(files)
+
     for file in files:
         filename = os.path.split(file.name)[-1]
         ext = os.path.splitext(filename)[-1]
@@ -152,11 +156,7 @@ def chain_upload_ui(select_vs, result, max_length, min_length):
             )
             load_file_button = gr.Button("上传文件并加载知识库")
         with gr.Tab("上传文件夹"):
-            folder_files = gr.File(
-                label="添加文件",
-                file_count="directory",
-                show_label=False
-            )
+            folder_files = gr.Textbox(label="上传文件夹", lines=1)
             load_folder_button = gr.Button("上传文件夹并加载知识库")
 
     # 将上传的文件保存到content文件夹下,并更新下拉框
@@ -180,7 +180,6 @@ def chain_ui():
 
     result = gr.Textbox(label="结果", lines=1, interactive=False)
     with gr.Row():
-
         max_length = gr.Slider(20, 1000, 100, step=1, label="Doc(最大长度)", )
         min_length = gr.Slider(10, 500, 50, step=1, label="Doc(最小长度)")
     with gr.Row():
