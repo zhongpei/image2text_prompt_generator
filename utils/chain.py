@@ -132,7 +132,7 @@ class LocalDocQA:
 
     def init_knowledge_vector_store(
             self,
-            vs_id,
+            vs_id: str,
             filepath: Union[str, List[str]],
             vs_path: str = None,
     ):

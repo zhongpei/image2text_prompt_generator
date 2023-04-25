@@ -113,7 +113,7 @@ def add_vs_name(vs_name):
     if vs_name in vs_list:
         return f"知识库{vs_name}已存在，请重新输入", vs_list
     vs_list.append(vs_name)
-    return f"知识库{vs_name}创建成功", list(set(vs_list)), gr.update(visible=True, value=vs_list)
+    return f"知识库{vs_name}创建成功", list(set(vs_list)), gr.update(visible=True, choices=vs_list, value=vs_name)
 
 
 def chain_upload_ui(select_vs, result):
