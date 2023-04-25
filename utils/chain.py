@@ -115,13 +115,13 @@ class LocalDocQA:
             os.makedirs(embedding_dir, exist_ok=True)
             self.embeddings = HuggingFaceEmbeddings(
                 model_name=embedding_model_dict[embedding_model],
-                device=embedding_device,
+
             )
             self.embeddings.client.save(embedding_dir)
         else:
             self.embeddings = HuggingFaceEmbeddings(
                 model_name=embedding_dir,
-                device=embedding_device,
+
             )
 
         # self.embeddings.client = sentence_transformers.SentenceTransformer(
