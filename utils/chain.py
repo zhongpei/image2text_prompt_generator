@@ -44,16 +44,20 @@ UPLOAD_ROOT_PATH = "./data/chain/upload/"
 LLM_MODEL = settings.chatglm.model if settings.chatglm.model else "THUDM/chatglm-6b-int4"
 
 from langchain.document_loaders import UnstructuredMarkdownLoader
-
+from langchain.text_splitter import MarkdownTextSplitter
 def file2doc(file_path: str, max_length=512, min_length=100):
     try:
         if file_path.lower().endswith(".pdf"):
             loader = UnstructuredFileLoader(file_path)
             textsplitter = ChineseTextSplitter(pdf=True, max_length=max_length, min_length=min_length)
             doc = loader.load_and_split(textsplitter)
+        elif file_path.lower().endswith(".md"):
+            loader = UnstructuredMarkdownLoader(file_path)
+            textsplitter = MarkdownTextSplitter(chunk_size=100, chunk_overlap=0)
+            doc = loader.load_and_split(text_splitter=textsplitter)
         else:
             #loader = UnstructuredFileLoader(file_path, mode="elements")
-            loader = UnstructuredFileLoader(file_path, mode="elements")
+            loader = UnstructuredFileLoader(file_path)
             textsplitter = ChineseTextSplitter(pdf=False, max_length=max_length, min_length=min_length)
             doc = loader.load_and_split(text_splitter=textsplitter)
         return doc

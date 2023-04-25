@@ -124,7 +124,6 @@ def uplaod_vector_store(vs_id: str, input_files, max_length=512, min_length=100)
         min_length=min_length,
     )
 
-
 def init_vector_store(vs_id: str, filepath=None, max_length=512, min_length=100) -> bool:
     vs_path = os.path.join(VS_ROOT_PATH, vs_id)
     if filepath is None:
@@ -150,7 +149,14 @@ def change_mode(mode):
         return gr.update(visible=True)
     else:
         return gr.update(visible=False)
+def del_vector_store(vs_name:str):
+    vs_dir = os.path.join(VS_ROOT_PATH,vs_name)
+    if os.path.exists(vs_dir) and os.path.isdir(vs_dir):
+        shutil.rmtree(vs_dir)
+        vs_list = get_vs_list(VS_ROOT_PATH)
+        return f"删除{vs_dir}成功",vs_list, gr.update(choices=vs_list, value=None)
 
+    return f"删除{vs_dir}失败", get_vs_list(VS_ROOT_PATH)
 
 def add_vs_name(vs_name):
     vs_list = get_vs_list(VS_ROOT_PATH)
@@ -210,18 +216,26 @@ def chain_ui():
             )
             load_vs_btn = gr.Button("加载知识库")
 
+
         with gr.Column(scale=2):
             vs_name = gr.Textbox(
-                label="请输入新建知识库名称",
+                label="请输入知识库名称",
                 lines=1,
                 interactive=True
             )
             vs_add_button = gr.Button(value="添加知识库")
+            vs_del_button = gr.Button(value="删除知识库")
+            vs_del_button.click(
+                fn=del_vector_store,
+                inputs=vs_name,
+                outputs=[result, vs_list, select_vs]
+            )
             vs_add_button.click(
                 fn=add_vs_name,
                 inputs=vs_name,
                 outputs=[result, vs_list, select_vs]
             )
+
 
     load_vs_btn.click(
         init_vector_store,
