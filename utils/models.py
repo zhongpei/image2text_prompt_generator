@@ -27,11 +27,13 @@ class ModelsBase(ABC):
         raise NotImplementedError
 
     def register(self, name: str, model: Any) -> None:
+        print(f'Register {name} ... {getattr(self, name)}')
         with self.lock:
             if name in self.models:
+                print(f"Unloading {name} ...")
                 delattr(self, name)
                 del self.models[name]
+            print(f"Loading {name} ...")
             self.models[name] = model
 
             setattr(self, name, model)
-            print(f'Loading {name} ... {getattr(self, name)}')
