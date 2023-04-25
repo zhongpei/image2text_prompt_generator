@@ -139,14 +139,17 @@ class LocalDocQA:
         docs = load_docs(filepath)
         if vs_path is None:
             vs_path = os.path.join(VS_ROOT_PATH, vs_id)
+        print(f"vector store path: {vs_path}")
 
         if os.path.isdir(vs_path):
             # add doc to exist vector store
+            print("add doc to exist vector store {vs_path}")
             vector_store = FAISS.load_local(vs_path, self.embeddings)
             vector_store.add_documents(docs)
         else:
+            print("create new vector store {vs_path}")
             vector_store = FAISS.from_documents(docs, self.embeddings)
-
+        
         vector_store.save_local(vs_path)
         self.vector_store = vector_store
 

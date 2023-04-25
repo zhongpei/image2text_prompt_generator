@@ -58,7 +58,7 @@ def chatglm_ui():
         def reset_state():
             return [], []
 
-        with gr.Row():
+        with gr.Tab("ChatGLM"):
             with gr.Column(scale=4):
                 chatbot = gr.Chatbot(
                     elem_id="chat-box",
@@ -84,13 +84,13 @@ def chatglm_ui():
                     interrupt_btn = gr.Button("终止生成")
                     reset_btn = gr.Button("清空")
 
-                with gr.Row():
-                    chat_mode = gr.Radio(
-                        ["ChatGLM 对话", "知识库问答"],
-                        label="请选择使用模式",
-                        value="知识库问答",
-                    )
-                    chain_ui(chatbot=chatbot, query=query)
+        with gr.Tab("Chain"):
+            chat_mode = gr.Radio(
+                ["ChatGLM 对话", "知识库问答"],
+                label="请选择使用模式",
+                value="知识库问答",
+            )
+            chain_ui(chatbot=chatbot, query=query)
 
         history = gr.State([])
         allow_generate = gr.State([True])

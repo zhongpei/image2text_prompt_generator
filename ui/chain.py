@@ -65,8 +65,6 @@ def reinit_model(embedding_model, llm_history_len, top_k, history):
         local_doc_qa.init_cfg(
             embedding_model=embedding_model,
             llm_history_len=llm_history_len,
-
-            top_k=top_k
         )
         model_status = """模型已成功重新加载，可以开始对话，或从右侧选择模式后开始对话"""
     except Exception as e:
