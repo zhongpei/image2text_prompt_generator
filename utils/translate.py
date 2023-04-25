@@ -19,6 +19,12 @@ class Models(ModelsBase):
     def __init__(self):
         super().__init__()
 
+    def __getitem__(self, item):
+        return super().__getitem__(item)
+
+    def unload(self):
+        return super().unload()
+
     def load(self, item: str) -> None:
         if item in ('zh2en_model', 'zh2en_tokenizer',):
             zh2en_model, zh2en_tokenizer = self.load_model(settings.translate.zh2en_model)

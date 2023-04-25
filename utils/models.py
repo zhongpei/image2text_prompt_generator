@@ -1,8 +1,9 @@
 from typing import Any
 import threading
+from abc import ABC, abstractmethod
 
 
-class ModelsBase(object):
+class ModelsBase(ABC):
     def __init__(self):
         self.models = {}
         self.lock = threading.Lock()

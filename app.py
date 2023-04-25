@@ -169,7 +169,7 @@ def ui(enable_chat: bool = False):
 
         empty_cache_btn.click(fn=empty_cache, inputs=force_clear_cache)
         unload_models_btn.click(fn=unload_models)
-        
+
         img_prompter_btn.click(
             fn=image_generate_prompter,
             inputs=[
