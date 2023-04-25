@@ -14,7 +14,7 @@ class ModelsBase(ABC):
                 delattr(self, name)
                 del model
 
-    def __getitem__(self, item):
+    def __getattr__(self, item):
         print(f'Getting {item} ...')
         if hasattr(self, item):
             return getattr(self, item)
