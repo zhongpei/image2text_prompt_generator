@@ -11,6 +11,7 @@ class ChineseTextSplitter(CharacterTextSplitter):
         self.min_length = min_length
         self.max_length = max_length
         self.sent_sep_pattern = re.compile('([﹒﹖﹗．。！？]["’”」』]{0,2}|(?=["‘“「『]{1,2}|$))')  # del ：；
+        self.sent_sep_pattern_2 = re.compile('([,，;；])')
 
     def fix_length(self, sent_list: List[str]) -> List[str]:
         new_sent_list = []
@@ -22,18 +23,18 @@ class ChineseTextSplitter(CharacterTextSplitter):
             if len(last_sent) < self.min_length and new_sent_list:
                 new_sent_list[-1] += sent
             elif len(sent) > self.max_length:
-                new_sent_list.extend(self.__split_text(sent, re.compile('([,，;；])')))
+                new_sent_list.extend(self.__split_text(sent, self.sent_sep_pattern_2))
             else:
                 new_sent_list.append(sent)
         return new_sent_list
 
     def split_text(self, text: str) -> List[str]:
         sent_list = self.__split_text(text)
-        print(f"split_text: {len(sent_list)}")
-        sent_list = self.fix_length(sent_list)
-        print(f"fix_length: {len(sent_list)}")
 
-        return sent_list
+        fix_list = self.fix_length(sent_list)
+        print(f"text: {len(text)} ==> split: {len(sent_list)}   fix: {len(fix_list)}")
+
+        return fix_list
 
     def __split_text(self, text: str, sent_sep_pattern=None) -> List[str]:
         if self.pdf:

@@ -78,10 +78,13 @@ def reinit_model(embedding_model, llm_history_len, top_k, history):
     return history + [[None, model_status]]
 
 
-def upload_files(fpath: List | str) -> List[str]:
+def upload_files(fpath: List | str, vs_id: str) -> List[str]:
     filelist = []
     output = []
     move = False
+    txt_dir = os.path.join(VS_ROOT_PATH, vs_id)
+    if not os.path.exists(txt_dir):
+        os.makedirs(txt_dir, exist_ok=True)
 
     if isinstance(fpath, str) and os.path.isdir(fpath):
         for root, dirs, files in os.walk(fpath):
@@ -104,15 +107,15 @@ def upload_files(fpath: List | str) -> List[str]:
         filename = "{}_{}{}".format(filename, datetime.now().strftime("%Y%m%d%H%M%S"), ext)
         print(f"filename: {filename}, fn: {fn}")
         if move:
-            shutil.move(fn, os.path.join(UPLOAD_ROOT_PATH, filename))
+            shutil.move(fn, os.path.join(txt_dir, filename))
         else:
-            shutil.copy(fn, os.path.join(UPLOAD_ROOT_PATH, filename))
-        output.append(os.path.join(UPLOAD_ROOT_PATH, filename))
+            shutil.copy(fn, os.path.join(txt_dir, filename))
+        output.append(os.path.join(txt_dir, filename))
     return output
 
 
 def uplaod_vector_store(vs_id: str, input_files, max_length=512, min_length=100) -> bool:
-    filelist = upload_files(input_files)
+    filelist = upload_files(input_files, vs_id=vs_id)
     print(f"filelist: {filelist}")
     return init_vector_store(
         vs_id,
