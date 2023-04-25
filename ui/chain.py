@@ -83,8 +83,9 @@ def upload_files(fpath: List | str) -> List[str]:
     move = False
 
     if isinstance(fpath, str) and os.path.isdir(fpath):
-        for fn in os.listdir(fpath):
-            filelist.append(os.path.join(fpath, fn))
+        for root, dirs, files in os.walk(fpath):
+            for fn in files:
+                filelist.append(os.path.join(root, fn))
 
     if isinstance(fpath, list):
         filelist = [fn.name for fn in fpath]
