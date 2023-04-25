@@ -88,23 +88,26 @@ def upload_files(files):
     return filelist
 
 
-def init_vector_store(vs_id: str, input_files):
-    vs_path = os.path.join(VS_ROOT_PATH, vs_id)
-
+def uplaod_vector_store(vs_id: str, input_files) -> bool:
     filelist = upload_files(input_files)
-
     print(f"filelist: {filelist}")
+    return init_vector_store(vs_id)
+
+
+def init_vector_store(vs_id: str) -> bool:
+    vs_path = os.path.join(VS_ROOT_PATH, vs_id)
 
     if local_doc_qa.is_initialized():
         local_doc_qa.init_knowledge_vector_store(
             vs_id=vs_id,
-            filepath=filelist,
+            filepath=[],
             vs_path=vs_path
         )
+        return True
     else:
         print("模型未初始化，无法创建知识库")
 
-    return None
+    return False
 
 
 def change_mode(mode):
@@ -144,13 +147,13 @@ def chain_upload_ui(select_vs, result):
 
     # 将上传的文件保存到content文件夹下,并更新下拉框
     load_file_button.click(
-        init_vector_store,
+        uplaod_vector_store,
         show_progress=True,
         inputs=[select_vs, files],
         outputs=[result],
     )
     load_folder_button.click(
-        init_vector_store,
+        uplaod_vector_store,
         show_progress=True,
         inputs=[select_vs, folder_files],
         outputs=[result],
@@ -161,7 +164,6 @@ def chain_ui(chatbot, query):
     init_model()
     vs_list = gr.State(get_vs_list(VS_ROOT_PATH))
     history = gr.State([])
-
 
     chatbot = gr.Chatbot(
         elem_id="chat-box",
@@ -185,13 +187,12 @@ def chain_ui(chatbot, query):
             load_vs_btn.click(
                 init_vector_store,
                 show_progress=True,
-                inputs=[select_vs, []],
+                inputs=[select_vs],
                 outputs=[result],
             )
         chain_upload_ui(select_vs=select_vs, result=result)
 
     with gr.Accordion("新建知识库", open=False):
-
         vs_name = gr.Textbox(
             label="请输入新建知识库名称",
             lines=1,
