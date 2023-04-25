@@ -44,16 +44,36 @@ LLM_MODEL = settings.chatglm.model if settings.chatglm.model else "THUDM/chatglm
 
 
 class ChineseTextSplitter(CharacterTextSplitter):
-    def __init__(self, pdf: bool = False, **kwargs):
+    def __init__(self, pdf: bool = False, min_length=200, max_length=512, **kwargs):
         super().__init__(**kwargs)
         self.pdf = pdf
+        self.min_length = min_length
+        self.max_length = max_length
+        self.sent_sep_pattern = re.compile('([﹒﹖﹗．。！？]["’”」』]{0,2}|(?=["‘“「『]{1,2}|$))')  # del ：；
+
+    def fix_length(self, sent_list: List[str]) -> List[str]:
+        new_sent_list = []
+        for sent in sent_list:
+            if len(sent) < self.min_length and new_sent_list:
+                new_sent_list[-1] += sent
+            elif len(sent) > self.max_length:
+                new_sent_list.extend(self.__split_text(sent, re.compile('([,，;；])')))
+        return new_sent_list
 
     def split_text(self, text: str) -> List[str]:
+        sent_list = self.__split_text(text)
+        sent_list = self.fix_length(sent_list)
+        return sent_list
+
+    def __split_text(self, text: str, sent_sep_pattern=None) -> List[str]:
         if self.pdf:
             text = re.sub(r"\n{3,}", "\n", text)
             text = re.sub('\s', ' ', text)
             text = text.replace("\n\n", "")
-        sent_sep_pattern = re.compile('([﹒﹔﹖﹗．。！？]["’”」』]{0,2}|(?=["‘“「『]{1,2}|$))')  # del ：；
+
+        if sent_sep_pattern is None:
+            sent_sep_pattern = self.sent_sep_pattern
+
         sent_list = []
         for ele in sent_sep_pattern.split(text):
             if sent_sep_pattern.match(ele) and sent_list:

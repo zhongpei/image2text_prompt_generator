@@ -103,7 +103,7 @@ def init_vector_store(vs_id: str, filepath=None) -> bool:
     vs_path = os.path.join(VS_ROOT_PATH, vs_id)
     if filepath is None:
         filepath = []
-    
+
     if local_doc_qa.is_initialized():
         local_doc_qa.init_knowledge_vector_store(
             vs_id=vs_id,
