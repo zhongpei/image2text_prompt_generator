@@ -14,7 +14,7 @@ generate_translate = true # 是否启用生成翻译功能
 [image_tools]
 enable = true # 是否启用图片处理功能
 
-transparent_background_model_path = "./models/transparent-background/ckpt_base.pth" # transparent-background模型路径
+transparent_background_model_path = ".\\models\\transparent-background\\ckpt_base.pth" # transparent-background模型路径
 
 
 [generator]
@@ -22,10 +22,10 @@ enable = true # 是否启用generator功能
 device = "cuda" # cpu mps cuda
 fix_sd_prompt = true # 是否修复sd prompt
 # models
-microsoft_model = "./Promptist"
-gpt2_650k_model = "./gpt2-650k-stable-diffusion-prompt-generator"
-gpt_neo_125m_model = "./StableDiffusion-Prompt-Generator-GPT-Neo-125M"
-mj_model = "./text2image-prompt-generator"
+microsoft_model = ".\\models\\Promptist"
+gpt2_650k_model = ".\\models\\gpt2-650k-stable-diffusion-prompt-generator"
+gpt_neo_125m_model = ".\\models\\StableDiffusion-Prompt-Generator-GPT-Neo-125M"
+mj_model = ".\\models\\text2image-prompt-generator"
 local_files_only = true # 是否只使用本地模型
 
 default_model_name = "microsoft" # microsoft gpt2_650k gpt_neo_125m mj
@@ -45,8 +45,8 @@ default_character_threshold=0.85
 enable = true # 是否启用翻译功能
 device = "cuda" # cpu mps cuda
 local_files_only = true # 是否只使用本地模型
-zh2en_model = "./models/opus-mt-zh-en"
-en2zh_model = "./models/opus-mt-en-zh"
+zh2en_model = ".\\models\\opus-mt-zh-en"
+en2zh_model = ".\\models\\opus-mt-en-zh"
 
 cache_dir = "./data/translate_cache" # 翻译缓存目录
 
