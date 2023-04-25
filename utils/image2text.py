@@ -47,7 +47,6 @@ class Models(ModelsBase):
         config.flavor_intermediate_count = 512
         config.blip_num_beams = 64
         config.clip_model_name = model_repo
-
         ci = Interrogator(config)
         return ci
 
@@ -91,7 +90,6 @@ class Models(ModelsBase):
 
         model = AutoModelForCausalLM.from_pretrained(
             pretrained_model_name_or_path=settings.git.model if settings.git.model else "microsoft/git-large-coco",
-
 
         )
         processor = AutoProcessor.from_pretrained(
