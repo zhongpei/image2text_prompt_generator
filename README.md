@@ -53,7 +53,19 @@ ChatGLM 模型需要单独下载(下载int4版本)，放到程序目录 models �
 * [v1.0](https://pan.baidu.com/s/1pKtpPmiuliX7rf0z-5HY_w?pwd=79sk) 提取码: 79sk
 * [v1.5](https://pan.baidu.com/s/1vMzDGbtTO0-CD7wk-4GrcQ?pwd=eb33) 提取码: eb33
 * [v1.8](https://pan.baidu.com/s/1bup8Oa56e_S4andbU8wk0g?pwd=7hbt) 提取码: 7hbt
-* [模型离线包](https://pan.baidu.com/s/1_Hs-MRjSxg0gaIRDaUTD8Q?pwd=6ti4) 提取码: 6ti4
+* [离线模型](https://pan.baidu.com/s/1_Hs-MRjSxg0gaIRDaUTD8Q?pwd=6ti4) 提取码: 6ti4
+
+### 启动程序
+
+* `webui.bat` 主要功能
+* `webui_chat.bat`  主要功能+chatGLM聊天界面
+* `webui_imagetools.bat` 图片处理工具
+* `webui_offline.bat` 使用离线模式
+    * 修改`settings.offline.toml`里面的模型路径
+    * 模型`git clone`到`models`目录（不能直接从cache拷贝）
+* `webui_venv.bat` 自己手动安装`venv`环境，用这个启动，默认`venv`目录。
+* 第一次运行会自动下载模型，默认下载在用户目录`.cache/huggingface`
+>>>>>>> main
 
 ### 启动程序
 
@@ -135,7 +147,9 @@ ChatGLM 模型需要单独下载(下载int4版本)，放到程序目录 models �
 来源于 `chatGPTBox` 项目，修改部分提示词语
 
 * 使用 `api.bat` 启动
-* 配置 `chatGPTBox` 插件为 自定义模型 http://localhost:8000
+
+* 配置 `chatGPTBox` 插件为 自定义模型 `http://localhost:8000/chat/completions`
+
 * 在[release](https://github.com/zhongpei/image2text_prompt_generator/releases)里面下载插件
 * [修改版插件](https://github.com/zhongpei/chatGPTBox)
 
@@ -215,6 +229,8 @@ cache_dir = "./data/translate_cache" # 翻译缓存目录
 [chatglm]
 # 本地模型 https://github.com/THUDM/ChatGLM-6B#从本地加载模型
 model = ".\\models\\chatglm-6b-int4" # ./chatglm-6b-int4 ./chatglm-6b-int8 ./chatglm-6b
+## windows 绝对路径配置方法
+# model = "E:\\zhangsan\\models\\chatglm-6b-int4" 
 device = "cuda" # cpu mps cuda
 enable_chat = true # 是否启用聊天功能
 local_files_only = true # 是否只使用本地模型
