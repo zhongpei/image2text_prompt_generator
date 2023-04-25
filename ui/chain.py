@@ -160,22 +160,13 @@ def chain_upload_ui(select_vs, result):
     )
 
 
-def chain_ui(chatbot, query):
+def chain_ui():
     init_model()
     vs_list = gr.State(get_vs_list(VS_ROOT_PATH))
-    history = gr.State([])
 
-    chatbot = gr.Chatbot(
-        elem_id="chat-box",
-        show_label=False
-    ).style(height=800)
-
-    query = gr.Textbox(show_label=False, placeholder="Prompts", lines=4).style(container=False)
-    generate_button = gr.Button("生成")
-    generate_button.click(get_answer, inputs=[query, history], outputs=[chatbot])
     result = gr.Textbox(label="结果", lines=1, interactive=False)
 
-    with gr.Accordion("加载知识库", open=False):
+    with gr.Column(scale=2):
         with gr.Row():
             select_vs = gr.Dropdown(
                 vs_list.value,
@@ -192,7 +183,7 @@ def chain_ui(chatbot, query):
             )
         chain_upload_ui(select_vs=select_vs, result=result)
 
-    with gr.Accordion("新建知识库", open=False):
+    with gr.Column(scale=1):
         vs_name = gr.Textbox(
             label="请输入新建知识库名称",
             lines=1,

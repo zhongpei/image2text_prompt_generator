@@ -3,6 +3,7 @@ import torch
 from utils.chatglm import models as chatglm_models
 from .chain import chain_ui
 import gradio as gr
+from .chain import get_answer
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -58,8 +59,10 @@ def chatglm_ui():
         def reset_state():
             return [], []
 
+        history = gr.State([])
+
         with gr.Tab("ChatGLM"):
-            with gr.Column(scale=4):
+            with gr.Column(scale=3):
                 chatbot = gr.Chatbot(
                     elem_id="chat-box",
                     show_label=False
@@ -73,6 +76,8 @@ def chatglm_ui():
                 with gr.Row():
                     query = gr.Textbox(show_label=False, placeholder="Prompts", lines=4).style(container=False)
                     generate_button = gr.Button("生成")
+                    chain_generate_button = gr.Button("知识库问答")
+                    chain_generate_button.click(get_answer, inputs=[query, history], outputs=[chatbot])
                 with gr.Row():
                     continue_message = gr.Textbox(
                         show_label=False, placeholder="Continue message", lines=2).style(container=False)
@@ -85,14 +90,8 @@ def chatglm_ui():
                     reset_btn = gr.Button("清空")
 
         with gr.Tab("Chain"):
-            chat_mode = gr.Radio(
-                ["ChatGLM", "Chain"],
-                label="请选择使用模式",
-                value="知识库问答",
-            )
-            chain_ui(chatbot=chatbot, query=query)
+            chain_ui()
 
-        history = gr.State([])
         allow_generate = gr.State([True])
         blank_input = gr.State("")
         reset_btn.click(reset_state, outputs=[chatbot, history], show_progress=True)
