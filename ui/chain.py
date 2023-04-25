@@ -20,7 +20,7 @@ LLM_HISTORY_LEN = 3
 VS_ROOT_PATH = "./data/chain/vector_store/"
 
 UPLOAD_ROOT_PATH = "./data/chain/upload/"
-
+FILE_EX_LIST = ['.txt', '.md', '.docx', '.pdf']
 local_doc_qa = LocalDocQA()
 
 
@@ -95,6 +95,8 @@ def upload_files(fpath: List | str) -> List[str]:
     for fn in filelist:
         filename = os.path.split(fn)[-1]
         ext = os.path.splitext(filename)[-1]
+        if ext not in FILE_EX_LIST:
+            continue
 
         filename = filename.split(".")[0]
         filename = filename.replace(" ", "_")
@@ -162,7 +164,7 @@ def chain_upload_ui(select_vs, result, max_length, min_length):
         with gr.Tab("上传文件"):
             files = gr.File(
                 label="添加文件",
-                file_types=['.txt', '.md', '.docx', '.pdf'],
+                file_types=FILE_EX_LIST,
                 file_count="multiple",
                 show_label=False
             )
