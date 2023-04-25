@@ -69,6 +69,10 @@ def empty_cache(force_clear_cache: bool = False):
         with torch.cuda.device(0):
             torch.cuda.empty_cache()
             torch.cuda.ipc_collect()
+        from utils.generator import models as generator_models
+        generator_models.unload()
+        from utils.translate import models as translate_models
+        translate_models.unload()
 
         if force_clear_cache:
             try:
