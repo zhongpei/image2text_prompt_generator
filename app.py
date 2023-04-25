@@ -64,15 +64,20 @@ def translate_input(text: str, chatglm_text: str) -> str:
     return translate_zh2en(text)
 
 
+def unload_models():
+    from utils.generator import models as generator_models
+    generator_models.unload()
+    from utils.translate import models as translate_models
+    translate_models.unload()
+
+    empty_cache(force_clear_cache=False)
+
+
 def empty_cache(force_clear_cache: bool = False):
     if torch.cuda.is_available():
         with torch.cuda.device(0):
             torch.cuda.empty_cache()
             torch.cuda.ipc_collect()
-        from utils.generator import models as generator_models
-        generator_models.unload()
-        from utils.translate import models as translate_models
-        translate_models.unload()
 
         if force_clear_cache:
             try:
@@ -89,6 +94,7 @@ def ui(enable_chat: bool = False):
             with gr.Row():
                 force_clear_cache = gr.Checkbox(False, label='force 强制清显存(谨慎使用)', width=60)
                 empty_cache_btn = gr.Button('clean VRam(清显存)')
+                unload_models_btn = gr.Button('unload models(卸载模型)')
 
             with gr.Tab('text2text(文本生成)'):
                 with gr.Row():
@@ -162,6 +168,8 @@ def ui(enable_chat: bool = False):
                 )
 
         empty_cache_btn.click(fn=empty_cache, inputs=force_clear_cache)
+        unload_models_btn.click(fn=unload_models)
+        
         img_prompter_btn.click(
             fn=image_generate_prompter,
             inputs=[
