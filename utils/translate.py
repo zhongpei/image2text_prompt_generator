@@ -1,5 +1,5 @@
 import os
-
+from typing import Any
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 from .singleton import Singleton
@@ -20,8 +20,10 @@ class Models(ModelsBase):
         super().__init__()
 
     def load(self, item: str) -> None:
+        print(f'Loading {item} ...')
         if item in ('zh2en_model', 'zh2en_tokenizer',):
             zh2en_model, zh2en_tokenizer = self.load_model(settings.translate.zh2en_model)
+            print(f"Registering {item} ...")
             self.register('zh2en_model', zh2en_model)
             self.register('zh2en_tokenizer', zh2en_tokenizer)
 

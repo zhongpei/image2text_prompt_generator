@@ -20,8 +20,6 @@ class Models(ModelsBase):
     def __init__(self):
         super().__init__()
 
-
-
     def load(self, item):
         if item in ('microsoft_model', 'microsoft_tokenizer'):
             microsoft_model, microsoft_tokenizer = self.load_microsoft_model()
