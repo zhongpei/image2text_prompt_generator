@@ -113,7 +113,7 @@ def add_vs_name(vs_name):
     if vs_name in vs_list:
         return f"知识库{vs_name}已存在，请重新输入", vs_list
     vs_list.append(vs_name)
-    return f"知识库{vs_name}创建成功", list(set(vs_list))
+    return f"知识库{vs_name}创建成功", list(set(vs_list)), gr.update(visible=True, value=vs_list)
 
 
 def chain_upload_ui(select_vs, result):
@@ -176,5 +176,5 @@ def chain_ui(chatbot, query):
         vs_add_button.click(
             fn=add_vs_name,
             inputs=vs_name,
-            outputs=[result, vs_list]
+            outputs=[result, vs_list, select_vs]
         )

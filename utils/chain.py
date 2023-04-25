@@ -149,7 +149,7 @@ class LocalDocQA:
         else:
             print("create new vector store {vs_path}")
             vector_store = FAISS.from_documents(docs, self.embeddings)
-        
+
         vector_store.save_local(vs_path)
         self.vector_store = vector_store
 
