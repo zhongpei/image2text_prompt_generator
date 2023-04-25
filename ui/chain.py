@@ -169,7 +169,7 @@ def chain_upload_ui(select_vs, result, max_length, min_length):
     load_folder_button.click(
         uplaod_vector_store,
         show_progress=True,
-        inputs=[select_vs, files, max_length, min_length],
+        inputs=[select_vs, folder_files, max_length, min_length],
         outputs=[result],
     )
 
@@ -180,9 +180,9 @@ def chain_ui():
 
     result = gr.Textbox(label="结果", lines=1, interactive=False)
     with gr.Row():
-        gr.Markdown("Doc长度限制")
-        max_length = gr.Slider(20, 1000, 100, step=1, label="最大长度", )
-        min_length = gr.Slider(10, 500, 50, step=1, label="最小长度")
+
+        max_length = gr.Slider(20, 1000, 100, step=1, label="Doc(最大长度)", )
+        min_length = gr.Slider(10, 500, 50, step=1, label="Doc(最小长度)")
     with gr.Row():
         with gr.Column(scale=2):
             select_vs = gr.Dropdown(

@@ -54,9 +54,17 @@ class ChineseTextSplitter(CharacterTextSplitter):
 
 
 if __name__ == '__main__':
-    test_text = "我是中国人,我爱我的祖国。"
-    text = "".join([test_text] * 100)
-    splitter = ChineseTextSplitter(min_length=22, max_length=50)
+    test_text = """娘儿们说了回话，不觉五更，鸡叫天明。吴月娘梳洗面貌，走到禅堂中，礼佛烧香。只见普静老师在禅床上高叫：“那吴氏娘子，你如何可省悟得了么？”
+ 
+这月娘便跪下参拜：“上告尊师，弟子吴氏，肉眼凡胎，不知师父是一尊古佛。适间一梦中都已省悟了。”
+ 
+老师道：“既已省悟，也不消前去，你就去，也无过只是如此。倒没的丧了五口儿性命。你这儿子，有分有缘遇着我，都是你平日一点善根所种。不然，定然难免骨肉分离。当初，你去世夫主西门庆造恶非善，此子转身托化你家，本要荡散其财本，倾覆其产业，临死还当身首羿处。今我度脱了他去，做了徒弟，常言‘一子出家，九祖升天’，你那夫主冤愆解释，亦得超生去了。你不信，跟我来，与你看一看。”
+ 
+于是叉步来到方丈内，只见孝哥儿还睡在床上。老师将手中禅杖，向他头上只一点，教月娘众人看。忽然翻过身来，却是西门庆，项带沉枷，腰系铁索。复用禅杖只一点，依旧是孝哥儿睡在床上。月娘见了，不觉放声大哭，原来孝哥儿即是西门庆托生。
+ 
+良久，孝哥儿醒了。月娘问他：“如何你跟了师父出家。"""
+    text = "".join([test_text] * 1)
+    splitter = ChineseTextSplitter(min_length=100, max_length=500, pdf=False)
 
     print([(l, len(l)) for l in splitter.split_text(text)])
     splitter = ChineseTextSplitter(min_length=10, max_length=20)
