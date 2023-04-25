@@ -199,6 +199,7 @@ def chain_ui():
     with gr.Row():
         max_length = gr.Slider(20, 1000, 100, step=1, label="Doc(最大长度)", )
         min_length = gr.Slider(10, 500, 50, step=1, label="Doc(最小长度)")
+        strip_mode = gr.Radio(["all", ""], label="去除空格")
     with gr.Row():
         with gr.Column(scale=2):
             select_vs = gr.Dropdown(
