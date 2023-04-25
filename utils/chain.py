@@ -113,7 +113,13 @@ class LocalDocQA:
 
         self.llm.history_len = llm_history_len
 
-        self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model_dict[embedding_model], )
+        embedding_dir = os.path.join("./models", embedding_model)
+        if not os.path.exists(embedding_dir):
+            os.makedirs(embedding_dir, exist_ok=True)
+            self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model_dict[embedding_model], )
+            self.embeddings.client.save_local(embedding_dir)
+        else:
+            self.embeddings = HuggingFaceEmbeddings(model_name=embedding_dir, )
 
         # self.embeddings.client = sentence_transformers.SentenceTransformer(
         #     self.embeddings.model_name,
@@ -135,7 +141,7 @@ class LocalDocQA:
         docs = load_docs(filepath)
         if vs_path is None:
             vs_path = os.path.join(VS_ROOT_PATH, vs_id)
-        print(f"vector store path: {vs_path}")
+        print(f"vector store path: {vs_path} \n docs: {docs}")
 
         if os.path.exists(vs_path) and os.path.isdir(vs_path):
             # add doc to exist vector store
