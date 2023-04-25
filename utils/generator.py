@@ -48,7 +48,7 @@ class Models(object):
     def load_gpt2_650k_pipe(cls):
         return pipeline(
             'text-generation',
-            model='Ar4ikov/gpt2-650k-stable-diffusion-prompt-generator',
+            model=settings.generator.gpt2_650k_model,
             device=device_id,
             trust_remote_code=True,
 
@@ -58,7 +58,7 @@ class Models(object):
     def load_mj_pipe(cls):
         return pipeline(
             'text-generation',
-            model='succinctly/text2image-prompt-generator',
+            model=settings.generator.mj_model,
             device=device_id,
             trust_remote_code=True,
 
@@ -67,7 +67,7 @@ class Models(object):
     @classmethod
     def load_microsoft_model(cls):
         model = AutoModelForCausalLM.from_pretrained(
-            "microsoft/Promptist",
+            pretrained_model_name_or_path=settings.generator.microsoft_model,
             trust_remote_code=True,
             resume_download=True,
             local_files_only=settings.translate.local_files_only,
