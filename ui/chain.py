@@ -169,9 +169,8 @@ def chain_ui():
     vs_list = gr.State(get_vs_list(VS_ROOT_PATH))
 
     result = gr.Textbox(label="结果", lines=1, interactive=False)
-
-    with gr.Column(scale=2):
-        with gr.Row():
+    with gr.Row():
+        with gr.Column(scale=2):
             select_vs = gr.Dropdown(
                 vs_list.value,
                 label="请选择要加载的知识库",
@@ -179,23 +178,27 @@ def chain_ui():
                 value=vs_list.value[0] if len(vs_list.value) > 0 else None
             )
             load_vs_btn = gr.Button("加载知识库")
-            load_vs_btn.click(
-                init_vector_store,
-                show_progress=True,
-                inputs=[select_vs],
-                outputs=[result],
-            )
-        chain_upload_ui(select_vs=select_vs, result=result)
 
-    with gr.Column(scale=1):
-        vs_name = gr.Textbox(
-            label="请输入新建知识库名称",
-            lines=1,
-            interactive=True
-        )
-        vs_add_button = gr.Button(value="添加知识库")
-        vs_add_button.click(
-            fn=add_vs_name,
-            inputs=vs_name,
-            outputs=[result, vs_list, select_vs]
-        )
+        with gr.Column(scale=2):
+            vs_name = gr.Textbox(
+                label="请输入新建知识库名称",
+                lines=1,
+                interactive=True
+            )
+            vs_add_button = gr.Button(value="添加知识库")
+            vs_add_button.click(
+                fn=add_vs_name,
+                inputs=vs_name,
+                outputs=[result, vs_list, select_vs]
+            )
+
+    load_vs_btn.click(
+        init_vector_store,
+        show_progress=True,
+        inputs=[select_vs],
+        outputs=[result],
+    )
+    chain_upload_ui(select_vs=select_vs, result=result)
+
+
+
