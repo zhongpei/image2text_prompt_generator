@@ -62,32 +62,34 @@ def chatglm_ui():
         history = gr.State([])
 
         with gr.Tab("ChatGLM"):
-            with gr.Column(scale=3):
-                chatbot = gr.Chatbot(
-                    elem_id="chat-box",
-                    show_label=False
-                ).style(height=800)
-            with gr.Column(scale=1):
-                with gr.Row():
-                    max_length = gr.Slider(32, 4096, value=2048, step=1, label="Maximum length", interactive=True)
-                    top_p = gr.Slider(0.01, 1, value=0.7, step=0.01, label="Top P", interactive=True)
-                    temperature = gr.Slider(0.01, 5, value=0.95, step=0.01, label="Temperature", interactive=True)
+            with gr.Row():
+                with gr.Column(scale=4):
+                    chatbot = gr.Chatbot(
+                        elem_id="chat-box",
+                        show_label=False
+                    ).style(height=800)
+                with gr.Column(scale=-1):
 
-                with gr.Row():
-                    query = gr.Textbox(show_label=False, placeholder="Prompts", lines=4).style(container=False)
-                    generate_button = gr.Button("生成")
-                    chain_generate_button = gr.Button("知识库问答")
-                    chain_generate_button.click(get_answer, inputs=[query, history], outputs=[chatbot])
-                with gr.Row():
-                    continue_message = gr.Textbox(
-                        show_label=False, placeholder="Continue message", lines=2).style(container=False)
-                    continue_btn = gr.Button("续写")
-                    revise_message = gr.Textbox(
-                        show_label=False, placeholder="Revise message", lines=2).style(container=False)
-                    revise_btn = gr.Button("修订")
-                    revoke_btn = gr.Button("撤回")
-                    interrupt_btn = gr.Button("终止生成")
-                    reset_btn = gr.Button("清空")
+                    with gr.Row():
+                        max_length = gr.Slider(32, 4096, value=2048, step=1, label="Maximum length", interactive=True)
+                        top_p = gr.Slider(0.01, 1, value=0.7, step=0.01, label="Top P", interactive=True)
+                        temperature = gr.Slider(0.01, 5, value=0.95, step=0.01, label="Temperature", interactive=True)
+
+                    with gr.Row():
+                        query = gr.Textbox(show_label=False, placeholder="Prompts", lines=4).style(container=False)
+                        generate_button = gr.Button("生成")
+                        chain_generate_button = gr.Button("知识库问答")
+                        chain_generate_button.click(get_answer, inputs=[query, history], outputs=[chatbot])
+                    with gr.Row():
+                        continue_message = gr.Textbox(
+                            show_label=False, placeholder="Continue message", lines=2).style(container=False)
+                        continue_btn = gr.Button("续写")
+                        revise_message = gr.Textbox(
+                            show_label=False, placeholder="Revise message", lines=2).style(container=False)
+                        revise_btn = gr.Button("修订")
+                        revoke_btn = gr.Button("撤回")
+                        interrupt_btn = gr.Button("终止生成")
+                        reset_btn = gr.Button("清空")
 
         with gr.Tab("Chain"):
             chain_ui()
