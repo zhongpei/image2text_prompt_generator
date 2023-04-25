@@ -81,7 +81,7 @@ def file2doc(file_path: str):
 
 def load_docs(path: str | List[str]) -> List[Any]:
     docs = []
-
+    print(f"load_docs: {path}, {type(path)}")
     if isinstance(path, list):
         docs = [file2doc(f) for f in path]
 

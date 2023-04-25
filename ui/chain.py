@@ -76,10 +76,11 @@ def reinit_model(embedding_model, llm_history_len, top_k, history):
 def upload_files(files):
     filelist = []
     for file in files:
-        filename = os.path.split(file.name)[-1]
+        filename = os.path.split(file.name)[-1].splitext()[0]
         ext = os.path.splitext(filename)[-1]
+
         filename = filename.replace(" ", "_")
-        filename = "{}_{}.{}".format(filename, datetime.now().strftime("%Y%m%d%H%M%S"), ext)
+        filename = "{}_{}{}".format(filename, datetime.now().strftime("%Y%m%d%H%M%S"), ext)
         shutil.move(file.name, os.path.join(UPLOAD_ROOT_PATH, filename))
         filelist.append(os.path.join(UPLOAD_ROOT_PATH, filename))
     return filelist
