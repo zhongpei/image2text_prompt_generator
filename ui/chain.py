@@ -93,13 +93,18 @@ def upload_files(files):
     return filelist
 
 
-def uplaod_vector_store(vs_id: str, input_files) -> bool:
+def uplaod_vector_store(vs_id: str, input_files, max_length=512, min_length=100) -> bool:
     filelist = upload_files(input_files)
     print(f"filelist: {filelist}")
-    return init_vector_store(vs_id, filepath=filelist)
+    return init_vector_store(
+        vs_id,
+        filepath=filelist,
+        max_length=max_length,
+        min_length=min_length,
+    )
 
 
-def init_vector_store(vs_id: str, filepath=None) -> bool:
+def init_vector_store(vs_id: str, filepath=None, max_length=512, min_length=100) -> bool:
     vs_path = os.path.join(VS_ROOT_PATH, vs_id)
     if filepath is None:
         filepath = []
@@ -108,7 +113,9 @@ def init_vector_store(vs_id: str, filepath=None) -> bool:
         local_doc_qa.init_knowledge_vector_store(
             vs_id=vs_id,
             filepath=filepath,
-            vs_path=vs_path
+            vs_path=vs_path,
+            max_length=max_length,
+            min_length=min_length,
         )
         return True
     else:
@@ -133,7 +140,7 @@ def add_vs_name(vs_name):
     return f"知识库{vs_name}创建成功", list(set(vs_list)), gr.update(visible=True, choices=vs_list, value=vs_name)
 
 
-def chain_upload_ui(select_vs, result):
+def chain_upload_ui(select_vs, result, max_length, min_length):
     with gr.Column(visible=True):
         gr.Markdown("向知识库中添加文件")
         with gr.Tab("上传文件"):
@@ -156,13 +163,13 @@ def chain_upload_ui(select_vs, result):
     load_file_button.click(
         uplaod_vector_store,
         show_progress=True,
-        inputs=[select_vs, files],
+        inputs=[select_vs, files, max_length, min_length],
         outputs=[result],
     )
     load_folder_button.click(
         uplaod_vector_store,
         show_progress=True,
-        inputs=[select_vs, folder_files],
+        inputs=[select_vs, files, max_length, min_length],
         outputs=[result],
     )
 
@@ -172,6 +179,9 @@ def chain_ui():
     vs_list = gr.State(get_vs_list(VS_ROOT_PATH))
 
     result = gr.Textbox(label="结果", lines=1, interactive=False)
+    with gr.Row():
+        max_length = gr.Slider(512, label="最大长度", min=30, max=1000, step=1)
+        min_length = gr.Slider(100, label="最小长度", min=10, max=500, step=1)
     with gr.Row():
         with gr.Column(scale=2):
             select_vs = gr.Dropdown(
@@ -201,4 +211,4 @@ def chain_ui():
         inputs=[select_vs],
         outputs=[result],
     )
-    chain_upload_ui(select_vs=select_vs, result=result)
+    chain_upload_ui(select_vs=select_vs, result=result, max_length=max_length, min_length=min_length)

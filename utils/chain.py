@@ -15,6 +15,7 @@ from langchain.vectorstores import FAISS
 
 from config import settings
 from utils.chatglm import models as chatglm_models
+from textsplitter import ChineseTextSplitter
 
 # Use p-tuning-v2 PrefixEncoder
 USE_PTUNING_V2 = False
@@ -43,55 +44,15 @@ UPLOAD_ROOT_PATH = "./data/chain/upload/"
 LLM_MODEL = settings.chatglm.model if settings.chatglm.model else "THUDM/chatglm-6b-int4"
 
 
-class ChineseTextSplitter(CharacterTextSplitter):
-    def __init__(self, pdf: bool = False, min_length=200, max_length=512, **kwargs):
-        super().__init__(**kwargs)
-        self.pdf = pdf
-        self.min_length = min_length
-        self.max_length = max_length
-        self.sent_sep_pattern = re.compile('([﹒﹖﹗．。！？]["’”」』]{0,2}|(?=["‘“「『]{1,2}|$))')  # del ：；
-
-    def fix_length(self, sent_list: List[str]) -> List[str]:
-        new_sent_list = []
-        for sent in sent_list:
-            if len(sent) < self.min_length and new_sent_list:
-                new_sent_list[-1] += sent
-            elif len(sent) > self.max_length:
-                new_sent_list.extend(self.__split_text(sent, re.compile('([,，;；])')))
-        return new_sent_list
-
-    def split_text(self, text: str) -> List[str]:
-        sent_list = self.__split_text(text)
-        sent_list = self.fix_length(sent_list)
-        return sent_list
-
-    def __split_text(self, text: str, sent_sep_pattern=None) -> List[str]:
-        if self.pdf:
-            text = re.sub(r"\n{3,}", "\n", text)
-            text = re.sub('\s', ' ', text)
-            text = text.replace("\n\n", "")
-
-        if sent_sep_pattern is None:
-            sent_sep_pattern = self.sent_sep_pattern
-
-        sent_list = []
-        for ele in sent_sep_pattern.split(text):
-            if sent_sep_pattern.match(ele) and sent_list:
-                sent_list[-1] += ele
-            elif ele:
-                sent_list.append(ele)
-        return sent_list
-
-
-def file2doc(file_path: str):
+def file2doc(file_path: str, max_length=512, min_length=100):
     try:
         if file_path.lower().endswith(".pdf"):
             loader = UnstructuredFileLoader(file_path)
-            textsplitter = ChineseTextSplitter(pdf=True)
+            textsplitter = ChineseTextSplitter(pdf=True, max_length=max_length, min_length=min_length)
             doc = loader.load_and_split(textsplitter)
         else:
             loader = UnstructuredFileLoader(file_path, mode="elements")
-            textsplitter = ChineseTextSplitter(pdf=False)
+            textsplitter = ChineseTextSplitter(pdf=False, max_length=max_length, min_length=min_length)
             doc = loader.load_and_split(text_splitter=textsplitter)
         return doc
     except Exception as e:
@@ -99,18 +60,20 @@ def file2doc(file_path: str):
         return
 
 
-def load_docs(input_path: str | List[str]) -> List[Any]:
+def load_docs(input_path: str | List[str], max_length=512, min_length=100) -> List[Any]:
     docs = []
     print(f"load_docs: {input_path}, {type(input_path)}")
     if isinstance(input_path, list):
         for f in input_path:
-            docs += file2doc(f)
+            docs += file2doc(f, max_length=max_length, min_length=min_length)
 
     elif os.path.isfile(input_path):
-        docs = [file2doc(input_path), ]
+        docs = [file2doc(input_path, max_length=max_length, min_length=min_length), ]
 
     elif os.path.isdir(input_path):
-        docs = [file2doc(os.path.join(input_path, f)) for f in os.listdir(input_path)]
+        for fn in os.listdir(input_path):
+            docs += file2doc(os.path.join(input_path, fn), max_length=max_length, min_length=min_length)
+
     print(f"load {input_path} ==> docs: {len(docs)}")
     return docs
 
@@ -161,8 +124,10 @@ class LocalDocQA:
             vs_id: str,
             filepath: Union[str, List[str]],
             vs_path: str = None,
+            max_length=512,
+            min_length=100,
     ):
-        docs = load_docs(filepath)
+        docs = load_docs(filepath, max_length=max_length, min_length=min_length)
         if vs_path is None:
             vs_path = os.path.join(VS_ROOT_PATH, vs_id)
         print(f"vector store path: {vs_path} \n docs: {docs}")
@@ -173,17 +138,22 @@ class LocalDocQA:
 
             print(f"add doc to exist vector store {index_file}")
             vector_store = FAISS.load_local(vs_path, self.embeddings)
+            self.vector_store = vector_store
+
             if len(docs) > 0:
                 vector_store.add_documents(docs)
-        else:
+                vector_store.save_local(vs_path)
+                self.vector_store = vector_store
+        elif len(docs) > 0:
+
             if not os.path.exists(vs_path):
                 os.makedirs(vs_path, exist_ok=True)
             print(f"create new vector store {vs_path}")
 
             vector_store = FAISS.from_documents(docs, self.embeddings)
-
-        vector_store.save_local(vs_path)
-        self.vector_store = vector_store
+            vector_store.save_local(vs_path)
+            self.vector_store = vector_store
+            return
 
     def get_knowledge_based_answer(
             self,
