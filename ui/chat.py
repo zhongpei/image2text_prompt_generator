@@ -76,9 +76,8 @@ def chatglm_ui():
 
                     with gr.Row():
                         query = gr.Textbox(show_label=False, placeholder="Prompts", lines=4).style(container=False)
-                        with gr.Row():
-                            generate_button = gr.Button("生成")
-                            chain_generate_button = gr.Button("知识库问答")
+                        generate_button = gr.Button("生成")
+                        chain_generate_button = gr.Button("知识库问答")
                         chain_generate_button.click(get_answer, inputs=[query, history], outputs=[chatbot])
                     with gr.Row():
                         continue_message = gr.Textbox(

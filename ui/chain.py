@@ -35,7 +35,8 @@ def get_vs_list(vs_path):
 
 def get_answer(query, history):
     if not local_doc_qa.is_initialized() or not local_doc_qa.is_active():
-        history[-1] = """知识库未成功加载，请到页面左上角"知识库"选项卡中重新选择后加载"""
+        history.append([None, "知识库未成功加载，请到页面左上角'知识库'选项卡中重新选择后加载"])
+
         return history
 
     resp, history = local_doc_qa.get_knowledge_based_answer(
