@@ -1,6 +1,6 @@
-from datetime import datetime
 import os
 import re
+from typing import Any
 from typing import List, Union
 
 import sentence_transformers
@@ -8,6 +8,7 @@ import torch
 from langchain.chains import RetrievalQA
 from langchain.document_loaders import UnstructuredFileLoader
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
+from langchain.llms import BaseLLM
 from langchain.prompts import PromptTemplate
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
@@ -78,9 +79,6 @@ def file2doc(file_path: str):
         return
 
 
-from typing import Any
-
-
 def load_docs(path: str) -> List[Any]:
     docs = []
 
@@ -97,9 +95,6 @@ def load_docs(path: str) -> List[Any]:
         docs = [file2doc(os.path.join(path, f)) for f in os.listdir(path)]
 
     return docs
-
-
-from langchain.llms import BaseLLM
 
 
 class LocalDocQA:
@@ -141,13 +136,13 @@ class LocalDocQA:
             vs_path = os.path.join(VS_ROOT_PATH, vs_id)
         print(f"vector store path: {vs_path}")
 
-        if os.path.isdir(vs_path):
+        if os.path.exists(vs_path) and os.path.isdir(vs_path):
             # add doc to exist vector store
-            print("add doc to exist vector store {vs_path}")
+            print(f"add doc to exist vector store {vs_path}")
             vector_store = FAISS.load_local(vs_path, self.embeddings)
             vector_store.add_documents(docs)
         else:
-            print("create new vector store {vs_path}")
+            print(f"create new vector store {vs_path}")
             vector_store = FAISS.from_documents(docs, self.embeddings)
 
         vector_store.save_local(vs_path)
