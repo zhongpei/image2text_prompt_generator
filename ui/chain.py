@@ -78,7 +78,7 @@ def upload_files(files):
     for file in files:
         filename = os.path.split(file.name)[-1]
         ext = os.path.splitext(filename)[-1]
-        
+
         filename = filename.split(".")[0]
         filename = filename.replace(" ", "_")
 
@@ -101,6 +101,8 @@ def init_vector_store(vs_id: str, input_files):
             filepath=filelist,
             vs_path=vs_path
         )
+    else:
+        print("模型未初始化，无法创建知识库")
 
     return None
 
