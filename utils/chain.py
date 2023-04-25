@@ -79,21 +79,18 @@ def file2doc(file_path: str):
         return
 
 
-def load_docs(path: str | List) -> List[Any]:
+def load_docs(path: str | List[str]) -> List[Any]:
     docs = []
 
     if isinstance(path, list):
         docs = [file2doc(f) for f in path]
-
-    if not isinstance(path, str) or not os.path.exists(path):
-        return []
 
     if os.path.isfile(path):
         docs = [file2doc(path), ]
 
     if os.path.isdir(path):
         docs = [file2doc(os.path.join(path, f)) for f in os.listdir(path)]
-
+    print(f"load {path} ==> docs: {docs}")
     return docs
 
 
@@ -116,10 +113,16 @@ class LocalDocQA:
         embedding_dir = os.path.join("./models", embedding_model)
         if not os.path.exists(embedding_dir):
             os.makedirs(embedding_dir, exist_ok=True)
-            self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model_dict[embedding_model], )
+            self.embeddings = HuggingFaceEmbeddings(
+                model_name=embedding_model_dict[embedding_model],
+                device=embedding_device,
+            )
             self.embeddings.client.save(embedding_dir)
         else:
-            self.embeddings = HuggingFaceEmbeddings(model_name=embedding_dir, )
+            self.embeddings = HuggingFaceEmbeddings(
+                model_name=embedding_dir,
+                device=embedding_device,
+            )
 
         # self.embeddings.client = sentence_transformers.SentenceTransformer(
         #     self.embeddings.model_name,
@@ -143,9 +146,10 @@ class LocalDocQA:
             vs_path = os.path.join(VS_ROOT_PATH, vs_id)
         print(f"vector store path: {vs_path} \n docs: {docs}")
 
-        if os.path.exists(vs_path) and os.path.isdir(vs_path):
+        if os.path.isfile(os.path.join(vs_path, "index.faiss")):
             # add doc to exist vector store
-            print(f"add doc to exist vector store {vs_path}")
+            index_file = os.path.join(vs_path, "index.faiss")
+            print(f"add doc to exist vector store {index_file}")
             vector_store = FAISS.load_local(vs_path, self.embeddings)
             vector_store.add_documents(docs)
         else:
