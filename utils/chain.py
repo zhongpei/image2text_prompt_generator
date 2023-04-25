@@ -114,10 +114,10 @@ class LocalDocQA:
         self.llm.history_len = llm_history_len
 
         self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model_dict[embedding_model], )
-        self.embeddings.client = sentence_transformers.SentenceTransformer(
-            self.embeddings.model_name,
-            device=embedding_device
-        )
+        # self.embeddings.client = sentence_transformers.SentenceTransformer(
+        #     self.embeddings.model_name,
+        #     device=embedding_device
+        # )
 
     def is_active(self):
         return self.vector_store is not None
