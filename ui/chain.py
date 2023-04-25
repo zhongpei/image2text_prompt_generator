@@ -80,6 +80,7 @@ def reinit_model(embedding_model, llm_history_len, top_k, history):
 
 def upload_files(fpath: List | str) -> List[str]:
     filelist = []
+    move = False
 
     if isinstance(fpath, str) and os.path.isdir(fpath):
         for fn in os.listdir(fpath):
@@ -87,6 +88,7 @@ def upload_files(fpath: List | str) -> List[str]:
 
     if isinstance(fpath, list):
         filelist = [fn.name for fn in fpath]
+        move = True  # temp file
 
     for fn in filelist:
         filename = os.path.split(fn)[-1]
@@ -96,7 +98,10 @@ def upload_files(fpath: List | str) -> List[str]:
         filename = filename.replace(" ", "_")
 
         filename = "{}_{}{}".format(filename, datetime.now().strftime("%Y%m%d%H%M%S"), ext)
-        shutil.move(fn, os.path.join(UPLOAD_ROOT_PATH, filename))
+        if move:
+            shutil.move(fn, os.path.join(UPLOAD_ROOT_PATH, filename))
+        else:
+            shutil.copy(fn, os.path.join(UPLOAD_ROOT_PATH, filename))
         filelist.append(os.path.join(UPLOAD_ROOT_PATH, filename))
     return filelist
 
