@@ -69,7 +69,6 @@ def chatglm_ui():
                         show_label=False
                     ).style(height=800)
                 with gr.Column(scale=-1):
-
                     with gr.Row():
                         max_length = gr.Slider(32, 4096, value=2048, step=1, label="Maximum length", interactive=True)
                         top_p = gr.Slider(0.01, 1, value=0.7, step=0.01, label="Top P", interactive=True)
@@ -77,8 +76,9 @@ def chatglm_ui():
 
                     with gr.Row():
                         query = gr.Textbox(show_label=False, placeholder="Prompts", lines=4).style(container=False)
-                        generate_button = gr.Button("生成")
-                        chain_generate_button = gr.Button("知识库问答")
+                        with gr.Row():
+                            generate_button = gr.Button("生成")
+                            chain_generate_button = gr.Button("知识库问答")
                         chain_generate_button.click(get_answer, inputs=[query, history], outputs=[chatbot])
                     with gr.Row():
                         continue_message = gr.Textbox(
