@@ -1,7 +1,7 @@
-import datetime
+from datetime import datetime
 import os
 import re
-from typing import List
+from typing import List, Union
 
 import sentence_transformers
 import torch
@@ -62,29 +62,58 @@ class ChineseTextSplitter(CharacterTextSplitter):
         return sent_list
 
 
-def load_file(filepath):
-    if filepath.lower().endswith(".pdf"):
-        loader = UnstructuredFileLoader(filepath)
-        textsplitter = ChineseTextSplitter(pdf=True)
-        docs = loader.load_and_split(textsplitter)
-    else:
-        loader = UnstructuredFileLoader(filepath, mode="elements")
-        textsplitter = ChineseTextSplitter(pdf=False)
-        docs = loader.load_and_split(text_splitter=textsplitter)
+def file2doc(file_path: str):
+    try:
+        if file_path.lower().endswith(".pdf"):
+            loader = UnstructuredFileLoader(file_path)
+            textsplitter = ChineseTextSplitter(pdf=True)
+            doc = loader.load_and_split(textsplitter)
+        else:
+            loader = UnstructuredFileLoader(file_path, mode="elements")
+            textsplitter = ChineseTextSplitter(pdf=False)
+            doc = loader.load_and_split(text_splitter=textsplitter)
+        return doc
+    except Exception as e:
+        print(e)
+        return
+
+
+from typing import Any
+
+
+def load_docs(path: str) -> List[Any]:
+    docs = []
+
+    if isinstance(path, list):
+        docs = [file2doc(f) for f in path]
+
+    if not isinstance(path, str) or not os.path.exists(path):
+        return []
+
+    if os.path.isfile(path):
+        docs = [file2doc(path), ]
+
+    if os.path.isdir(path):
+        docs = [file2doc(os.path.join(path, f)) for f in os.listdir(path)]
+
     return docs
 
 
-class LocalDocQA:
-    llm: object = None
-    embeddings: HuggingFaceEmbeddings = None
-    top_k: int = VECTOR_SEARCH_TOP_K
+from langchain.llms import BaseLLM
 
-    def init_cfg(self,
-                 embedding_model: str = EMBEDDING_MODEL,
-                 embedding_device: str = EMBEDDING_DEVICE,
-                 llm_history_len: int = LLM_HISTORY_LEN,
-                 top_k: int = VECTOR_SEARCH_TOP_K,
-                 ):
+
+class LocalDocQA:
+    llm: BaseLLM = None
+    embeddings: HuggingFaceEmbeddings = None
+    vector_store: FAISS = None
+
+    def init_cfg(
+            self,
+            embedding_model: str = EMBEDDING_MODEL,
+            embedding_device: str = EMBEDDING_DEVICE,
+            llm_history_len: int = LLM_HISTORY_LEN,
+
+    ):
         self.llm = chatglm_models.chatglm
 
         self.llm.history_len = llm_history_len
@@ -94,65 +123,39 @@ class LocalDocQA:
             self.embeddings.model_name,
             device=embedding_device
         )
-        self.top_k = top_k
+
+    def is_active(self):
+        return self.vector_store is not None
+
+    def is_initialized(self):
+        return self.llm is not None and self.embeddings is not None
 
     def init_knowledge_vector_store(
             self,
-            filepath: str or List[str],
-            vs_path: str or os.PathLike = None
+            vs_id,
+            filepath: Union[str, List[str]],
+            vs_path: str = None,
     ):
-        loaded_files = []
-        if isinstance(filepath, str):
-            if not os.path.exists(filepath):
-                print("路径不存在")
-                return None
-            elif os.path.isfile(filepath):
-                file = os.path.split(filepath)[-1]
-                try:
-                    docs = load_file(filepath)
-                    print(f"{file} 已成功加载")
-                    loaded_files.append(filepath)
-                except Exception as e:
-                    print(e)
-                    print(f"{file} 未能成功加载")
-                    return None
-            elif os.path.isdir(filepath):
-                docs = []
-                for file in os.listdir(filepath):
-                    fullfilepath = os.path.join(filepath, file)
-                    try:
-                        docs += load_file(fullfilepath)
-                        print(f"{file} 已成功加载")
-                        loaded_files.append(fullfilepath)
-                    except Exception as e:
-                        print(e)
-                        print(f"{file} 未能成功加载")
-        else:
-            docs = []
-            for file in filepath:
-                try:
-                    docs += load_file(file)
-                    print(f"{file} 已成功加载")
-                    loaded_files.append(file)
-                except Exception as e:
-                    print(e)
-                    print(f"{file} 未能成功加载")
+        docs = load_docs(filepath)
+        if vs_path is None:
+            vs_path = os.path.join(VS_ROOT_PATH, vs_id)
 
-        if vs_path and os.path.isdir(vs_path):
+        if os.path.isdir(vs_path):
+            # add doc to exist vector store
             vector_store = FAISS.load_local(vs_path, self.embeddings)
             vector_store.add_documents(docs)
         else:
-            if not vs_path:
-                vs_path = f"""{VS_ROOT_PATH}{os.path.splitext(file)[0]}_FAISS_{datetime.datetime.now().strftime("%Y%m%d_%H%M%S")}"""
             vector_store = FAISS.from_documents(docs, self.embeddings)
 
         vector_store.save_local(vs_path)
-        return vs_path if len(docs) > 0 else None, loaded_files
+        self.vector_store = vector_store
 
-    def get_knowledge_based_answer(self,
-                                   query,
-                                   vs_path,
-                                   chat_history=[], ):
+    def get_knowledge_based_answer(
+            self,
+            query,
+            chat_history=None,
+            top_k: int = VECTOR_SEARCH_TOP_K,
+    ):
         prompt_template = """基于以下已知信息，简洁和专业的来回答用户的问题。
     如果无法从中得到答案，请说 "根据已知信息无法回答该问题" 或 "没有提供足够的相关信息"，不允许在答案中添加编造成分，答案请使用中文。
 
@@ -165,11 +168,14 @@ class LocalDocQA:
             template=prompt_template,
             input_variables=["context", "question"]
         )
+        if chat_history is None:
+            chat_history = []
+
         self.llm.history = chat_history
-        vector_store = FAISS.load_local(vs_path, self.embeddings)
+
         knowledge_chain = RetrievalQA.from_llm(
             llm=self.llm,
-            retriever=vector_store.as_retriever(search_kwargs={"k": self.top_k}),
+            retriever=self.vector_store.as_retriever(search_kwargs={"k": top_k}),
             prompt=prompt
         )
         knowledge_chain.combine_documents_chain.document_prompt = PromptTemplate(

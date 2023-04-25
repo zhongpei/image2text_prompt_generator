@@ -13,6 +13,34 @@ def update_status(history, status):
     return history
 
 
+def predict_continue(
+        query,
+        latest_message,
+        max_length,
+        top_p,
+        temperature,
+        allow_generate,
+        history,
+        chat_mode='chat',
+
+):
+    if chat_mode == "chat":
+        yield chatglm_models.chatglm.predict_continue(
+            query=query,
+            latest_message=latest_message,
+            max_lengt=max_length,
+            top_p=top_p,
+            temperature=temperature,
+            allow_generate=allow_generate,
+            history=history,
+        )
+    elif chat_mode == "chain":
+        from .chain import get_answer
+        return get_answer(query, history)
+    else:
+        raise ValueError(f"Unknown chat mode {chat_mode}")
+
+
 def chatglm_ui():
     with gr.Tab('Chat'):
         def revise(history, latest_message):
@@ -32,7 +60,10 @@ def chatglm_ui():
 
         with gr.Row():
             with gr.Column(scale=4):
-                chatbot = gr.Chatbot(elem_id="chat-box", show_label=False).style(height=800)
+                chatbot = gr.Chatbot(
+                    elem_id="chat-box",
+                    show_label=False
+                ).style(height=800)
             with gr.Column(scale=1):
                 with gr.Row():
                     max_length = gr.Slider(32, 4096, value=2048, step=1, label="Maximum length", interactive=True)
@@ -59,7 +90,7 @@ def chatglm_ui():
                         label="请选择使用模式",
                         value="知识库问答",
                     )
-                    chain_ui(mode=chat_mode, chatbot=chatbot, query=query)
+                    chain_ui(chatbot=chatbot, query=query)
 
         history = gr.State([])
         allow_generate = gr.State([True])

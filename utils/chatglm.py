@@ -114,13 +114,16 @@ class ChatGLM(LLM):
             if not allow_generate[0]:
                 break
 
+
+
     @property
     def _llm_type(self) -> str:
         return "ChatGLM"
 
     def _call(self,
               prompt: str,
-              stop: Optional[List[str]] = None) -> str:
+              stop: Optional[List[str]] = None
+              ) -> str:
         response, _ = self.model.chat(
             self.tokenizer,
             prompt,
