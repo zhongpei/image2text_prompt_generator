@@ -79,18 +79,18 @@ def file2doc(file_path: str):
         return
 
 
-def load_docs(path: str | List[str]) -> List[Any]:
+def load_docs(input_path: str | List[str]) -> List[Any]:
     docs = []
-    print(f"load_docs: {path}, {type(path)}")
-    if isinstance(path, list):
-        docs = [file2doc(f) for f in path]
+    print(f"load_docs: {input_path}, {type(input_path)}")
+    if isinstance(input_path, list):
+        docs = [file2doc(f) for f in input_path]
 
-    if os.path.isfile(path):
-        docs = [file2doc(path), ]
+    elif os.path.isfile(input_path):
+        docs = [file2doc(input_path), ]
 
-    if os.path.isdir(path):
-        docs = [file2doc(os.path.join(path, f)) for f in os.listdir(path)]
-    print(f"load {path} ==> docs: {docs}")
+    elif os.path.isdir(input_path):
+        docs = [file2doc(os.path.join(input_path, f)) for f in os.listdir(input_path)]
+    print(f"load {input_path} ==> docs: {docs}")
     return docs
 
 
