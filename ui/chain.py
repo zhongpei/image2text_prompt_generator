@@ -180,8 +180,8 @@ def chain_ui():
 
     result = gr.Textbox(label="结果", lines=1, interactive=False)
     with gr.Row():
-        max_length = gr.Slider(512, label="最大长度", min=30, max=1000, step=1)
-        min_length = gr.Slider(100, label="最小长度", min=10, max=500, step=1)
+        max_length = gr.Slider(20, 1000, 200, step=1, label="最大长度", )
+        min_length = gr.Slider(50, 500, 100, step=1, label="最小长度")
     with gr.Row():
         with gr.Column(scale=2):
             select_vs = gr.Dropdown(
