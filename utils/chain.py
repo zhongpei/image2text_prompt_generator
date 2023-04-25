@@ -15,7 +15,7 @@ from langchain.vectorstores import FAISS
 
 from config import settings
 from utils.chatglm import models as chatglm_models
-from textsplitter import ChineseTextSplitter
+from .textsplitter import ChineseTextSplitter
 
 # Use p-tuning-v2 PrefixEncoder
 USE_PTUNING_V2 = False
