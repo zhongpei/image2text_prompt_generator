@@ -79,7 +79,7 @@ def file2doc(file_path: str):
         return
 
 
-def load_docs(path: str) -> List[Any]:
+def load_docs(path: str | List) -> List[Any]:
     docs = []
 
     if isinstance(path, list):
@@ -117,7 +117,7 @@ class LocalDocQA:
         if not os.path.exists(embedding_dir):
             os.makedirs(embedding_dir, exist_ok=True)
             self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model_dict[embedding_model], )
-            self.embeddings.client.save_local(embedding_dir)
+            self.embeddings.client.save(embedding_dir)
         else:
             self.embeddings = HuggingFaceEmbeddings(model_name=embedding_dir, )
 

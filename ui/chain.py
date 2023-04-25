@@ -90,6 +90,8 @@ def init_vector_store(vs_id: str, input_files):
 
     filelist = upload_files(input_files)
 
+    print(f"filelist: {filelist}")
+
     if local_doc_qa.is_initialized():
         local_doc_qa.init_knowledge_vector_store(
             vs_id=vs_id,
@@ -111,7 +113,7 @@ def add_vs_name(vs_name):
     vs_list = get_vs_list(VS_ROOT_PATH)
 
     if vs_name in vs_list:
-        return f"知识库{vs_name}已存在，请重新输入", vs_list
+        return f"知识库{vs_name}已存在，请重新输入", vs_list, gr.update(visible=True, choices=vs_list, value=vs_name)
     vs_list.append(vs_name)
     return f"知识库{vs_name}创建成功", list(set(vs_list)), gr.update(visible=True, choices=vs_list, value=vs_name)
 
