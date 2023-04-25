@@ -96,16 +96,18 @@ def upload_files(files):
 def uplaod_vector_store(vs_id: str, input_files) -> bool:
     filelist = upload_files(input_files)
     print(f"filelist: {filelist}")
-    return init_vector_store(vs_id)
+    return init_vector_store(vs_id, filepath=filelist)
 
 
-def init_vector_store(vs_id: str) -> bool:
+def init_vector_store(vs_id: str, filepath=None) -> bool:
     vs_path = os.path.join(VS_ROOT_PATH, vs_id)
-
+    if filepath is None:
+        filepath = []
+    
     if local_doc_qa.is_initialized():
         local_doc_qa.init_knowledge_vector_store(
             vs_id=vs_id,
-            filepath=[],
+            filepath=filepath,
             vs_path=vs_path
         )
         return True
@@ -200,6 +202,3 @@ def chain_ui():
         outputs=[result],
     )
     chain_upload_ui(select_vs=select_vs, result=result)
-
-
-
