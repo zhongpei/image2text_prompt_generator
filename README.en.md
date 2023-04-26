@@ -62,9 +62,20 @@ The ChatGLM model needs to be downloaded separately (download the int4 version),
 -   `webui_chat.bat`Main function +chatGLM chat interface
 -   `webui_imagetools.bat`image processing tool
 -   `webui_offline.bat`use offline mode
-    -   修改`settings.offline.toml`inside the model path
+    -   Revise`settings.offline.toml`inside the model path
+    -   Model`git clone`arrive`models`目录（不能直接从cache拷贝）
+-   `webui_venv.bat`Install it manually`venv`Environment, start with this, default`venv`Table of contents.
+-   The first run will automatically download the model, and the default download is in the user directory`.cache/huggingface`
+
+### starting program
+
+-   `webui.bat`The main function
+-   `webui_chat.bat`Main function +chatGLM chat interface
+-   `webui_imagetools.bat`image processing tool
+-   `webui_offline.bat`use offline mode
+    -   Revise`settings.offline.toml`inside the model path
     -   Model`git clone`arrive`models`Directory (cannot be copied directly from cache)
--   `webui_venv.bat`Install it manually`venv`环境，用这个启动，默认`venv`Table of contents.
+-   `webui_venv.bat`Install it manually`venv`Environment, start with this, default`venv`Table of contents.
 -   The first run will automatically download the model, and the default download is in the user directory`.cache/huggingface`
 
 ### update program
@@ -101,7 +112,7 @@ or`github`Package and download zip, overwrite the program directory
 ### graphic text
 
 -   clip is used for multiple people, complex scenes, high video memory usage (>8G)
--   blip for characters and scenes simple
+-   blip for simple characters and scenes
 -   wd14 for figures
 -   Prompt generation will automatically merge blip or clip + wd14
 
@@ -134,13 +145,16 @@ or`github`Package and download zip, overwrite the program directory
 from`chatGPTBox`Project, modify some prompt words
 
 -   use`api.bat`start up
+
 -   configuration`chatGPTBox`Plugins for custom models`http://localhost:8000/chat/completions`
+
 -   exist[release](https://github.com/zhongpei/image2text_prompt_generator/releases)Download the plugin inside
+
 -   [Modified plugin](https://github.com/zhongpei/chatGPTBox)
 
 ## limit
 
--   不支持`cuda`, it is not recommended to use clip
+-   not support`cuda`, it is not recommended to use clip
 -   Video memory &lt;6G, it is not recommended to use ChatGLM
 
 </details>
@@ -172,7 +186,7 @@ local_files_only = false # 是否只使用本地模型
 
 ## offline model
 
-Please refer to[ChatGLM local load model](https://github.com/THUDM/ChatGLM-6B#从本地加载模型)Model`git clone`arrive`models`directory (not directly from`cache`copy), then modify the`settings-offline.toml`inside the model path
+Please refer to[ChatGLM loads the model locally](https://github.com/THUDM/ChatGLM-6B#从本地加载模型)Model`git clone`arrive`models`directory (not directly from`cache`copy), then modify the`settings-offline.toml`inside the model path
 
 -   The windows path is best to use an absolute path, do not contain Chinese
 -   linux/mac paths can use relative paths
