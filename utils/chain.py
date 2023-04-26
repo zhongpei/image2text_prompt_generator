@@ -1,3 +1,4 @@
+import json
 import os
 import re
 from typing import Any
@@ -45,6 +46,8 @@ LLM_MODEL = settings.chatglm.model if settings.chatglm.model else "THUDM/chatglm
 
 from langchain.document_loaders import UnstructuredMarkdownLoader
 from langchain.text_splitter import MarkdownTextSplitter
+
+
 def file2doc(file_path: str, max_length=512, min_length=100):
     try:
         if file_path.lower().endswith(".pdf"):
@@ -56,7 +59,7 @@ def file2doc(file_path: str, max_length=512, min_length=100):
             textsplitter = MarkdownTextSplitter(chunk_size=100, chunk_overlap=0)
             doc = loader.load_and_split(text_splitter=textsplitter)
         else:
-            #loader = UnstructuredFileLoader(file_path, mode="elements")
+            # loader = UnstructuredFileLoader(file_path, mode="elements")
             loader = UnstructuredFileLoader(file_path)
             textsplitter = ChineseTextSplitter(pdf=False, max_length=max_length, min_length=min_length)
             doc = loader.load_and_split(text_splitter=textsplitter)
@@ -196,5 +199,9 @@ class LocalDocQA:
         knowledge_chain.return_source_documents = True
 
         result = knowledge_chain({"query": query})
+
+        print(json.dumps(self.llm.history, indent=4))
+
         self.llm.history[-1][0] = query
+
         return result, self.llm.history
