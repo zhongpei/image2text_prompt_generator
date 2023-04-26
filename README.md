@@ -297,7 +297,7 @@ python app.py
 </details>
 
 ## 更新信息
-
+* v2.0 LangChain(本地文件问答)
 * v1.8 打标签工具
 * v1.7 翻译本地标签缓存，翻译缓存, API
 * v1.6 图片工具
@@ -329,4 +329,7 @@ python app.py
     * [X] 翻译缓存
 * [ ] 标签
     * [X] clip + w14 混合批量图片标签
+* [X] LangChain
+    * [X] 索引
+    * [X] 问答
 
