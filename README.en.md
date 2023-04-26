@@ -11,7 +11,7 @@
 Prompt generator
 
 Supports parsing prompt descriptions from images, and can be extended based on descriptions for secondary image generation.
-Support Chinese through[ChatGLM](https://github.com/THUDM/ChatGLM-6B)Extend the Prompt description.
+Support Chinese through[ChatGLM](https://github.com/THUDM/ChatGLM-6B)扩展出Prompt描述。
 
 ✅ Models used in this project
 
@@ -60,18 +60,19 @@ The ChatGLM model needs to be downloaded separately (download the int4 version),
 
 -   `webui.bat`The main function
 -   `webui_chat.bat`Main function +chatGLM chat interface
--   `webui_imagetools.bat`image processing tool
+-   `webui_imagetools.bat`image processing tools
 -   `webui_offline.bat`use offline mode
     -   Revise`settings.offline.toml`inside the model path
-    -   Model`git clone`arrive`models`目录（不能直接从cache拷贝）
+    -   Model`git clone`arrive`models`Directory (cannot be copied directly from cache)
 -   `webui_venv.bat`Install it manually`venv`Environment, start with this, default`venv`Table of contents.
 -   The first run will automatically download the model, and the default download is in the user directory`.cache/huggingface`
+    > > > > > > > main
 
 ### starting program
 
 -   `webui.bat`The main function
 -   `webui_chat.bat`Main function +chatGLM chat interface
--   `webui_imagetools.bat`image processing tool
+-   `webui_imagetools.bat`image processing tools
 -   `webui_offline.bat`use offline mode
     -   Revise`settings.offline.toml`inside the model path
     -   Model`git clone`arrive`models`Directory (cannot be copied directly from cache)
@@ -112,13 +113,13 @@ or`github`Package and download zip, overwrite the program directory
 ### graphic text
 
 -   clip is used for multiple people, complex scenes, high video memory usage (>8G)
--   blip for simple characters and scenes
+-   blip for characters and scenes simple
 -   wd14 for figures
 -   Prompt generation will automatically merge blip or clip + wd14
 
 ![img.png](./img/image2text.png)
 
-## image processing tool
+## image processing tools
 
 -   Batch buckle background
 -   paste face (for refining clothes)
@@ -152,6 +153,10 @@ from`chatGPTBox`Project, modify some prompt words
 
 -   [Modified plugin](https://github.com/zhongpei/chatGPTBox)
 
+### browser load plugin
+
+![img.png](./img/chrome_ex.png)
+
 ## limit
 
 -   not support`cuda`, it is not recommended to use clip
@@ -161,6 +166,8 @@ from`chatGPTBox`Project, modify some prompt words
 
 <details>
 <summary>配置文件</summary>
+
+### configuration file
 
 `settings.toml`
 
@@ -186,7 +193,7 @@ local_files_only = false # 是否只使用本地模型
 
 ## offline model
 
-Please refer to[ChatGLM loads the model locally](https://github.com/THUDM/ChatGLM-6B#从本地加载模型)Model`git clone`arrive`models`directory (not directly from`cache`copy), then modify the`settings-offline.toml`inside the model path
+Please refer to[ChatGLM local load model](https://github.com/THUDM/ChatGLM-6B#从本地加载模型)Model`git clone`arrive`models`directory (not directly from`cache`copy), then modify the`settings-offline.toml`inside the model path
 
 -   The windows path is best to use an absolute path, do not contain Chinese
 -   linux/mac paths can use relative paths
@@ -244,7 +251,7 @@ To prevent the c drive from being full, it can be configured`cache`directory to 
 ## manual installation
 
 First, make sure your computer has the`Python3.10`. If you have not installed
-Python, go to the official site ([https://www.python.org/downloads/) to download and install the latest version of](https://www.python.org/downloads/）下载并安装最新版本的)`Python3.10`.
+Python, go to the official site (<https://www.python.org/downloads/）下载并安装最新版本的>`Python3.10`.
 Next, download and unzip our tools installation package.
 Open the command line window (Windows users can press Win + R keys, enter "cmd" in the run box and press Enter to open the command line window), and enter the directory where the tool installation package is located.
 Enter the following command in a command line window to install the required dependencies:
@@ -289,6 +296,7 @@ The tools are now successfully installed and started. You can follow the tool's 
 
 ## Update information
 
+-   v2.0 LangChain (local file question and answer)
 -   v1.8 labeling tool
 -   v1.7 translate local tag cache, translation cache, API
 -   v1.6 picture tools
@@ -311,7 +319,7 @@ The tools are now successfully installed and started. You can follow the tool's 
 -   [x] cutout tool
     -   [x] cut background
     -   [x] pick people's heads
-    -   [x] Covering people's faces
+    -   [x] 遮挡人物脸部
     -   [x] Modify file names in batches
     -   [x] Load catalog tags and translate
 -   [x] translate
@@ -320,3 +328,6 @@ The tools are now successfully installed and started. You can follow the tool's 
     -   [x] translation cache
 -   [ ] Label
     -   [x] clip + w14 mixed batch image tags
+-   [x] LangChain
+    -   [x] index
+    -   [x] question and answer
