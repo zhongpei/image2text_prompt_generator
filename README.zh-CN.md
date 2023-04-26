@@ -66,6 +66,7 @@ ChatGLM 模型需要单独下载(下载int4版本)，放到程序目录 models �
     -   模型`git clone`到`models`目录（不能直接从cache拷贝）
 -   `webui_venv.bat`自己手动安装`venv`环境，用这个启动，默认`venv`目录。
 -   第一次运行会自动下载模型，默认下载在用户目录`.cache/huggingface`
+    > > > > > > > 主要的
 
 ### 启动程序
 
@@ -152,6 +153,10 @@ ChatGLM 模型需要单独下载(下载int4版本)，放到程序目录 models �
 
 -   [修改版插件](https://github.com/zhongpei/chatGPTBox)
 
+### 浏览器加载插件
+
+![img.png](./img/chrome_ex.png)
+
 ## 限制
 
 -   不支持`cuda`，不建议使用clip
@@ -161,6 +166,8 @@ ChatGLM 模型需要单独下载(下载int4版本)，放到程序目录 models �
 
 <details>
 <summary>配置文件</summary>
+
+### 配置文件
 
 `settings.toml`
 
@@ -289,6 +296,7 @@ python app.py
 
 ## 更新信息
 
+-   v2.0 LangChain(本地文件问答)
 -   v1.8 打标签工具
 -   v1.7 翻译本地标签缓存，翻译缓存, API
 -   v1.6 图片工具
@@ -320,3 +328,6 @@ python app.py
     -   [x] 翻译缓存
 -   [ ] 标签
     -   [x] clip + w14 混合批量图片标签
+-   [x] 浪链
+    -   [x] 索引
+    -   [x] 问答
