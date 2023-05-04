@@ -40,6 +40,7 @@ def remove_background(
         fast=False,
         jit=False,
         ckpt=None,
+        device="cpu"
 ):
     # Remove the background of the images
     # video_path: path to the source
@@ -51,7 +52,7 @@ def remove_background(
         if not os.path.isfile(ckpt):
             ckpt = None
     print("ckpt: {} fast: {}".format(ckpt, fast))
-    remover = Remover(fast=fast, jit=jit, ckpt=ckpt)
+    remover = Remover(fast=fast, jit=jit, ckpt=ckpt, device=device)
 
     for img, name in ImageLoader(image_path):
         print("Processing: {}".format(name))
