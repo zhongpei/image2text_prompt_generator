@@ -13,7 +13,7 @@ generate_translate = true # 是否启用生成翻译功能
 
 [image_tools]
 enable = true # 是否启用图片处理功能
-
+device = "cuda" # cpu mps cuda
 transparent_background_model_path = ".\\models\\transparent-background\\ckpt_base.pth" # transparent-background模型路径
 
 

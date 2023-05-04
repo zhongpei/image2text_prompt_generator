@@ -259,7 +259,7 @@ Python，请前往官方网站（https://www.python.org/downloads/）下载并�
 在命令行窗口中输入以下命令安装所需的依赖项：
 
 ```bash
-git clone https://huggingface.co/spaces/hahahafofo/image2text_prompt_generator
+git clone https://github.com/zhongpei/image2text_prompt_generator
 cd image2text_prompt_generator
 
 # 建立虚拟环境
@@ -282,7 +282,7 @@ pip install --upgrade -r requirements.txt
 
 ```bash
 # 激活环境 linux & mac
-./venv/bin/activate
+source ./venv/bin/activate
 # 激活环境 windows
 .\venv\Scripts\activate
 
