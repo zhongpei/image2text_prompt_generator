@@ -113,7 +113,7 @@ ChatGLM モデルは別途ダウンロード (int4 バージョンをダウン�
 ### グラフィックテキスト
 
 -   クリップは、複数の人、複雑なシーン、高いビデオ メモリ使用量 (>8G) に使用されます。
--   シンプルなキャラクターやシーンのブリップ
+-   文字とシーンの単純なブリップ
 -   フィギュア用のwd14
 -   プロンプト生成により、ブリップまたはクリップ + wd14 が自動的にマージされます
 
@@ -193,7 +193,7 @@ local_files_only = false # 是否只使用本地模型
 
 ## オフライン モデル
 
-を参照してください。[ChatGLM ローカル負荷モデル](https://github.com/THUDM/ChatGLM-6B#从本地加载模型)模型`git clone`到着`models`ディレクトリ（直接ではありません`cache`コピー)、次に変更します`settings-offline.toml`モデルパス内
+を参照してください。[ChatGLM はモデルをローカルに読み込みます](https://github.com/THUDM/ChatGLM-6B#从本地加载模型)模型`git clone`到着`models`ディレクトリ（直接ではありません`cache`コピー)、次に変更します`settings-offline.toml`モデルパス内
 
 -   Windows パスは絶対パスを使用するのが最適です。中国語を含めないでください。
 -   linux/mac パスは相対パスを使用できます
@@ -251,13 +251,13 @@ Cドライブがいっぱいになるのを防ぐために、それを構成す�
 ## 手動インストール
 
 まず、コンピュータに`Python3.10`.インストールしていない場合
-Python、公式 Web サイト ([https://www.python.org/downloads/) から最新バージョンをダウンロードしてインストールします。](https://www.python.org/downloads/）下载并安装最新版本的)`Python3.10`.
+Python、公式サイト ([https://www.python.org/downloads/) から最新バージョンをダウンロードしてインストールします。](https://www.python.org/downloads/）下载并安装最新版本的)`Python3.10`.
 次に、ツールのインストール パッケージをダウンロードして解凍します。
-コマンド ライン ウィンドウを開き (Windows ユーザーは Win + R キーを押して、実行ボックスに「cmd」と入力し、Enter キーを押してコマンド ライン ウィンドウを開きます)、ツールのインストール パッケージがあるディレクトリを入力します。
+コマンド ライン ウィンドウを開き (Windows ユーザーは Win + R キーを押して、実行ボックスに「cmd」と入力し、Enter キーを押してコマンド ライン ウィンドウを開きます)、ツールのインストール パッケージが配置されているディレクトリを入力します。
 コマンド ライン ウィンドウに次のコマンドを入力して、必要な依存関係をインストールします。
 
 ```bash
-git clone https://huggingface.co/spaces/hahahafofo/image2text_prompt_generator
+git clone https://github.com/zhongpei/image2text_prompt_generator
 cd image2text_prompt_generator
 
 # 建立虚拟环境
@@ -280,7 +280,7 @@ pip install --upgrade -r requirements.txt
 
 ```bash
 # 激活环境 linux & mac
-./venv/bin/activate
+source ./venv/bin/activate
 # 激活环境 windows
 .\venv\Scripts\activate
 
