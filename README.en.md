@@ -11,7 +11,7 @@
 Prompt generator
 
 Supports parsing prompt descriptions from images, and can be extended based on descriptions for secondary image generation.
-Support Chinese through[ChatGLM](https://github.com/THUDM/ChatGLM-6B)扩展出Prompt描述。
+Support Chinese through[ChatGLM](https://github.com/THUDM/ChatGLM-6B)Extend the Prompt description.
 
 ✅ Models used in this project
 
@@ -60,7 +60,7 @@ The ChatGLM model needs to be downloaded separately (download the int4 version),
 
 -   `webui.bat`The main function
 -   `webui_chat.bat`Main function +chatGLM chat interface
--   `webui_imagetools.bat`image processing tools
+-   `webui_imagetools.bat`image processing tool
 -   `webui_offline.bat`use offline mode
     -   Revise`settings.offline.toml`inside the model path
     -   Model`git clone`arrive`models`Directory (cannot be copied directly from cache)
@@ -72,7 +72,7 @@ The ChatGLM model needs to be downloaded separately (download the int4 version),
 
 -   `webui.bat`The main function
 -   `webui_chat.bat`Main function +chatGLM chat interface
--   `webui_imagetools.bat`image processing tools
+-   `webui_imagetools.bat`image processing tool
 -   `webui_offline.bat`use offline mode
     -   Revise`settings.offline.toml`inside the model path
     -   Model`git clone`arrive`models`Directory (cannot be copied directly from cache)
@@ -113,13 +113,13 @@ or`github`Package and download zip, overwrite the program directory
 ### graphic text
 
 -   clip is used for multiple people, complex scenes, high video memory usage (>8G)
--   blip for characters and scenes simple
+-   blip for simple characters and scenes
 -   wd14 for figures
 -   Prompt generation will automatically merge blip or clip + wd14
 
 ![img.png](./img/image2text.png)
 
-## image processing tools
+## image processing tool
 
 -   Batch buckle background
 -   paste face (for refining clothes)
@@ -153,7 +153,7 @@ from`chatGPTBox`Project, modify some prompt words
 
 -   [Modified plugin](https://github.com/zhongpei/chatGPTBox)
 
-### browser load plugin
+### Browser loads the plug-in
 
 ![img.png](./img/chrome_ex.png)
 
@@ -193,7 +193,7 @@ local_files_only = false # 是否只使用本地模型
 
 ## offline model
 
-Please refer to[ChatGLM local load model](https://github.com/THUDM/ChatGLM-6B#从本地加载模型)Model`git clone`arrive`models`directory (not directly from`cache`copy), then modify the`settings-offline.toml`inside the model path
+Please refer to[ChatGLM loads the model locally](https://github.com/THUDM/ChatGLM-6B#从本地加载模型)Model`git clone`arrive`models`directory (not directly from`cache`copy), then modify the`settings-offline.toml`inside the model path
 
 -   The windows path is best to use an absolute path, do not contain Chinese
 -   linux/mac paths can use relative paths
@@ -251,13 +251,13 @@ To prevent the c drive from being full, it can be configured`cache`directory to 
 ## manual installation
 
 First, make sure your computer has the`Python3.10`. If you have not installed
-Python, go to the official site (<https://www.python.org/downloads/）下载并安装最新版本的>`Python3.10`.
+Python, go to the official site ([https://www.python.org/downloads/) to download and install the latest version of](https://www.python.org/downloads/）下载并安装最新版本的)`Python3.10`.
 Next, download and unzip our tools installation package.
 Open the command line window (Windows users can press Win + R keys, enter "cmd" in the run box and press Enter to open the command line window), and enter the directory where the tool installation package is located.
 Enter the following command in a command line window to install the required dependencies:
 
 ```bash
-git clone https://huggingface.co/spaces/hahahafofo/image2text_prompt_generator
+git clone https://github.com/zhongpei/image2text_prompt_generator
 cd image2text_prompt_generator
 
 # 建立虚拟环境
@@ -280,7 +280,7 @@ Once installed, you can start the tool by running:
 
 ```bash
 # 激活环境 linux & mac
-./venv/bin/activate
+source ./venv/bin/activate
 # 激活环境 windows
 .\venv\Scripts\activate
 
@@ -319,11 +319,11 @@ The tools are now successfully installed and started. You can follow the tool's 
 -   [x] cutout tool
     -   [x] cut background
     -   [x] pick people's heads
-    -   [x] 遮挡人物脸部
+    -   [x] Covering people's faces
     -   [x] Modify file names in batches
     -   [x] Load catalog tags and translate
 -   [x] translate
-    -   [x] f2men, men2f
+    -   [x] f2m, f2f
     -   [x] WD14 tags translation local cache
     -   [x] translation cache
 -   [ ] Label
