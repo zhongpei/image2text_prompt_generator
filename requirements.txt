@@ -2,7 +2,7 @@ transformers==4.27.4
 sentencepiece==0.1.97
 sacremoses==0.0.53
 torch==2.0.0
-gradio==3.24.1
+gradio==3.34.0
 pillow>=9.0.0
 piexif>=1.1.3
 onnxruntime>=1.12.0
