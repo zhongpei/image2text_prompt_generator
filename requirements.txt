@@ -1,4 +1,4 @@
-transformers==4.27.4
+transformers==4.30.0
 sentencepiece==0.1.97
 sacremoses==0.0.53
 torch==2.0.0
